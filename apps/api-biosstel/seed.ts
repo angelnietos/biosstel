@@ -9,7 +9,7 @@ import 'reflect-metadata';
 import 'tsconfig-paths/register';
 import { DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { UserEntity } from '@lib/api-users';
+import { UserEntity } from '@biosstel/api-users';
 
 async function seed() {
   console.log('🌱 Starting database seed...\n');

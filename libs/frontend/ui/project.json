@@ -1,7 +1,7 @@
 {
   "name": "ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/ui/src",
+  "sourceRoot": "libs/frontend/ui/src",
   "projectType": "library",
   "tags": ["type:ui", "scope:ui"],
   "targets": {
@@ -9,9 +9,9 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/ui",
-        "main": "libs/ui/src/index.ts",
-        "tsConfig": "libs/ui/tsconfig.json",
+        "outputPath": "dist/libs/frontend/ui",
+        "main": "libs/frontend/ui/src/index.ts",
+        "tsConfig": "libs/frontend/ui/tsconfig.json",
         "assets": []
       }
     },
@@ -24,7 +24,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "passWithNoTests": true,
-        "config": "libs/ui/vitest.config.ts"
+        "config": "libs/frontend/ui/vitest.config.ts"
       }
     }
   }

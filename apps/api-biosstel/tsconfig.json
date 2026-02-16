@@ -20,9 +20,10 @@
     "paths": {
       "@/*": ["src/*"],
       "@lib/*": ["../../dist/libs/*"],
-      "@biosstel/shared-types": ["../../dist/libs/shared-types/index.js"],
-      "@biosstel/api-users": ["../../dist/libs/api-users/index.js"],
-      "@biosstel/api-shared": ["../../dist/libs/api-shared/index.js"]
+      "@lib/backend/*": ["../../dist/libs/backend/*"],
+      "@biosstel/shared-types": ["../../dist/libs/shared/shared-types/index.js"],
+      "@biosstel/api-users": ["../../dist/libs/backend/api-users/index.js"],
+      "@biosstel/api-shared": ["../../dist/libs/backend/api-shared/index.js"]
     }
   },
   "include": ["src/**/*"],

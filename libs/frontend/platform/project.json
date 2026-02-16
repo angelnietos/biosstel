@@ -1,7 +1,7 @@
 {
   "name": "platform",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/platform/src",
+  "sourceRoot": "libs/frontend/platform/src",
   "projectType": "library",
   "tags": ["type:platform", "scope:platform"],
   "targets": {
@@ -10,8 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/platform",
-        "main": "libs/platform/src/index.ts",
-        "tsConfig": "libs/platform/tsconfig.json",
+        "main": "libs/frontend/platform/src/index.ts",
+        "tsConfig": "libs/frontend/platform/tsconfig.json",
         "assets": []
       }
     },
@@ -24,7 +24,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "passWithNoTests": true,
-        "config": "libs/platform/vitest.config.ts"
+        "config": "libs/frontend/platform/vitest.config.ts"
       }
     }
   }

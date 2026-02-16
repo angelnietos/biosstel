@@ -1,7 +1,7 @@
 {
   "name": "ui-layout",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/ui-layout/src",
+  "sourceRoot": "libs/frontend/ui-layout/src",
   "projectType": "library",
   "tags": ["type:layout", "scope:layout"],
   "targets": {
@@ -9,9 +9,9 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/ui-layout",
-        "main": "libs/ui-layout/src/index.ts",
-        "tsConfig": "libs/ui-layout/tsconfig.json",
+        "outputPath": "dist/libs/frontend/ui-layout",
+        "main": "libs/frontend/ui-layout/src/index.ts",
+        "tsConfig": "libs/frontend/ui-layout/tsconfig.json",
         "assets": []
       }
     },
@@ -24,7 +24,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "passWithNoTests": true,
-        "config": "libs/ui-layout/vitest.config.ts"
+        "config": "libs/frontend/ui-layout/vitest.config.ts"
       }
     }
   }

@@ -20,12 +20,13 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"],
-      "@biosstel/ui": ["../../libs/ui/src/index.ts"],
-      "@biosstel/ui-layout": ["../../libs/ui-layout/src/index.ts"],
-      "@biosstel/platform": ["../../libs/platform/src/index.ts"],
-      "@biosstel/auth": ["../../libs/auth/src/index.ts"],
-      "@biosstel/users": ["../../libs/users/src/index.ts"]
+      "@biosstel/shared-types": ["../../libs/shared/shared-types/src/index.ts"],
+      "@biosstel/shared": ["../../libs/frontend/shared/src/index.ts"],
+      "@biosstel/ui": ["../../libs/frontend/ui/src/index.ts"],
+      "@biosstel/ui-layout": ["../../libs/frontend/ui-layout/src/index.ts"],
+      "@biosstel/platform": ["../../libs/frontend/platform/src/index.ts"],
+      "@biosstel/auth": ["../../libs/frontend/auth/src/index.ts"],
+      "@biosstel/users": ["../../libs/frontend/users/src/index.ts"]
     }
   },
   "include": [

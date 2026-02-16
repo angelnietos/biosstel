@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from '@lib/api-users';
-import { UserEntity } from '@lib/api-users';
+import { UsersModule } from '@biosstel/api-users';
+import { UserEntity } from '@biosstel/api-users';
 
 @Module({
   imports: [
