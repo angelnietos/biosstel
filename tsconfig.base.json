@@ -20,15 +20,18 @@
     "baseUrl": ".",
     "paths": {
       "@lib/*": ["libs/*"],
-      "@biosstel/shared-types": ["libs/shared-types/src/index.ts"],
-      "@biosstel/shared": ["libs/shared/src/index.ts"],
-      "@biosstel/ui": ["libs/ui/src/index.ts"],
-      "@biosstel/ui-layout": ["libs/ui-layout/src/index.ts"],
-      "@biosstel/platform": ["libs/platform/src/index.ts"],
-      "@biosstel/auth": ["libs/auth/src/index.ts"],
-      "@biosstel/users": ["libs/users/src/index.ts"],
-      "@biosstel/api-users": ["libs/api-users/src/index.ts"],
-      "@biosstel/api-shared": ["libs/api-shared/src/index.ts"]
+      "@lib/frontend/*": ["libs/frontend/*"],
+      "@lib/backend/*": ["libs/backend/*"],
+      "@lib/shared/*": ["libs/shared/*"],
+      "@biosstel/shared-types": ["libs/shared/shared-types/src/index.ts"],
+      "@biosstel/shared": ["libs/frontend/shared/src/index.ts"],
+      "@biosstel/ui": ["libs/frontend/ui/src/index.ts"],
+      "@biosstel/ui-layout": ["libs/frontend/ui-layout/src/index.ts"],
+      "@biosstel/platform": ["libs/frontend/platform/src/index.ts"],
+      "@biosstel/auth": ["libs/frontend/auth/src/index.ts"],
+      "@biosstel/users": ["libs/frontend/users/src/index.ts"],
+      "@biosstel/api-users": ["libs/backend/api-users/src/index.ts"],
+      "@biosstel/api-shared": ["libs/backend/api-shared/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

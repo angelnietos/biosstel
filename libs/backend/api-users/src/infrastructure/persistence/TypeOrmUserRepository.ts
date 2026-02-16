@@ -90,6 +90,7 @@ export class TypeOrmUserRepository implements IUserRepository {
       email: entity.email,
       firstName: entity.firstName,
       lastName: entity.lastName,
+      phone: entity.phone,
       isActive: entity.isActive,
       organizationId: entity.organizationId,
       createdAt: entity.createdAt,
