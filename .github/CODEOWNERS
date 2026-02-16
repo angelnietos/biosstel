@@ -1,0 +1,86 @@
+# CODEOWNERS file for Biosstel Monorepo
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ========================================
+# GLOBAL OWNERS
+# ========================================
+* @biosstel-team
+
+# ========================================
+# FRONTEND
+# ========================================
+/apps/front-biosstel/ @frontend-team
+/libs/frontend/ @frontend-team
+*.tsx @frontend-team
+*.css @frontend-team
+/apps/front-biosstel/src/app/ @frontend-team
+
+# Next.js specific
+next.config.* @frontend-team
+/apps/front-biosstel/messages/ @frontend-team
+
+# ========================================
+# BACKEND
+# ========================================
+/apps/api-biosstel/ @backend-team
+/libs/backend/ @backend-team
+nest-cli.json @backend-team
+
+# Database
+/apps/api-biosstel/seed.ts @backend-team @database-team
+/docker/init-db.sql @backend-team @database-team
+/docker/seed-users.sql @backend-team @database-team
+
+# ========================================
+# SHARED LIBRARIES
+# ========================================
+/libs/shared/ @backend-team @frontend-team
+/libs/shared-types/ @backend-team @frontend-team
+
+# ========================================
+# INFRASTRUCTURE & DevOps
+# ========================================
+/docker/ @devops-team
+docker-compose*.yml @devops-team
+/.github/ @devops-team
+Dockerfile @devops-team
+
+# CI/CD
+/.github/workflows/ @devops-team @tech-lead
+/.github/dependabot.yml @devops-team
+
+# ========================================
+# CONFIGURATION FILES
+# ========================================
+package.json @tech-lead @devops-team
+pnpm-lock.yaml @tech-lead
+pnpm-workspace.yaml @tech-lead
+tsconfig*.json @tech-lead
+nx.json @tech-lead
+.eslintrc* @tech-lead
+vitest.config.ts @tech-lead
+playwright.config.ts @tech-lead @qa-team
+
+# ========================================
+# DOCUMENTATION
+# ========================================
+*.md @tech-lead
+/docs/ @tech-lead
+README.md @tech-lead
+/libs/backend/HEXAGONAL_ARCHITECTURE.md @backend-team @tech-lead
+/.github/BRANCH_PROTECTION.md @devops-team @tech-lead
+
+# ========================================
+# TESTING
+# ========================================
+/apps/e2e-api/ @backend-team @qa-team
+/apps/e2e-front/ @frontend-team @qa-team
+*.test.ts @qa-team
+*.spec.ts @qa-team
+*.e2e.ts @qa-team
+
+# ========================================
+# SECURITY
+# ========================================
+.env.example @devops-team @security-team
+/apps/api-biosstel/src/auth/ @backend-team @security-team

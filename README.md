@@ -16,6 +16,7 @@ Monorepo full-stack modular con arquitectura hexagonal y feature-driven developm
 | Testing | Vitest + Playwright |
 | Contenedores | Docker + Docker Compose |
 | Desarrollo | tsx (live reload con archivos fuente) |
+| CI/CD | GitHub Actions |
 
 ### Arquitectura Modular Full-Stack
 
@@ -1079,5 +1080,75 @@ babooni/
 | 📊 **Dashboard** | Objetivos, alertas y asignaciones |
 | 🚀 **CI/CD** | GitHub Actions configurado |
 | 📖 **API Docs** | Swagger UI automático |
+
+---
+
+## 🚀 CI/CD Pipeline
+
+### Estrategia de Branching
+
+```
+main (production) ──────────────────────────────────────────►
+  ↑                                                          
+release/* (staging) ────────────────────────────────────────►
+  ↑                                                          
+develop (integration) ──────────────────────────────────────►
+  ↑                                                          
+feature/* (development) ────────────────────────────────────►
+```
+
+### Flujos Automatizados
+
+| Rama | Trigger | Acciones | Deploy |
+|------|---------|----------|--------|
+| `main` | Push | Lint + Test + Build + E2E | ✅ Production |
+| `release/*` | Push | Lint + Test + Build | ✅ Staging |
+| `develop` | Push | Lint + Test + Build | ❌ No deploy |
+| `feature/*` | PR | Lint + Test | ❌ No deploy |
+
+### GitHub Actions Workflows
+
+1. **`ci.yml`** - Pipeline principal
+   - ✅ Lint (ESLint + TypeScript)
+   - ✅ Tests unitarios (Vitest)
+   - ✅ Tests E2E (Playwright)
+   - ✅ Build (Frontend + Backend)
+
+2. **`cd.yml`** - Deployment
+   - 🐳 Build Docker images
+   - 🚀 Deploy to environment
+   - 🏷️ Create release tags (solo `main`)
+
+3. **`pr-checks.yml`** - PR automation
+   - 📋 PR information
+   - 🔍 Detect changed files
+   - 📊 Bundle size check
+
+### Configuración Branch Protection
+
+Ver documentación completa en [`.github/BRANCH_PROTECTION.md`](.github/BRANCH_PROTECTION.md)
+
+**Resumen:**
+- **`main`**: 2 approvals + todos los checks + no force push
+- **`release/*`**: 1 approval + checks + no force push
+- **`develop`**: 1 approval + checks básicos
+- **`feature/*`**: 1 approval + lint
+
+### CODEOWNERS
+
+Revisores automáticos configurados por área:
+- **Frontend**: `@frontend-team`
+- **Backend**: `@backend-team`
+- **DevOps**: `@devops-team`
+- **Global**: `@tech-lead`
+
+Ver [`.github/CODEOWNERS`](.github/CODEOWNERS)
+
+### Dependabot
+
+Actualizaciones automáticas semanales:
+- 📦 npm packages (agrupados por framework)
+- 🐳 Docker base images
+- ⚙️ GitHub Actions
 
 ---

@@ -1,0 +1,150 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/**'
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '8'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ========================================
+  # 🐳 BUILD & PUSH DOCKER IMAGES
+  # ========================================
+  docker:
+    name: 🐳 Build & Push Docker Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    
+    strategy:
+      matrix:
+        service: [frontend, backend]
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🔐 Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 📝 Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.service }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: 🏗️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: 🐳 Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/${{ matrix.service == 'frontend' && 'frontend' || 'api' }}.Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ========================================
+  # 🚀 DEPLOY TO ENVIRONMENT
+  # ========================================
+  deploy:
+    name: 🚀 Deploy to ${{ github.ref == 'refs/heads/main' && 'Production' || 'Staging' }}
+    runs-on: ubuntu-latest
+    needs: [docker]
+    timeout-minutes: 10
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+      url: ${{ github.ref == 'refs/heads/main' && 'https://biosstel.com' || 'https://staging.biosstel.com' }}
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🚀 Deploy to server
+        run: |
+          echo "🚀 Deploying to ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}"
+          echo "📦 Images: ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}"
+          echo "📦 Images: ghcr.io/${{ github.repository }}/backend:${{ github.sha }}"
+          # TODO: Add actual deployment commands here (SSH, kubectl, docker-compose, etc.)
+      
+      - name: 📢 Notify deployment
+        if: always()
+        run: |
+          echo "✅ Deployment ${{ job.status }}"
+          # TODO: Add Slack/Discord/Email notification
+
+  # ========================================
+  # 🏷️ CREATE RELEASE (main only)
+  # ========================================
+  release:
+    name: 🏷️ Create Release
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: 🏷️ Create release tag
+        id: tag
+        run: |
+          VERSION=$(date +'%Y.%m.%d')-${{ github.run_number }}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          git tag v$VERSION
+          git push origin v$VERSION
+      
+      - name: 📝 Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$PREVIOUS_TAG" ]; then
+            CHANGELOG=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges | head -20)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: 🎉 Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.tag.outputs.version }}
+          release_name: Release v${{ steps.tag.outputs.version }}
+          body: |
+            ## 🚀 Changes
+            
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ## 📦 Docker Images
+            
+            - Frontend: `ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}`
+            - Backend: `ghcr.io/${{ github.repository }}/backend:${{ github.sha }}`
+          draft: false
+          prerelease: false

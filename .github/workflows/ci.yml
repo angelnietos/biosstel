@@ -1,144 +1,230 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
-    branches: [main, master, develop]
+    branches:
+      - main
+      - develop
+      - 'release/**'
   pull_request:
-    branches: [main, master, develop]
+    branches:
+      - main
+      - develop
+      - 'release/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  NODE_VERSION: '20'
+  PNPM_VERSION: '8'
 
 jobs:
+  # ========================================
+  # 🔍 LINT & TYPECHECK
+  # ========================================
   lint:
-    name: Lint
+    name: 🔍 Lint & Typecheck
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run linter
-        run: pnpm lint
-
-  typecheck:
-    name: Type Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run typecheck
-        run: pnpm typecheck
-
-  test-unit:
-    name: Unit Tests + Coverage
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run unit tests with coverage
-        run: pnpm test -- --coverage
-
-      - name: Upload coverage to SonarCloud
-        if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          projectBaseDir: .
-
-  sonar:
-    name: SonarCloud Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v3
         with:
-          version: 9
-
-      - name: Setup Node.js
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
-      - name: Install dependencies
+      
+      - name: 📥 Install dependencies
         run: pnpm install --frozen-lockfile
+      
+      - name: 🔍 Run ESLint
+        run: pnpm run lint:all
+        continue-on-error: false
+      
+      - name: 🔍 TypeCheck Frontend
+        run: pnpm run typecheck:front
+      
+      - name: 🔍 TypeCheck Backend
+        run: pnpm run typecheck:api
 
-      - name: SonarCloud Scan
-        if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          projectBaseDir: .
-
-  build:
-    name: Build
+  # ========================================
+  # 🧪 TESTS
+  # ========================================
+  test-unit:
+    name: 🧪 Unit Tests
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test-unit]
+    timeout-minutes: 15
+    
     steps:
-      - name: Checkout
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v3
         with:
-          version: 9
-
-      - name: Setup Node.js
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
-      - name: Install dependencies
+      
+      - name: 📥 Install dependencies
         run: pnpm install --frozen-lockfile
+      
+      - name: 🧪 Run unit tests
+        run: pnpm run test
+        env:
+          CI: true
 
-      - name: Build project
-        run: pnpm build
+  test-e2e:
+    name: 🧪 E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')
+    
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: biosstel
+          POSTGRES_PASSWORD: biosstel123
+          POSTGRES_DB: biosstel_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5433:5432
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      
+      - name: 📥 Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: 📦 Install Playwright browsers
+        run: pnpm run playwright:install
+      
+      - name: 🗄️ Run database seed
+        run: pnpm run db:seed
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5433
+          DB_USER: biosstel
+          DB_PASSWORD: biosstel123
+          DB_NAME: biosstel_test
+      
+      - name: 🧪 Run E2E tests
+        run: pnpm run test:e2e
+        env:
+          CI: true
+          DB_HOST: localhost
+          DB_PORT: 5433
+          DB_USER: biosstel
+          DB_PASSWORD: biosstel123
+          DB_NAME: biosstel_test
+      
+      - name: 📊 Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ========================================
+  # 🏗️ BUILD
+  # ========================================
+  build:
+    name: 🏗️ Build Applications
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [lint, test-unit]
+    
+    strategy:
+      matrix:
+        app: [frontend, backend]
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      
+      - name: 📥 Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: 🏗️ Build ${{ matrix.app }}
+        run: |
+          if [ "${{ matrix.app }}" == "frontend" ]; then
+            pnpm run build:front
+          else
+            pnpm run build:api
+          fi
+        env:
+          NODE_ENV: production
+      
+      - name: 📦 Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.app }}
+          path: |
+            apps/front-biosstel/.next
+            apps/api-biosstel/dist
+          retention-days: 7
+
+  # ========================================
+  # 🎉 SUCCESS CHECK
+  # ========================================
+  ci-success:
+    name: ✅ CI Success
+    runs-on: ubuntu-latest
+    needs: [lint, test-unit, build]
+    if: always()
+    
+    steps:
+      - name: ✅ Check all jobs
+        run: |
+          if [[ "${{ needs.lint.result }}" != "success" ]] || \
+             [[ "${{ needs.test-unit.result }}" != "success" ]] || \
+             [[ "${{ needs.build.result }}" != "success" ]]; then
+            echo "❌ CI Pipeline failed"
+            exit 1
+          fi
+          echo "✅ CI Pipeline passed"

@@ -1,0 +1,73 @@
+version: 2
+updates:
+  # ========================================
+  # NPM DEPENDENCIES
+  # ========================================
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "biosstel-team"
+    assignees:
+      - "biosstel-team"
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "⬆️ deps:"
+      include: "scope"
+    groups:
+      nestjs:
+        patterns:
+          - "@nestjs/*"
+      nextjs:
+        patterns:
+          - "next*"
+          - "react*"
+      nx:
+        patterns:
+          - "@nx/*"
+          - "nx"
+      testing:
+        patterns:
+          - "*test*"
+          - "vitest*"
+          - "playwright*"
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
+
+  # ========================================
+  # GITHUB ACTIONS
+  # ========================================
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "⬆️ ci:"
+
+  # ========================================
+  # DOCKER
+  # ========================================
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "⬆️ docker:"
