@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "module": "commonjs",
     "moduleResolution": "node",
@@ -13,7 +13,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "../../dist/libs/backend/api-users",
+    "outDir": "../../../dist/libs/backend/api-users",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },

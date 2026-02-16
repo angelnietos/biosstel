@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -13,7 +13,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "../../dist/libs/api-shared"
+    "outDir": "../../../dist/libs/backend/api-shared"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
