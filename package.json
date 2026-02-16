@@ -2,6 +2,10 @@
   "name": "biosstel-monorepo",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
   "scripts": {
     "dev:front": "nx dev front-biosstel",
     "dev:api": "nx dev api-biosstel",
@@ -19,11 +23,6 @@
     "nx": "^20.4.0",
     "typescript": "^5.8.3"
   },
-  "workspaces": [
-    "apps/*",
-    "libs/*"
-  ],
-  "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=20.0.0"
   }

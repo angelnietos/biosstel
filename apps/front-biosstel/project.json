@@ -1,0 +1,50 @@
+{
+  "name": "front-biosstel",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/front-biosstel/src",
+  "projectType": "application",
+  "tags": ["type:app", "framework:nextjs", "scope:frontend"],
+  "targets": {
+    "dev": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "front-biosstel:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "front-biosstel:build:development"
+        },
+        "production": {
+          "buildTarget": "front-biosstel:build:production"
+        }
+      }
+    },
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/front-biosstel"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/front-biosstel/.next"
+        },
+        "production": {}
+      }
+    },
+    "start": {
+      "executor": "@nx/next:server",
+      "options": {
+        "buildTarget": "front-biosstel:build",
+        "dev": false
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

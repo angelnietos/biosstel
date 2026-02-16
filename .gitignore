@@ -1,1 +1,41 @@
-"node_modules\nbuild\ndist\n.next\n.env\n*.log\n.DS_Store" 
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+build
+dist
+.next
+out
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Nx
+.nx/cache
+.nx/workspace-data
+
+# Test coverage
+coverage
+
+# Temp files
+tmp
+temp

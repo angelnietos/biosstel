@@ -1,0 +1,53 @@
+{
+  "name": "api-biosstel",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api-biosstel/src",
+  "projectType": "application",
+  "tags": ["type:api", "framework:node", "scope:backend"],
+  "targets": {
+    "dev": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "api-biosstel:build",
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-biosstel:build:development"
+        },
+        "production": {
+          "buildTarget": "api-biosstel:build:production"
+        }
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/api-biosstel",
+        "main": "apps/api-biosstel/app.ts",
+        "tsConfig": "apps/api-biosstel/tsconfig.json",
+        "assets": ["apps/api-biosstel/src/subgraphs/**/*.graphql"]
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "start": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-biosstel:build"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node dist/apps/api-biosstel/app.js"
+      },
+      "dependsOn": ["build"]
+    }
+  }
+}

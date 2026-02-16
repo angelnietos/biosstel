@@ -1,15 +1,14 @@
 {
-  "name": "api-template",
+  "name": "api-biosstel",
   "version": "1.0.0",
-  "description": "API template with microservices architecture using GraphQL + Express + PostgreSQL/Sequelize",
-  "main": "index.js",
+  "description": "API with microservices architecture using GraphQL + Express + PostgreSQL/Sequelize",
+  "main": "build/app.js",
   "scripts": {
-    "build": "concurrently \"tsc\" \"npm run build:common\" \"pnpm -r run build\" \"npm run copy:typedef\"",
-    "build:common": "cd ./microservices/common && npm run build",
-    "build:auth": "cd ./microservices/auth && npm run build",
     "dev": "concurrently --raw \"npm run dev:graphql\" \"npm run dev:auth\"",
     "dev:graphql": "ts-node-dev ./app.ts",
     "dev:auth": "ts-node-dev ./microservices/auth/app.ts",
+    "build": "tsc && npm run build:common && npm run copy:typedef",
+    "build:common": "cd ./microservices/common && npm run build",
     "copy:typedef": "copyfiles -u 1 src/subgraphs/**/*.graphql build/src",
     "start": "node build/app.js"
   },
