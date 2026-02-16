@@ -1,16 +1,52 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { userDataSlice } from "./slices/userData";
-import { adminApi } from "./api/users";
+/**
+ * Simple store for the frontend
+ * This can be replaced with any state management solution
+ */
 
-export const store = configureStore({
-  reducer: {
-    userData: userDataSlice.reducer,
-    [adminApi.reducerPath]: adminApi.reducer,
-  },
-  middleware: (getDefaultMiddleware: any) => getDefaultMiddleware().concat(adminApi.middleware),
-});
+interface UserData {
+  id: string;
+  email: string;
+  name: string;
+  token?: string;
+}
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
+interface StoreState {
+  user: UserData | null;
+  isAuthenticated: boolean;
+  setUser: (user: UserData | null) => void;
+  logout: () => void;
+}
+
+// Simple global store - can be replaced with zustand, redux, etc.
+class Store {
+  private state: StoreState = {
+    user: null,
+    isAuthenticated: false,
+    setUser: (user) => {
+      this.state.user = user;
+      this.state.isAuthenticated = !!user;
+      this.listeners.forEach((listener) => listener(this.state));
+    },
+    logout: () => {
+      this.state.user = null;
+      this.state.isAuthenticated = false;
+      this.listeners.forEach((listener) => listener(this.state));
+    },
+  };
+
+  private listeners: ((state: StoreState) => void)[] = [];
+
+  getState(): StoreState {
+    return this.state;
+  }
+
+  subscribe(listener: (state: StoreState) => void): () => void {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
+  }
+}
+
+export const store = new Store();
+export const { getState, subscribe } = store;

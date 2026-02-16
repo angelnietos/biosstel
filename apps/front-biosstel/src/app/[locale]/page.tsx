@@ -1,7 +1,7 @@
 import Image from "next/image";
 import background from "../../../public/images/background.png";
 import logo from "../../../public/images/logo.png";
-import { MainContainer } from "@/components/templates/auth/MainContainer";
+import { MainContainer } from "@biosstel/ui-layout";
 
 export default function LoginPage() {
   return (

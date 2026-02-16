@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { ToastProvider } from "@/components/templates/ToastProvider";
+import { ToastProvider } from "@biosstel/ui";
 import "./globals.css";
 
 const inter = Inter({
