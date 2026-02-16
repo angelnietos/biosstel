@@ -26,7 +26,10 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/front-biosstel"
+        "outputPath": "dist/apps/front-biosstel",
+        "buildMode": "compile",
+        "useTurbopack": false,
+        "swc": true
       },
       "configurations": {
         "development": {

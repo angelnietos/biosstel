@@ -1,10 +1,8 @@
 import createNextIntlPlugin from "next-intl/plugin";
-import path from "path";
 
 const nextConfig = {
-  turbopack: {
-    root: path.join(__dirname),
-  },
+  // Turbopack is now the default in Next.js 16
+  // No need to configure it explicitly
 };
 
 const withNextIntl = createNextIntlPlugin();

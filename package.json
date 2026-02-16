@@ -2,10 +2,6 @@
   "name": "biosstel-monorepo",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "libs/*"
-  ],
   "scripts": {
     "start": "node node_modules/nx/bin/nx.js run-many -t dev --parallel",
     "start:front": "node node_modules/nx/bin/nx.js dev front-biosstel",
@@ -13,8 +9,8 @@
     "dev": "node node_modules/nx/bin/nx.js run-many -t dev --parallel",
     "dev:front": "node node_modules/nx/bin/nx.js dev front-biosstel",
     "dev:api": "node node_modules/nx/bin/nx.js dev api-biosstel",
-    "build": "node node_modules/nx/bin/nx.js run-many -t build",
-    "build:front": "node node_modules/nx/bin/nx.js build front-biosstel",
+    "build": "cd apps/api-biosstel && pnpm nest build && cd ../.. && node node_modules/nx/bin/nx.js build shared-types && cd apps/front-biosstel && pnpm next build",
+    "build:front": "cd apps/front-biosstel && pnpm next build",
     "build:api": "node node_modules/nx/bin/nx.js build api-biosstel",
     "lint": "node node_modules/nx/bin/nx.js run-many -t lint",
     "test": "node node_modules/nx/bin/nx.js run-many -t test",
@@ -26,15 +22,36 @@
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f"
+    "docker:logs": "docker-compose logs -f",
+    "ci": "pnpm install --frozen-lockfile",
+    "lint:front": "node node_modules/nx/bin/nx.js lint front-biosstel",
+    "lint:api": "node node_modules/nx/bin/nx.js lint api-biosstel",
+    "lint:all": "node node_modules/nx/bin/nx.js run-many -t lint",
+    "typecheck": "node node_modules/nx/bin/nx.js run-many -t typecheck",
+    "typecheck:front": "node node_modules/nx/bin/nx.js typecheck front-biosstel",
+    "typecheck:api": "node node_modules/nx/bin/nx.js typecheck api-biosstel"
   },
   "devDependencies": {
+    "@nx/eslint": "^20.4.0",
     "@nx/js": "^20.4.0",
     "@nx/next": "^20.4.0",
     "@nx/node": "^20.4.0",
     "@nx/workspace": "^20.4.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
     "nx": "^20.4.0",
     "typescript": "^5.8.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@parcel/watcher",
+      "@swc/core",
+      "bcrypt",
+      "nx",
+      "sharp"
+    ]
   },
   "engines": {
     "node": ">=20.0.0"

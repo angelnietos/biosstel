@@ -5,6 +5,7 @@
     "appsDir": "apps",
     "libsDir": "libs"
   },
+  "defaultProject": "front-biosstel",
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "sharedGlobals": [],
