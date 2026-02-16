@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: biosstel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: biosstel
+      POSTGRES_PASSWORD: biosstel123
+      POSTGRES_DB: biosstel
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U biosstel -d biosstel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - biosstel-network
+
+  # API Backend - GraphQL
+  api:
+    build:
+      context: ..
+      dockerfile: docker/api.Dockerfile
+    container_name: biosstel-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://biosstel:biosstel123@postgres:5432/biosstel
+      JWT_SECRET: your-jwt-secret-change-in-production
+      JWT_EXPIRES_IN: 7d
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - biosstel-network
+
+  # Frontend - Next.js
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/frontend.Dockerfile
+    container_name: biosstel-frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://api:4000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - biosstel-network
+
+  # Adminer - Database Admin UI (optional)
+  adminer:
+    image: adminer:latest
+    container_name: biosstel-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - biosstel-network
+
+volumes:
+  postgres_data:
+
+networks:
+  biosstel-network:
+    driver: bridge

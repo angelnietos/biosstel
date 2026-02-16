@@ -7,13 +7,20 @@
     "libs/*"
   ],
   "scripts": {
-    "dev:front": "nx dev front-biosstel",
-    "dev:api": "nx dev api-biosstel",
-    "dev": "nx run-many -t dev --parallel",
-    "build": "nx run-many -t build",
-    "lint": "nx run-many -t lint",
-    "test": "nx run-many -t test",
-    "nx": "nx"
+    "dev:front": "node node_modules/nx/bin/nx.js dev front-biosstel",
+    "dev:api": "node node_modules/nx/bin/nx.js dev api-biosstel",
+    "dev": "node node_modules/nx/bin/nx.js run-many -t dev --parallel",
+    "build": "node node_modules/nx/bin/nx.js run-many -t build",
+    "lint": "node node_modules/nx/bin/nx.js run-many -t lint",
+    "test": "node node_modules/nx/bin/nx.js run-many -t test",
+    "nx": "node node_modules/nx/bin/nx.js",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up -d",
+    "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
+    "docker:prod": "docker-compose up -d --build",
+    "docker:prod:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:setup": "docker-compose -f docker-compose.dev.yml up -d postgres",
+    "db:reset": "docker-compose -f docker-compose.dev.yml down -v && docker-compose -f docker-compose.dev.yml up -d postgres"
   },
   "devDependencies": {
     "@nx/js": "^20.4.0",

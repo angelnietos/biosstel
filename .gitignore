@@ -39,3 +39,6 @@ coverage
 # Temp files
 tmp
 temp
+
+# Docker volumes (local)
+docker/volumes

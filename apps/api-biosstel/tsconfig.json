@@ -1,17 +1,18 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2020",
     "module": "commonjs",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "outDir": "./build",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "paths": {
-      "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"]
-    }
+    "declaration": true,
+    "declarationMap": true
   },
-  "exclude": ["./microservices/**/*"]
+  "include": ["src/**/*", "app.ts", "microservices/**/*"],
+  "exclude": ["node_modules", "build"]
 }

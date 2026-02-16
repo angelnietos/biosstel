@@ -1,0 +1,54 @@
+version: '3.8'
+
+# Development Docker Compose
+# Use this for local development with hot reload
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: biosstel-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: biosstel
+      POSTGRES_PASSWORD: biosstel123
+      POSTGRES_DB: biosstel
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U biosstel -d biosstel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - biosstel-dev-network
+
+  # Adminer - Database Admin UI
+  adminer:
+    image: adminer:latest
+    container_name: biosstel-adminer-dev
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - biosstel-dev-network
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  biosstel-dev-network:
+    driver: bridge
+
+# To run the frontend and API in development mode:
+# 1. Start the database: docker-compose -f docker-compose.dev.yml up -d
+# 2. Run frontend: npm run dev:front
+# 3. Run API: npm run dev:api
+#
+# Or run everything together:
+# docker-compose -f docker-compose.dev.yml up -d && npm run dev
