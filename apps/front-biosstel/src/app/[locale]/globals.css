@@ -1,4 +1,8 @@
 @import "tailwindcss";
+
+/* Tailwind v4 (CSS-first): include sources outside the Next app (monorepo libs) */
+@source "../../../../../libs/**/*.{ts,tsx}";
+@source "../../../../../apps/front-biosstel/src/**/*.{ts,tsx}";
 @import "./theme.css";
 @import "react-toastify/dist/ReactToastify.css";
 
@@ -35,7 +39,8 @@
 html,
 body {
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {

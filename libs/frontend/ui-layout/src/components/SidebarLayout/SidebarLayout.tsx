@@ -21,11 +21,11 @@ export const SidebarLayout = ({
   sidebarWidth = 'w-64',
 }: SidebarLayoutProps) => {
   return (
-    <div className={`flex min-h-screen ${className}`}>
-      <aside className={`${sidebarWidth} flex-shrink-0 border-r border-gray-200`}>
+    <div className={`flex min-h-screen bg-gray-50 ${className}`}>
+      <aside className={`${sidebarWidth} flex-shrink-0`}>
         {sidebar}
       </aside>
-      <main className="flex-1">
+      <main className="flex-1 overflow-auto">
         {children}
       </main>
     </div>

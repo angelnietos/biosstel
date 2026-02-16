@@ -49,7 +49,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
       } else {
         const currentPath = window.location.pathname;
         const locale = currentPath.split('/')[1] || 'es';
-        router.push(`/${locale}/users`);
+        router.push(`/${locale}/home`);
       }
     } catch (err: any) {
       setSubmitError(err.message || 'Error al iniciar sesión');

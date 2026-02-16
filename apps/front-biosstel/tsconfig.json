@@ -26,7 +26,8 @@
       "@biosstel/ui-layout": ["../../libs/frontend/ui-layout/src/index.ts"],
       "@biosstel/platform": ["../../libs/frontend/platform/src/index.ts"],
       "@biosstel/auth": ["../../libs/frontend/auth/src/index.ts"],
-      "@biosstel/users": ["../../libs/frontend/users/src/index.ts"]
+      "@biosstel/users": ["../../libs/frontend/users/src/index.ts"],
+      "@biosstel/dashboard": ["../../libs/frontend/dashboard/src/index.ts"]
     }
   },
   "include": [
