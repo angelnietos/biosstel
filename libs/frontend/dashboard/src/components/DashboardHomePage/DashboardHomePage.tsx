@@ -73,7 +73,19 @@ export const DashboardHomePage = () => {
           </div>
         )}
 
-        <AlertsTable alerts={data?.alerts ?? []} />
+        {/* Alertas siempre visibles, independientemente de filtros */}
+        {isLoading ? (
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm animate-pulse">
+            <div className="h-4 w-32 bg-gray-100 rounded mb-4" />
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-20 w-full bg-gray-100 rounded" />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <AlertsTable alerts={data?.alerts ?? []} />
+        )}
       </div>
     </DashboardLayout>
   );
