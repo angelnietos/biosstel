@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './modules/users.module';
+import { UsersModule } from '@lib/api-users';
+import { UserEntity } from '@lib/api-users';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { UsersModule } from './modules/users.module';
         username: configService.get('DB_USER', 'biosstel'),
         password: configService.get('DB_PASSWORD', 'biosstel123'),
         database: configService.get('DB_NAME', 'biosstel'),
-        entities: [__dirname + '/**/*.entity{.js}'],
+        entities: [UserEntity],
         synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') === 'development',
       }),

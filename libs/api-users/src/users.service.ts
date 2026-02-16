@@ -13,10 +13,13 @@ import {
   UpdateUserData,
   PaginatedResult,
 } from './application/ports/IUserRepository';
+import { TypeOrmUserRepository } from './infrastructure/persistence/TypeOrmUserRepository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(
+    private readonly userRepository: TypeOrmUserRepository,
+  ) {}
 
   async findAll(page = 1, pageSize = 10): Promise<PaginatedResult<User>> {
     return this.userRepository.findAll(page, pageSize);
