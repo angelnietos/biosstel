@@ -21,6 +21,7 @@
     "db:stop": "docker-compose -f docker-compose.dev.yml down",
     "db:reset": "docker-compose -f docker-compose.dev.yml down -v && docker-compose -f docker-compose.dev.yml up -d postgres adminer",
     "db:logs": "docker-compose -f docker-compose.dev.yml logs -f postgres",
+    "db:seed": "cd apps/api-biosstel && tsx --tsconfig tsconfig.dev.json seed.ts",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
