@@ -1,13 +1,28 @@
-version: '3.8'
-
-# Development Docker Compose
-# Use this for local development with hot reload
+# =============================================================
+# Biosstel — Local Development (Docker Compose)
+# =============================================================
+# Everything runs inside containers:
+#   • Same Node 20 + pnpm 10 for all developers
+#   • pnpm install runs inside Linux container → lockfile is OS-agnostic
+#   • Hot reload via bind-mounted source code
+#   • node_modules in named volume (Linux binaries, not on host)
+#
+# Quick start:
+#   docker compose -f docker-compose.dev.yml up
+#
+# First time / after adding deps:
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# Reset everything:
+#   docker compose -f docker-compose.dev.yml down -v
+#   docker compose -f docker-compose.dev.yml up --build
+# =============================================================
 
 services:
-  # PostgreSQL Database
+  # ─── Database ───────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
-    container_name: biosstel-postgres-dev
+    container_name: biosstel-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: biosstel
@@ -17,39 +32,128 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_dev_data:/var/lib/postgresql/data
-      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./docker/seed-users.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U biosstel -d biosstel"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 5s
+      timeout: 3s
+      retries: 10
     networks:
-      - biosstel-dev-network
+      - biosstel
 
-  # Adminer - Database Admin UI
+  # ─── DB Admin UI ────────────────────────────────────────────
   adminer:
     image: adminer:latest
-    container_name: biosstel-adminer-dev
+    container_name: biosstel-adminer
     restart: unless-stopped
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
-      - biosstel-dev-network
+      - biosstel
 
+  # ─── Install dependencies (runs once, then exits) ──────────
+  deps:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    container_name: biosstel-deps
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: >
+      sh -c "
+        echo '📦 Installing dependencies...' &&
+        pnpm install &&
+        echo '✅ Dependencies installed'
+      "
+    networks:
+      - biosstel
+
+  # ─── API Backend (NestJS) ──────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    container_name: biosstel-api
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: biosstel
+      DB_PASSWORD: biosstel123
+      DB_NAME: biosstel
+      JWT_SECRET: dev-jwt-secret-do-not-use-in-production
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGIN: http://localhost:3000
+      # File watching through Docker bind mounts (Windows/Mac)
+      CHOKIDAR_USEPOLLING: "true"
+    command: >
+      sh -c "
+        echo '🚀 Starting API (NestJS)...' &&
+        cd apps/api-biosstel &&
+        pnpm exec ts-node -r tsconfig-paths/register --project tsconfig.dev.json dev.ts
+      "
+    depends_on:
+      deps:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    networks:
+      - biosstel
+
+  # ─── Frontend (Next.js) ────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    container_name: biosstel-frontend
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NEXT_TELEMETRY_DISABLED: 1
+      # File watching through Docker bind mounts (Windows/Mac)
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    command: >
+      sh -c "
+        echo '🌐 Starting Frontend (Next.js)...' &&
+        cd apps/front-biosstel &&
+        pnpm exec next dev --hostname 0.0.0.0 --port 3000
+      "
+    depends_on:
+      deps:
+        condition: service_completed_successfully
+    networks:
+      - biosstel
+
+# ─── Volumes ───────────────────────────────────────────────────
 volumes:
-  postgres_dev_data:
+  postgres_data:
+    name: biosstel-postgres-data
+  node_modules:
+    name: biosstel-node-modules
 
+# ─── Network ──────────────────────────────────────────────────
 networks:
-  biosstel-dev-network:
+  biosstel:
     driver: bridge
-
-# To run the frontend and API in development mode:
-# 1. Start the database: docker-compose -f docker-compose.dev.yml up -d
-# 2. Run frontend: npm run dev:front
-# 3. Run API: npm run dev:api
-#
-# Or run everything together:
-# docker-compose -f docker-compose.dev.yml up -d && npm run dev
