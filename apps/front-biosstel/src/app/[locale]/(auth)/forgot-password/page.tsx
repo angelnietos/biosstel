@@ -1,5 +1,4 @@
-import { ForgotPasswordForm } from '@biosstel/auth';
-import { AuthLayout } from '@biosstel/shared';
+import { ForgotPasswordForm, AuthShell } from '@biosstel/auth';
 
 export default function ForgotPasswordPage() {
   const handleSubmit = async (values: { email: string }) => {
@@ -8,8 +7,8 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <AuthLayout>
+    <AuthShell>
       <ForgotPasswordForm onSubmit={handleSubmit} />
-    </AuthLayout>
+    </AuthShell>
   );
 }

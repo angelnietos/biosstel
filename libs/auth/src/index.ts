@@ -3,39 +3,24 @@
  * 
  * Enterprise Modular Extractable v4 - Auth Feature
  * 
- * This is a standalone, publicable npm package for authentication.
- * Each feature is publicable as a package - no feature depends on another.
+ * FEATURE STRUCTURE:
  * 
- * LAYER STRUCTURE:
- * 
- * domain/           - Pure TypeScript, NO React, NO Next, NO fetch
- *                   Portable to Node, React Native, etc.
- * 
- * application/      - Repository interfaces
- *                   Defines contracts without implementation details
- * 
- * infrastructure/   - Concrete implementations (REST, GraphQL, SDK, Mock)
- *                   Swappable without changing UI
- * 
- * ui/              - React components (uses application layer hooks)
- *                   Does NOT know about routes
- * 
- * shell/           - Visual composition
- *                   Uses ui-layout, NOT Next.js
+ * data-access/     - Hooks y funciones API
+ * api/             - Rutas API de Next.js (opcional)
+ * shell/           - Contenedor principal de la feature
+ * feature/         - Componentes y layouts específicos
+ *   layouts/       - Layouts de la feature
+ *   components/    - Componentes de la feature
  * 
  * DEPENDENCIES ALLOWED:
  * - @biosstel/ui (atomic components)
  * - @biosstel/ui-layout (visual layouts)
- * - @biosstel/platform (Next.js adapters - if needed)
+ * - @biosstel/shared (shared components)
+ * - @biosstel/platform (Next.js adapters)
  * - react
- * 
- * DEPENDENCIES FORBIDDEN:
- * - Other features (auth → users is NOT allowed)
- * - Next.js directly
- * - Business logic in UI components
  */
 
-// Domain Layer - Pure TypeScript entities
+// Domain Layer - Pure TypeScript entities (hexagonal architecture)
 export type { User, AuthUser, Role, Permission, Organization } from './domain';
 
 // Application Layer - Repository interfaces
@@ -49,8 +34,11 @@ export type {
 // Infrastructure Layer - Concrete implementations
 export { AuthRepository, authRepository } from './infrastructure';
 
-// Data Access Layer - Hooks
+// Data Access Layer - Hooks y API functions
 export * from './data-access';
 
-// UI Layer - React components
-export * from './ui';
+// Shell - Contenedor principal
+export * from './shell';
+
+// Feature - Componentes y layouts
+export * from './feature';

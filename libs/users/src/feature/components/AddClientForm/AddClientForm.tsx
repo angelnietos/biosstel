@@ -1,5 +1,5 @@
 /**
- * @biosstel/users - AddUserForm Component
+ * @biosstel/users - AddClientForm Component
  */
 
 'use client';
@@ -8,23 +8,21 @@ import { Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Input, ErrorFormMsg } from '@biosstel/ui';
 import { Button } from '@biosstel/shared';
-import { PageContainer } from '@biosstel/ui-layout';
+import { UsersPageLayout } from '../../layouts';
 import * as Yup from 'yup';
 
 const inputStyles =
   'h-[43px] w-full rounded-lg border border-border-input bg-transparent px-3 text-body';
 
-export interface AddUserFormProps {
+export interface AddClientFormProps {
   onSubmit: (values: {
     name: string;
     email: string;
-    last_name: string;
     phone: string;
-    role: string;
   }) => Promise<void>;
 }
 
-export const AddUserForm = ({ onSubmit }: AddUserFormProps) => {
+export const AddClientForm = ({ onSubmit }: AddClientFormProps) => {
   const t = useTranslations();
 
   const validationSchema = Yup.object().shape({
@@ -32,24 +30,17 @@ export const AddUserForm = ({ onSubmit }: AddUserFormProps) => {
     email: Yup.string()
       .email('Email inválido')
       .required(t('form.isRequired')),
-    last_name: Yup.string().required(t('form.isRequired')),
     phone: Yup.string().required(t('form.isRequired')),
-    role: Yup.string().required(t('form.isRequired')),
   });
 
   return (
-    <PageContainer>
-      <h1 className="mb-8 text-3xl font-bold text-gray-900">Agregar Usuario</h1>
-
-      <div className="rounded-lg bg-white p-6 shadow-md">
+    <UsersPageLayout title="Agregar Cliente">
         <Formik
           validateOnChange={false}
           initialValues={{
             name: '',
             email: '',
-            last_name: '',
             phone: '',
-            role: '',
           }}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
@@ -60,26 +51,13 @@ export const AddUserForm = ({ onSubmit }: AddUserFormProps) => {
                 <Input
                   name="name"
                   type="text"
-                  placeholder="Nombre"
+                  placeholder="Nombre del cliente"
                   value={values.name}
                   onChange={(e) => setFieldValue('name', e.target.value)}
                   className={inputStyles}
                   error={Boolean(errors.name)}
                 />
                 <ErrorFormMsg errorMsg={errors.name} />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <Input
-                  name="last_name"
-                  type="text"
-                  placeholder="Apellidos"
-                  value={values.last_name}
-                  onChange={(e) => setFieldValue('last_name', e.target.value)}
-                  className={inputStyles}
-                  error={Boolean(errors.last_name)}
-                />
-                <ErrorFormMsg errorMsg={errors.last_name} />
               </div>
 
               <div className="flex flex-col gap-1">
@@ -108,19 +86,6 @@ export const AddUserForm = ({ onSubmit }: AddUserFormProps) => {
                 <ErrorFormMsg errorMsg={errors.phone} />
               </div>
 
-              <div className="flex flex-col gap-1">
-                <Input
-                  name="role"
-                  type="text"
-                  placeholder="Rol"
-                  value={values.role}
-                  onChange={(e) => setFieldValue('role', e.target.value)}
-                  className={inputStyles}
-                  error={Boolean(errors.role)}
-                />
-                <ErrorFormMsg errorMsg={errors.role} />
-              </div>
-
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -128,14 +93,13 @@ export const AddUserForm = ({ onSubmit }: AddUserFormProps) => {
                 fullWidth
                 className="mt-4"
               >
-                Crear Usuario
+                Crear Cliente
               </Button>
             </form>
           )}
         </Formik>
-      </div>
-    </PageContainer>
+    </UsersPageLayout>
   );
 };
 
-export default AddUserForm;
+export default AddClientForm;

@@ -1,10 +1,9 @@
-import { LoginForm } from '@biosstel/auth';
-import { AuthLayout } from '@biosstel/shared';
+import { LoginForm, AuthShell } from '@biosstel/auth';
 
 export default function LoginPage() {
   return (
-    <AuthLayout>
+    <AuthShell>
       <LoginForm />
-    </AuthLayout>
+    </AuthShell>
   );
 }

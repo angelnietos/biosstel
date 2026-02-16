@@ -7,7 +7,7 @@
 import { Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Input, ErrorFormMsg } from '@biosstel/ui';
-import { MainContainer } from '@biosstel/ui-layout';
+import { AuthPageLayout } from '../../layouts';
 import { Button } from '@biosstel/shared';
 import * as Yup from 'yup';
 import { Link } from '@biosstel/platform';
@@ -29,10 +29,7 @@ export const ForgotPasswordForm = ({ onSubmit }: ForgotPasswordFormProps) => {
   });
 
   return (
-    <MainContainer>
-      <h1 className="mb-8 text-h1 font-semibold text-black md:text-datos">
-        Recuperar contraseña
-      </h1>
+    <AuthPageLayout title="Recuperar contraseña">
 
       <Formik
         validateOnChange={false}
@@ -72,7 +69,7 @@ export const ForgotPasswordForm = ({ onSubmit }: ForgotPasswordFormProps) => {
           </form>
         )}
       </Formik>
-    </MainContainer>
+    </AuthPageLayout>
   );
 };
 

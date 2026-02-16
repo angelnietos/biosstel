@@ -12,10 +12,10 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
 import { Input, InputPassword, ErrorFormMsg } from '@biosstel/ui';
-import { MainContainer } from '@biosstel/ui-layout';
+import { AuthPageLayout } from '../../layouts';
 import { Button } from '@biosstel/shared';
 import { Link } from '@biosstel/platform';
-import { useLogin } from '../../../data-access';
+import { useLogin } from '../../data-access';
 
 const inputStyles =
   'h-[43px] w-full rounded-lg border border-border-input bg-transparent px-3 text-body';
@@ -54,10 +54,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   };
 
   return (
-    <MainContainer>
-      <h1 className="mb-8 text-h1 font-semibold text-black md:text-datos">
-        {t('loginPage.title')}
-      </h1>
+    <AuthPageLayout title={t('loginPage.title')}>
 
       <Formik
         validateOnChange={false}
@@ -109,7 +106,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           </form>
         )}
       </Formik>
-    </MainContainer>
+    </AuthPageLayout>
   );
 };
 

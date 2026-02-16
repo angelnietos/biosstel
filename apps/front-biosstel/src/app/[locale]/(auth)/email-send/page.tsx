@@ -1,10 +1,9 @@
-import { EmailSendMessage } from '@biosstel/auth';
-import { AuthLayout } from '@biosstel/shared';
+import { EmailSendMessage, AuthShell } from '@biosstel/auth';
 
 export default function EmailSendPage() {
   return (
-    <AuthLayout>
+    <AuthShell>
       <EmailSendMessage />
-    </AuthLayout>
+    </AuthShell>
   );
 }

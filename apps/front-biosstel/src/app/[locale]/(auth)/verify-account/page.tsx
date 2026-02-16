@@ -1,16 +1,15 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { VerifyAccountMessage } from '@biosstel/auth';
-import { AuthLayout } from '@biosstel/shared';
+import { VerifyAccountMessage, AuthShell } from '@biosstel/auth';
 
 export default function VerifyAccountPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
 
   return (
-    <AuthLayout>
+    <AuthShell>
       <VerifyAccountMessage token={token} />
-    </AuthLayout>
+    </AuthShell>
   );
 }
