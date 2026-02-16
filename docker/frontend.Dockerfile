@@ -13,13 +13,8 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/front-biosstel/package.json ./apps/front-biosstel/
 COPY libs/shared-types/package.json ./libs/shared-types/
-COPY libs/frontend/ui/package.json ./libs/frontend/ui/ 2>/dev/null || true
-COPY libs/frontend/shared/package.json ./libs/frontend/shared/ 2>/dev/null || true
-COPY libs/frontend/ui-layout/package.json ./libs/frontend/ui-layout/ 2>/dev/null || true
-COPY libs/frontend/platform/package.json ./libs/frontend/platform/ 2>/dev/null || true
-COPY libs/frontend/auth/package.json ./libs/frontend/auth/ 2>/dev/null || true
-COPY libs/frontend/dashboard/package.json ./libs/frontend/dashboard/ 2>/dev/null || true
-COPY libs/frontend/users/package.json ./libs/frontend/users/ 2>/dev/null || true
+# Only copy package.json if it exists (libs/frontend/shared has one)
+COPY libs/frontend/shared/package.json ./libs/frontend/shared/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile

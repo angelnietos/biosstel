@@ -26,7 +26,6 @@ WORKDIR /app
 
 # Copy dependencies
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/api-biosstel/node_modules ./apps/api-biosstel/node_modules 2>/dev/null || true
 
 # Copy workspace config
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
