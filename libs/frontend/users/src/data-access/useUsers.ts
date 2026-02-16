@@ -2,6 +2,8 @@
  * @biosstel/users - useUsers Hook
  */
 
+'use client';
+
 import { useState } from 'react';
 import { createUserApi, createClientApi, type CreateClientData } from './usersApi';
 import type { CreateUserData } from '../types';

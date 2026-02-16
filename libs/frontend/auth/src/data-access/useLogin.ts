@@ -5,6 +5,8 @@
  * Handles API calls and state management.
  */
 
+'use client';
+
 import { useState } from 'react';
 import { loginApi } from './authApi';
 import type { LoginCredentials, AuthResponse } from '../types';

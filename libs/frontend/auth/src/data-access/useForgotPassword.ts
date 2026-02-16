@@ -2,6 +2,8 @@
  * @biosstel/auth - useForgotPassword Hook
  */
 
+'use client';
+
 import { useState } from 'react';
 import { forgotPasswordApi } from './authApi';
 

@@ -10,8 +10,18 @@
 
 'use client';
 
-import { Link as NextIntlLink } from 'next-intl/navigation';
+import { createNavigation } from 'next-intl/navigation';
+import { defineRouting } from 'next-intl/routing';
 import { ReactNode, AnchorHTMLAttributes } from 'react';
+
+// Define routing configuration
+const routing = defineRouting({
+  locales: ['es', 'en'],
+  defaultLocale: 'es',
+});
+
+// Create navigation with Link
+const { Link: NextIntlLink } = createNavigation(routing);
 
 export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;

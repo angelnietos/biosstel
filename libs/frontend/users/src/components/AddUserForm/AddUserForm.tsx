@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Input, ErrorFormMsg } from '@biosstel/ui';
 import { Button } from '@biosstel/shared';
-import { UsersPageLayout } from '../layouts';
+import { UsersPageLayout } from '../../layouts';
 import * as Yup from 'yup';
 
 const inputStyles =
