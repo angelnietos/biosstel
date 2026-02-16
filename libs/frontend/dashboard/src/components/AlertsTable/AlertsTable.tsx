@@ -13,27 +13,38 @@ export interface AlertsTableProps {
 }
 
 export const AlertsTable = ({ alerts }: AlertsTableProps) => {
+  const getRolBadgeColor = (rol?: string) => {
+    // Todos los roles en morado/púrpura como en el Figma
+    return 'bg-purple-50 text-purple-700 border-purple-200';
+  };
+
   const getStatusBadgeColor = (statusType?: string) => {
     switch (statusType) {
-      case 'tienda':
-      case 'telemarketing':
-      case 'comercial':
-        return 'bg-purple-100 text-purple-800 border-purple-300';
       case 'no-fichado':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-red-50 text-red-700 border-red-200';
       case 'fuera-horario':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'bg-green-50 text-green-700 border-green-200';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-300';
+        return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
 
   const getStatusIcon = (statusType?: string) => {
     if (statusType === 'no-fichado') {
-      return <span className="text-red-600 mr-1.5 text-base">⚠️</span>;
+      return (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="inline-block mr-1">
+          <circle cx="8" cy="8" r="7" fill="#DC2626" />
+          <path d="M8 4.5v4M8 10.5v1" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      );
     }
     if (statusType === 'fuera-horario') {
-      return <span className="text-green-600 mr-1.5 text-base">✓</span>;
+      return (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="inline-block mr-1">
+          <circle cx="8" cy="8" r="7" fill="#16A34A" />
+          <path d="M5 8l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
     }
     return null;
   };
@@ -48,47 +59,67 @@ export const AlertsTable = ({ alerts }: AlertsTableProps) => {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
-      <div className="px-6 py-4">
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-gray-100">
         <h3 className="text-h2 font-semibold text-gray-900">Alertas</h3>
       </div>
 
-      <div className="px-6 pb-6">
-        <div className="grid grid-cols-[1.2fr_1fr_1fr_.8fr_1fr] gap-4 px-4 pb-2 text-mini text-gray-350">
-          <div>Usuario</div>
-          <div>Departamento</div>
-          <div>Centro de trabajo</div>
-          <div>Rol</div>
-          <div>Status</div>
-        </div>
-
-        <div className="space-y-3">
-          {alerts.map((alert) => (
-            <div
-              key={alert.id}
-              className="grid grid-cols-[1.2fr_1fr_1fr_.8fr_1fr] gap-4 items-center rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-[0_1px_6px_rgba(0,0,0,0.04)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.08)] transition-shadow"
-            >
-              <div className="text-body text-gray-900">{alert.usuario}</div>
-              <div className="text-body text-gray-600">{alert.departamento}</div>
-              <div className="text-body text-gray-600">{alert.centroTrabajo}</div>
-              <div>
-                <span className="inline-flex rounded-full bg-badge-purple px-3 py-1 text-mini font-semibold text-accent-purple">
-                  {alert.rol ?? alert.estado}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 justify-end">
-                {getStatusIcon(alert.statusType)}
-                <span
-                  className={`inline-flex items-center rounded-full px-3 py-1 text-mini font-semibold border ${getStatusBadgeColor(
-                    alert.statusType
-                  )}`}
-                >
-                  {alert.estado}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-100">
+              <th className="px-6 py-3 text-left text-mini font-semibold text-gray-500 uppercase tracking-wide">
+                Usuario
+              </th>
+              <th className="px-6 py-3 text-left text-mini font-semibold text-gray-500 uppercase tracking-wide">
+                Departamento
+              </th>
+              <th className="px-6 py-3 text-left text-mini font-semibold text-gray-500 uppercase tracking-wide">
+                Centro de trabajo
+              </th>
+              <th className="px-6 py-3 text-left text-mini font-semibold text-gray-500 uppercase tracking-wide">
+                Rol
+              </th>
+              <th className="px-6 py-3 text-right text-mini font-semibold text-gray-500 uppercase tracking-wide">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {alerts.map((alert) => (
+              <tr key={alert.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{alert.usuario}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-700">{alert.departamento}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-700">{alert.centroTrabajo}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold border ${getRolBadgeColor(
+                      alert.rol
+                    )}`}
+                  >
+                    {alert.rol}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right">
+                  <span
+                    className={`inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold border ${getStatusBadgeColor(
+                      alert.statusType
+                    )}`}
+                  >
+                    {getStatusIcon(alert.statusType)}
+                    {alert.estado}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
