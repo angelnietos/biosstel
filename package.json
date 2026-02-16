@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/nx/bin/nx.js run-many -t dev --parallel",
+    "start:all": "node node_modules/nx/bin/nx.js run-many -t dev --parallel",
     "start:front": "node node_modules/nx/bin/nx.js dev front-biosstel",
     "start:api": "node node_modules/nx/bin/nx.js dev api-biosstel",
     "dev": "node node_modules/nx/bin/nx.js run-many -t dev --parallel",
+    "dev:all": "node node_modules/nx/bin/nx.js run-many -t dev --parallel",
     "dev:front": "node node_modules/nx/bin/nx.js dev front-biosstel",
     "dev:api": "node node_modules/nx/bin/nx.js dev api-biosstel",
     "build": "cd apps/api-biosstel && pnpm nest build && cd ../.. && node node_modules/nx/bin/nx.js build shared-types && cd apps/front-biosstel && pnpm next build",
