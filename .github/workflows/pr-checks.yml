@@ -1,5 +1,7 @@
 name: PR Checks
 
+run-name: PR #${{ github.event.pull_request.number }} | ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }} | SHA ${{ substr(github.event.pull_request.head.sha, 0, 7) }}
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]

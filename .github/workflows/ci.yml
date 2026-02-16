@@ -1,5 +1,7 @@
 name: CI Pipeline
 
+run-name: ${{ github.ref_name }} | Build #${{ github.run_number }} | SHA ${{ substr(github.sha, 0, 7) }}
+
 on:
   push:
     branches:
