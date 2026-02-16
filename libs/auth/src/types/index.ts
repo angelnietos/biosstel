@@ -1,8 +1,7 @@
 /**
- * @biosstel/auth - Domain Layer: User Entity
+ * @biosstel/auth - Types
  * 
- * Pure TypeScript entity - NO React, NO Next, NO fetch
- * Portable to Node, React Native, or any other framework
+ * TypeScript types and interfaces for auth feature
  */
 
 export interface User {
@@ -34,4 +33,23 @@ export interface Organization {
   id: string;
   name: string;
   slug: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+  refreshToken?: string;
+  tokenType?: string;
 }

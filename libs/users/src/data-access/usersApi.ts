@@ -2,15 +2,9 @@
  * @biosstel/users - Users API Functions
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+import type { CreateUserData } from '../types';
 
-export interface CreateUserData {
-  name: string;
-  email: string;
-  last_name: string;
-  phone: string;
-  role: string;
-}
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 export interface CreateClientData {
   name: string;
@@ -24,13 +18,7 @@ export const createUserApi = async (data: CreateUserData): Promise<any> => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      firstName: data.name,
-      lastName: data.last_name,
-      email: data.email,
-      phone: data.phone,
-      organizationId: data.role,
-    }),
+    body: JSON.stringify(data),
   });
 
   if (!response.ok) {

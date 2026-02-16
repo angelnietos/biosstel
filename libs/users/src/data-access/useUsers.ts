@@ -3,7 +3,8 @@
  */
 
 import { useState } from 'react';
-import { createUserApi, createClientApi, type CreateUserData, type CreateClientData } from './usersApi';
+import { createUserApi, createClientApi, type CreateClientData } from './usersApi';
+import type { CreateUserData } from '../types';
 
 export const useCreateUser = () => {
   const [isLoading, setIsLoading] = useState(false);

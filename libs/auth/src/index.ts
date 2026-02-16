@@ -1,44 +1,27 @@
 /**
  * @biosstel/auth - Auth Feature Library
  * 
- * Enterprise Modular Extractable v4 - Auth Feature
+ * Simplified frontend feature structure:
  * 
- * FEATURE STRUCTURE:
- * 
- * data-access/     - Hooks y funciones API
- * api/             - Rutas API de Next.js (opcional)
- * shell/           - Contenedor principal de la feature
- * feature/         - Componentes y layouts específicos
- *   layouts/       - Layouts de la feature
- *   components/    - Componentes de la feature
- * 
- * DEPENDENCIES ALLOWED:
- * - @biosstel/ui (atomic components)
- * - @biosstel/ui-layout (visual layouts)
- * - @biosstel/shared (shared components)
- * - @biosstel/platform (Next.js adapters)
- * - react
+ * types/          - TypeScript types and interfaces
+ * data-access/   - Hooks and API functions
+ * shell/         - Main container component
+ * components/    - Feature-specific components
+ * layouts/       - Feature-specific layouts
+ * api/           - Next.js API routes (optional)
  */
 
-// Domain Layer - Pure TypeScript entities (hexagonal architecture)
-export type { User, AuthUser, Role, Permission, Organization } from './domain';
+// Types
+export * from './types';
 
-// Application Layer - Repository interfaces
-export type {
-  IAuthRepository,
-  LoginCredentials,
-  RegisterData,
-  AuthResponse,
-} from './application';
-
-// Infrastructure Layer - Concrete implementations
-export { AuthRepository, authRepository } from './infrastructure';
-
-// Data Access Layer - Hooks y API functions
+// Data Access - Hooks and API functions
 export * from './data-access';
 
-// Shell - Contenedor principal
+// Shell - Main container
 export * from './shell';
 
-// Feature - Componentes y layouts
-export * from './feature';
+// Components
+export * from './components';
+
+// Layouts
+export * from './layouts';

@@ -7,7 +7,7 @@
 import { Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Input, ErrorFormMsg } from '@biosstel/ui';
-import { AuthPageLayout } from '../../layouts';
+import { AuthPageLayout } from '../layouts';
 import { Button } from '@biosstel/shared';
 import * as Yup from 'yup';
 import { Link } from '@biosstel/platform';

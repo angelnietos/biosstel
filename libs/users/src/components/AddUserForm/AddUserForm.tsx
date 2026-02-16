@@ -1,5 +1,5 @@
 /**
- * @biosstel/users - AddClientForm Component
+ * @biosstel/users - AddUserForm Component
  */
 
 'use client';
@@ -8,21 +8,23 @@ import { Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Input, ErrorFormMsg } from '@biosstel/ui';
 import { Button } from '@biosstel/shared';
-import { UsersPageLayout } from '../../layouts';
+import { UsersPageLayout } from '../layouts';
 import * as Yup from 'yup';
 
 const inputStyles =
   'h-[43px] w-full rounded-lg border border-border-input bg-transparent px-3 text-body';
 
-export interface AddClientFormProps {
+export interface AddUserFormProps {
   onSubmit: (values: {
     name: string;
     email: string;
+    last_name: string;
     phone: string;
+    role: string;
   }) => Promise<void>;
 }
 
-export const AddClientForm = ({ onSubmit }: AddClientFormProps) => {
+export const AddUserForm = ({ onSubmit }: AddUserFormProps) => {
   const t = useTranslations();
 
   const validationSchema = Yup.object().shape({
@@ -30,17 +32,21 @@ export const AddClientForm = ({ onSubmit }: AddClientFormProps) => {
     email: Yup.string()
       .email('Email inválido')
       .required(t('form.isRequired')),
+    last_name: Yup.string().required(t('form.isRequired')),
     phone: Yup.string().required(t('form.isRequired')),
+    role: Yup.string().required(t('form.isRequired')),
   });
 
   return (
-    <UsersPageLayout title="Agregar Cliente">
+    <UsersPageLayout title="Agregar Usuario">
         <Formik
           validateOnChange={false}
           initialValues={{
             name: '',
             email: '',
+            last_name: '',
             phone: '',
+            role: '',
           }}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
@@ -51,13 +57,26 @@ export const AddClientForm = ({ onSubmit }: AddClientFormProps) => {
                 <Input
                   name="name"
                   type="text"
-                  placeholder="Nombre del cliente"
+                  placeholder="Nombre"
                   value={values.name}
                   onChange={(e) => setFieldValue('name', e.target.value)}
                   className={inputStyles}
                   error={Boolean(errors.name)}
                 />
                 <ErrorFormMsg errorMsg={errors.name} />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <Input
+                  name="last_name"
+                  type="text"
+                  placeholder="Apellidos"
+                  value={values.last_name}
+                  onChange={(e) => setFieldValue('last_name', e.target.value)}
+                  className={inputStyles}
+                  error={Boolean(errors.last_name)}
+                />
+                <ErrorFormMsg errorMsg={errors.last_name} />
               </div>
 
               <div className="flex flex-col gap-1">
@@ -86,6 +105,19 @@ export const AddClientForm = ({ onSubmit }: AddClientFormProps) => {
                 <ErrorFormMsg errorMsg={errors.phone} />
               </div>
 
+              <div className="flex flex-col gap-1">
+                <Input
+                  name="role"
+                  type="text"
+                  placeholder="Rol"
+                  value={values.role}
+                  onChange={(e) => setFieldValue('role', e.target.value)}
+                  className={inputStyles}
+                  error={Boolean(errors.role)}
+                />
+                <ErrorFormMsg errorMsg={errors.role} />
+              </div>
+
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -93,7 +125,7 @@ export const AddClientForm = ({ onSubmit }: AddClientFormProps) => {
                 fullWidth
                 className="mt-4"
               >
-                Crear Cliente
+                Crear Usuario
               </Button>
             </form>
           )}
@@ -102,4 +134,4 @@ export const AddClientForm = ({ onSubmit }: AddClientFormProps) => {
   );
 };
 
-export default AddClientForm;
+export default AddUserForm;

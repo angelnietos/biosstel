@@ -4,19 +4,11 @@
  * API functions for authentication.
  */
 
+import type { LoginCredentials, AuthResponse } from '../types';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
-export interface LoginCredentials {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  user: any;
-  accessToken?: string;
-}
-
-export const loginApi = async (credentials: LoginCredentials): Promise<LoginResponse> => {
+export const loginApi = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   // Por ahora, validamos contra la API de usuarios
   // TODO: Implementar endpoint de autenticación completo
   const response = await fetch(`${API_URL}/api/users?page=1&pageSize=100`, {
@@ -35,7 +27,7 @@ export const loginApi = async (credentials: LoginCredentials): Promise<LoginResp
   const users = data.items || data.data || (Array.isArray(data) ? data : []);
   
   const user = users.find((u: any) => 
-    u.email === credentials.username || u.email === credentials.username
+    u.email === credentials.email
   );
 
   if (!user) {
@@ -43,7 +35,11 @@ export const loginApi = async (credentials: LoginCredentials): Promise<LoginResp
   }
 
   // TODO: Implementar verificación de contraseña con bcrypt en el backend
-  return { user };
+  return { 
+    user,
+    accessToken: '', // TODO: Obtener token real del backend
+    tokenType: 'Bearer'
+  };
 };
 
 export const forgotPasswordApi = async (email: string): Promise<void> => {

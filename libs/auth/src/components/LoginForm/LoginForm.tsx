@@ -12,7 +12,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
 import { Input, InputPassword, ErrorFormMsg } from '@biosstel/ui';
-import { AuthPageLayout } from '../../layouts';
+import { AuthPageLayout } from '../layouts';
 import { Button } from '@biosstel/shared';
 import { Link } from '@biosstel/platform';
 import { useLogin } from '../../data-access';
