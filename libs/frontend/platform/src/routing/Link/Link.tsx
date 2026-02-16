@@ -31,7 +31,7 @@ export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   shallow?: boolean;
   passHref?: boolean;
   prefetch?: boolean;
-  locale?: string | false;
+  locale?: string;
 }
 
 /**
