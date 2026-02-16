@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/apps/api-biosstel",
+    "module": "commonjs",
+    "types": ["node"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "ES2021",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "paths": {
+      "@/*": ["src/*"],
+      "@biosstel/shared-types": ["../../dist/libs/shared/index.js"],
+      "@biosstel/api-users": ["../../dist/libs/backend/api-users/index.js"],
+      "@biosstel/api-shared": ["../../dist/libs/backend/api-shared/index.js"],
+      "@biosstel/api-dashboard": ["../../dist/libs/backend/api-dashboard/index.js"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "node_modules", "dist"]
+}

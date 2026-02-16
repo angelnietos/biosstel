@@ -22,7 +22,8 @@ export const DashboardHomePage = () => {
     setFilters(filters);
   };
 
-  const { data, isLoading, error } = useDashboardHome(filters, hasFilters);
+  // Always fetch data (alerts should always show, objectives depend on filters)
+  const { data, isLoading, error } = useDashboardHome(filters, true);
 
   return (
     <DashboardLayout>

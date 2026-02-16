@@ -20,13 +20,13 @@
       "options": {
         "outputPath": "dist/apps/api-biosstel",
         "main": "apps/api-biosstel/src/main.ts",
-        "tsConfig": "apps/api-biosstel/tsconfig.app.json",
+        "tsConfig": "apps/api-biosstel/tsconfig.build.json",
         "assets": ["apps/api-biosstel/src/**/*"],
         "buildableProjectDepsInPackageJsonType": "dependencies"
       },
       "dependsOn": [
         {
-          "target": "api-users:build",
+          "target": "build",
           "projects": "dependencies"
         }
       ]
