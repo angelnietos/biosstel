@@ -3,6 +3,8 @@
  * This allows importing from source files directly (live reload)
  */
 
+// Import reflect-metadata FIRST (required for TypeORM decorators)
+import 'reflect-metadata';
 import 'tsconfig-paths/register';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
