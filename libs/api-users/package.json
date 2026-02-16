@@ -1,0 +1,28 @@
+{
+  "name": "@biosstel/api-users",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": "./src/index.js",
+    "./users.module": "./src/users.module.js",
+    "./users.service": "./src/users.service.js",
+    "./users.controller": "./src/users.controller.js"
+  },
+  "dependencies": {
+    "@biosstel/api-shared": "workspace:*",
+    "@biosstel/shared-types": "workspace:*",
+    "@nestjs/common": "^10.4.15",
+    "@nestjs/typeorm": "^10.0.2",
+    "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "typeorm": "^0.3.20",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2"
+  }
+}

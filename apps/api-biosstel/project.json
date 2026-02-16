@@ -4,6 +4,7 @@
   "sourceRoot": "apps/api-biosstel/src",
   "projectType": "application",
   "tags": ["type:api", "framework:nestjs", "scope:backend"],
+  "implicitDependencies": ["api-users"],
   "targets": {
     "dev": {
       "executor": "@nx/js:node",
@@ -20,8 +21,9 @@
       "options": {
         "outputPath": "dist/apps/api-biosstel",
         "main": "apps/api-biosstel/src/main.ts",
-        "tsConfig": "apps/api-biosstel/tsconfig.json",
-        "assets": ["apps/api-biosstel/src/**/*"]
+        "tsConfig": "apps/api-biosstel/tsconfig.app.json",
+        "assets": ["apps/api-biosstel/src/**/*"],
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
     "start": {

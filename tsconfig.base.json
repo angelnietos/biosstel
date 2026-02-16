@@ -24,7 +24,9 @@
       "@biosstel/ui-layout": ["libs/ui-layout/src/index.ts"],
       "@biosstel/platform": ["libs/platform/src/index.ts"],
       "@biosstel/auth": ["libs/auth/src/index.ts"],
-      "@biosstel/users": ["libs/users/src/index.ts"]
+      "@biosstel/users": ["libs/users/src/index.ts"],
+      "@biosstel/api-users": ["libs/api-users/src/index.ts"],
+      "@biosstel/api-shared": ["libs/api-shared/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

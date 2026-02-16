@@ -19,9 +19,11 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["src/*"],
-      "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"]
+      "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"],
+      "@biosstel/api-users": ["../../libs/api-users/src/index.ts"],
+      "@biosstel/api-shared": ["../../libs/api-shared/src/index.ts"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/modules/**/*"],
   "exclude": ["node_modules", "dist"]
 }

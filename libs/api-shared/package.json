@@ -1,0 +1,13 @@
+{
+  "name": "@biosstel/api-shared",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.2.2"
+  }
+}

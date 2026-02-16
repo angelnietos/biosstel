@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
-import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -30,10 +27,8 @@ import { HealthModule } from './modules/health/health.module';
       inject: [ConfigService],
     }),
 
-    // Modules
-    AuthModule,
-    UsersModule,
-    HealthModule,
+    // Feature Modules - imported from modules folder
+    // TODO: Add UsersModule from libs when path resolution is fixed
   ],
 })
 export class AppModule {}
