@@ -5,7 +5,7 @@ const nextConfig = {
   // No need to configure it explicitly
   
   // Standalone output for Docker
-  output: 'standalone',
+  output: 'standalone' as const,
 };
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
