@@ -1,0 +1,30 @@
+{
+  "name": "api-users",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/api-users/src",
+  "projectType": "library",
+  "tags": ["type:feature", "scope:api-users"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/api-users/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/api-users",
+        "main": "libs/api-users/src/index.ts",
+        "tsConfig": "libs/api-users/tsconfig.json",
+        "assets": ["libs/api-users/*.md"]
+      }
+    }
+  }
+}
