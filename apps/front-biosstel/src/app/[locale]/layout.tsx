@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Providers } from "./providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { ToastProvider } from "@biosstel/ui";
@@ -22,20 +21,22 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
   const messages = await getMessages();
+  
   return (
-    <html lang="en">
-      <Providers>
+    <html lang={locale}>
+      <body className={`${inter.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <body className={`${inter.variable} antialiased`}>
-            {children}
-            <ToastProvider />
-          </body>
+          {children}
+          <ToastProvider />
         </NextIntlClientProvider>
-      </Providers>
+      </body>
     </html>
   );
 }
