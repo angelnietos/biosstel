@@ -1,9 +1,7 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vitest/config';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
   test: {
     globals: true,
     environment: 'node',
@@ -11,14 +9,19 @@ export default defineConfig({
     exclude: ['apps/**/e2e/**', 'apps/**/node_modules/**'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text', 'json', 'html', 'lcov'],
+      reportsDirectory: 'coverage',
       exclude: [
         'node_modules/',
         'dist/',
+        'build/',
+        '.next/',
         '**/*.config.ts',
         '**/*.spec.ts',
+        '**/*.test.ts',
         '**/test/**',
         '**/tests/**',
+        '**/e2e/**',
       ],
     },
   },
