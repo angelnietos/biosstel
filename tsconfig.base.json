@@ -21,6 +21,7 @@
     "paths": {
       "@lib/*": ["libs/*"],
       "@biosstel/shared-types": ["libs/shared-types/src/index.ts"],
+      "@biosstel/shared": ["libs/shared/src/index.ts"],
       "@biosstel/ui": ["libs/ui/src/index.ts"],
       "@biosstel/ui-layout": ["libs/ui-layout/src/index.ts"],
       "@biosstel/platform": ["libs/platform/src/index.ts"],

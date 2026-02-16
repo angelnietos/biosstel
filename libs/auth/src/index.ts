@@ -49,9 +49,8 @@ export type {
 // Infrastructure Layer - Concrete implementations
 export { AuthRepository, authRepository } from './infrastructure';
 
-/**
- * DEFAULT EXPORTS
- * 
- * For easier importing, you can also import directly:
- * import { authRepository } from '@biosstel/auth'
- */
+// Data Access Layer - Hooks
+export * from './data-access';
+
+// UI Layer - React components
+export * from './ui';

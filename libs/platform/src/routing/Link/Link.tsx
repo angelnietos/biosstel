@@ -1,14 +1,16 @@
 /**
- * @biosstel/platform - Next.js Link Adapter
+ * @biosstel/platform - Next.js Link Adapter with next-intl support
  * 
- * This adapter wraps Next.js Link to provide a consistent API.
+ * This adapter wraps next-intl Link to provide a consistent API.
  * It allows features to use routing without depending directly on Next.js.
  * 
  * If you switch to another framework (Remix, React Router, etc.),
  * you only need to change this adapter, not your feature code.
  */
 
-import NextLink from 'next/link';
+'use client';
+
+import { Link as NextIntlLink } from 'next-intl/navigation';
 import { ReactNode, AnchorHTMLAttributes } from 'react';
 
 export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -24,7 +26,7 @@ export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 
 /**
  * Platform-agnostic Link component.
- * Uses Next.js Link internally but can be swapped for another router.
+ * Uses next-intl Link internally but can be swapped for another router.
  */
 export const Link = ({
   href,
@@ -38,7 +40,7 @@ export const Link = ({
   ...rest
 }: LinkProps) => {
   return (
-    <NextLink
+    <NextIntlLink
       href={href}
       replace={replace}
       scroll={scroll}
@@ -49,7 +51,7 @@ export const Link = ({
       {...rest}
     >
       {children}
-    </NextLink>
+    </NextIntlLink>
   );
 };
 

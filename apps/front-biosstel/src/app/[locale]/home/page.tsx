@@ -1,16 +1,9 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
+import { PageContent } from '@biosstel/shared';
 
 export default function HomePage() {
-  const t = useTranslations();
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900">Home</h1>
-      <div className="rounded-lg bg-white p-6 shadow-md">
-        <p className="text-gray-600">Bienvenido a Biosstel</p>
-      </div>
-    </div>
+    <PageContent title="Home">
+      <p className="text-gray-600">Bienvenido a Biosstel</p>
+    </PageContent>
   );
 }
