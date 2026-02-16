@@ -51,6 +51,12 @@ jobs:
       - name: 📥 Install dependencies
         run: pnpm install --frozen-lockfile
       
+      - name: 🧹 Clean local node_modules (may interfere with lint)
+        run: |
+          # Remove node_modules from subprojects to avoid module resolution issues
+          # pnpm may create these due to version conflicts, but they can interfere with ESLint
+          rm -rf apps/*/node_modules libs/*/node_modules || true
+      
       - name: 🔍 Run ESLint
         run: |
           # Lint only main apps (shared-types is types-only, no lint needed)
