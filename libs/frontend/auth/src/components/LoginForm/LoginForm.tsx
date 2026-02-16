@@ -7,6 +7,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -27,20 +28,22 @@ export interface LoginFormProps {
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const router = useRouter();
   const t = useTranslations();
-  const { login } = useLogin();
+  const { login, error: loginError } = useLogin();
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string()
-      .required(t('form.isRequired'))
-      .min(6, t('form.minSixCharacters')),
+    email: Yup.string()
+      .email(t('form.invalidEmail'))
+      .required(t('form.isRequired')),
     password: Yup.string()
       .required(t('form.isRequired'))
       .min(6, t('form.minSixCharacters')),
   });
 
-  const handleSubmit = async (values: { username: string; password: string }) => {
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    setSubmitError(null);
     try {
-      await login(values);
+      await login({ email: values.email, password: values.password });
       if (onSuccess) {
         onSuccess();
       } else {
@@ -49,7 +52,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         router.push(`/${locale}/users`);
       }
     } catch (err: any) {
-      throw err;
+      setSubmitError(err.message || 'Error al iniciar sesión');
     }
   };
 
@@ -58,23 +61,28 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
       <Formik
         validateOnChange={false}
-        initialValues={{ username: '', password: '' }}
+        initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         {({ setFieldValue, values, errors, handleSubmit, isSubmitting }) => (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {(submitError || loginError) && (
+              <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                {submitError || loginError}
+              </div>
+            )}
             <div className="flex flex-col gap-1">
               <Input
-                name="username"
-                type="text"
+                name="email"
+                type="email"
                 placeholder={t('loginPage.firstInput')}
-                value={values.username}
-                onChange={(e) => setFieldValue('username', e.target.value)}
+                value={values.email}
+                onChange={(e) => setFieldValue('email', e.target.value)}
                 className={inputStyles}
-                error={Boolean(errors.username)}
+                error={Boolean(errors.email)}
               />
-              <ErrorFormMsg errorMsg={errors.username} />
+              <ErrorFormMsg errorMsg={errors.email} />
             </div>
             <div className="flex flex-col gap-1">
               <InputPassword

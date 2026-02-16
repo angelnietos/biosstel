@@ -1,6 +1,14 @@
 {
-  "general": {
-    "title": "Biosstel",
-    "description": "Biosstel"
+  "form": {
+    "forgotPassword": "Forgot my password",
+    "isRequired": "This field is required",
+    "minSixCharacters": "Minimum 6 characters",
+    "invalidEmail": "Invalid email"
+  },
+  "loginPage": {
+    "title": "Login",
+    "firstInput": "Email",
+    "secondInput": "Password",
+    "BtnSend": "Login"
   }
 }
