@@ -143,6 +143,66 @@ export interface PaginatedResponse<T> {
 export type PaginatedResult<T> = PaginatedResponse<T>;
 
 // ============================================
+// Dashboard Types
+// ============================================
+
+export type DashboardObjectiveAccent = 'maroon' | 'teal' | 'blue' | 'purple';
+
+export interface DashboardObjective {
+  id: string;
+  title: string;
+  achieved: number;
+  objective: number;
+  unit?: string;
+  accent?: DashboardObjectiveAccent;
+  href?: string;
+}
+
+export interface DashboardAlert {
+  id: string;
+  usuario: string;
+  departamento: string;
+  centroTrabajo: string;
+  rol?: string;
+  estado: string;
+  statusType?: 'tienda' | 'telemarketing' | 'comercial' | 'no-fichado' | 'fuera-horario';
+}
+
+export interface DashboardHomeResponse {
+  objectives: DashboardObjective[];
+  alerts: DashboardAlert[];
+}
+
+export interface TerminalObjectivesHeader {
+  id: string;
+  title: string;
+  rangeLabel: string;
+  achieved: number;
+  objective: number;
+  pct: number;
+}
+
+export interface TerminalAssignmentRow {
+  label: string;
+  value: number;
+  total: number;
+  ok: boolean;
+}
+
+export interface TerminalAssignmentCard {
+  title: string;
+  totalValue: number;
+  totalObjective: number;
+  rows: TerminalAssignmentRow[];
+}
+
+export interface TerminalObjectivesResponse {
+  header: TerminalObjectivesHeader | null;
+  departmentCards: TerminalAssignmentCard[];
+  peopleCards: TerminalAssignmentCard[];
+}
+
+// ============================================
 // Repository Interface (for backend)
 // ============================================
 

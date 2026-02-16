@@ -1,0 +1,23 @@
+{
+  "name": "api-dashboard",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/api-dashboard/src",
+  "projectType": "library",
+  "tags": ["type:feature", "scope:api", "scope:api-dashboard"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/api-dashboard",
+        "main": "libs/backend/api-dashboard/src/index.ts",
+        "tsConfig": "libs/backend/api-dashboard/tsconfig.json",
+        "assets": ["libs/backend/api-dashboard/*.md"]
+      }
+    }
+  }
+}
+

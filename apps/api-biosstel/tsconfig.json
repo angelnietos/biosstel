@@ -21,9 +21,10 @@
       "@/*": ["src/*"],
       "@lib/*": ["../../dist/libs/*"],
       "@lib/backend/*": ["../../dist/libs/backend/*"],
-      "@biosstel/shared-types": ["../../dist/libs/shared/shared-types/index.js"],
-      "@biosstel/api-users": ["../../dist/libs/backend/api-users/index.js"],
-      "@biosstel/api-shared": ["../../dist/libs/backend/api-shared/index.js"]
+      "@biosstel/shared-types": ["../../libs/shared/src/index.ts"],
+      "@biosstel/api-users": ["../../libs/backend/api-users/src/index.ts"],
+      "@biosstel/api-shared": ["../../libs/backend/api-shared/src/index.ts"],
+      "@biosstel/api-dashboard": ["../../libs/backend/api-dashboard/src/index.ts"]
     }
   },
   "include": ["src/**/*"],

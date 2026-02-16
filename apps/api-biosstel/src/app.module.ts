@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '@biosstel/api-users';
-import { UserEntity } from '@biosstel/api-users';
+import { DashboardModule } from '@biosstel/api-dashboard';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { UserEntity } from '@biosstel/api-users';
         username: configService.get('DB_USER', 'biosstel'),
         password: configService.get('DB_PASSWORD', 'biosstel123'),
         database: configService.get('DB_NAME', 'biosstel'),
-        entities: [UserEntity],
+        autoLoadEntities: true,
         synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') === 'development',
       }),
@@ -31,6 +31,7 @@ import { UserEntity } from '@biosstel/api-users';
 
     // Feature Modules
     UsersModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}

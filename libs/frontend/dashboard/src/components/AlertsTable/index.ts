@@ -1,1 +1,1 @@
-export { AlertsTable, type AlertsTableProps, type Alert } from './AlertsTable';
+export { AlertsTable, type AlertsTableProps } from './AlertsTable';

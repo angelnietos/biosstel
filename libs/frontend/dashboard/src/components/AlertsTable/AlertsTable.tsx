@@ -6,15 +6,7 @@
 
 'use client';
 
-export interface Alert {
-  id: string;
-  usuario: string;
-  departamento: string;
-  centroTrabajo: string;
-  rol?: string;
-  estado: string;
-  statusType?: 'tienda' | 'telemarketing' | 'comercial' | 'no-fichado' | 'fuera-horario';
-}
+import type { DashboardAlert as Alert } from '@biosstel/shared-types';
 
 export interface AlertsTableProps {
   alerts: Alert[];

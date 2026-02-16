@@ -21,7 +21,7 @@
     "db:stop": "docker-compose -f docker-compose.dev.yml down",
     "db:reset": "docker-compose -f docker-compose.dev.yml down -v && docker-compose -f docker-compose.dev.yml up -d postgres adminer",
     "db:logs": "docker-compose -f docker-compose.dev.yml logs -f postgres",
-    "db:seed": "cd apps/api-biosstel && tsx --tsconfig tsconfig.dev.json seed.ts",
+    "db:seed": "cd apps/api-biosstel && ts-node --project tsconfig.dev.json seed.ts",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
@@ -57,10 +57,11 @@
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.0.0",
     "happy-dom": "^16.8.1",
+    "nodemon": "^3.1.11",
     "nx": "^20.4.0",
     "playwright": "^1.58.2",
-    "tsx": "^4.19.2",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.8.3",
     "vite": "^6.4.1",
     "vite-tsconfig-paths": "^5.1.4",
@@ -78,5 +79,8 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.2.2"
   }
 }

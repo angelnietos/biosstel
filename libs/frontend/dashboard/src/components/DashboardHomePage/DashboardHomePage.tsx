@@ -7,64 +7,22 @@
 
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { DashboardLayout } from '../../layouts';
 import { DashboardFilters } from '../DashboardFilters';
 import { ObjectiveCard } from '../ObjectiveCard';
-import { AlertsTable, type Alert } from '../AlertsTable';
-
-const mockObjectives = [
-  {
-    title: 'Terminales (Familia X)',
-    achieved: 12867,
-    objective: 34560,
-    accent: 'maroon' as const,
-    href: '/objetivos-terminales',
-  },
-  { title: 'Familia Y', achieved: 10124, objective: 89988, accent: 'teal' as const },
-  { title: 'Familia', achieved: 37009, objective: 36134, accent: 'blue' as const },
-  { title: 'Producto X', achieved: 57112, objective: 76110, accent: 'purple' as const },
-];
-
-const mockAlerts: Alert[] = [
-  {
-    id: '1',
-    usuario: 'Isabelle Torres',
-    departamento: 'Comercial',
-    centroTrabajo: 'Barakaldo',
-    rol: 'Comercial',
-    estado: 'No ha fichado',
-    statusType: 'no-fichado',
-  },
-  {
-    id: '2',
-    usuario: 'Maria Robledo',
-    departamento: 'Comercial',
-    centroTrabajo: 'Las Arenas',
-    rol: 'Telemarketing',
-    estado: 'No ha fichado',
-    statusType: 'no-fichado',
-  },
-  {
-    id: '3',
-    usuario: 'Lucia Martinez',
-    departamento: 'Comercial',
-    centroTrabajo: 'Las Arenas',
-    rol: 'Comercial',
-    estado: 'Fichaje fuera de horario',
-    statusType: 'fuera-horario',
-  },
-];
+import { AlertsTable } from '../AlertsTable';
+import { useDashboardHome } from '../../data-access';
 
 export const DashboardHomePage = () => {
-  const [hasFilters, setHasFilters] = useState(false);
+  const [filters, setFilters] = useState<Record<string, string[]>>({});
+  const hasFilters = Object.values(filters).some((arr) => arr.length > 0);
 
   const handleFilterChange = (filters: Record<string, string[]>) => {
-    const hasActiveFilters = Object.values(filters).some((arr) => arr.length > 0);
-    setHasFilters(hasActiveFilters);
+    setFilters(filters);
   };
 
-  const objectives = useMemo(() => mockObjectives, []);
+  const { data, isLoading, error } = useDashboardHome(filters, hasFilters);
 
   return (
     <DashboardLayout>
@@ -82,22 +40,39 @@ export const DashboardHomePage = () => {
               Por favor realiza un filtro previo para que se muestren los datos de objetivos.
             </div>
           </div>
+        ) : isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm animate-pulse"
+              >
+                <div className="h-3 w-40 bg-gray-100 rounded mb-4" />
+                <div className="h-8 w-64 bg-gray-100 rounded mb-3" />
+                <div className="h-2 w-full bg-gray-100 rounded" />
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="rounded-2xl border border-red-200 bg-white px-6 py-5 mb-6 text-error">
+            {error}
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {objectives.map((obj) => (
+            {(data?.objectives ?? []).map((obj) => (
               <ObjectiveCard
-                key={obj.title}
+                key={obj.id}
                 title={obj.title}
                 achieved={obj.achieved}
                 objective={obj.objective}
-                accent={obj.accent}
+                accent={obj.accent as any}
                 href={obj.href}
               />
             ))}
           </div>
         )}
 
-        <AlertsTable alerts={mockAlerts} />
+        <AlertsTable alerts={data?.alerts ?? []} />
       </div>
     </DashboardLayout>
   );
