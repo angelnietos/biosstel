@@ -12,7 +12,7 @@ WORKDIR /app
 # Copy package files for workspace
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api-biosstel/package.json ./apps/api-biosstel/
-COPY libs/shared/package.json ./libs/shared/
+COPY libs/shared-types/package.json ./libs/shared-types/
 COPY libs/backend/api-users/package.json ./libs/backend/api-users/
 COPY libs/backend/api-dashboard/package.json ./libs/backend/api-dashboard/
 COPY libs/backend/api-shared/package.json ./libs/backend/api-shared/
@@ -36,7 +36,7 @@ COPY tsconfig.base.json ./
 COPY apps/api-biosstel ./apps/api-biosstel
 
 # Copy shared libraries
-COPY libs/shared ./libs/shared
+COPY libs/shared-types ./libs/shared-types
 COPY libs/backend/api-users ./libs/backend/api-users
 COPY libs/backend/api-dashboard ./libs/backend/api-dashboard
 COPY libs/backend/api-shared ./libs/backend/api-shared

@@ -11,7 +11,7 @@
     "rootDir": "src",
     "paths": {
       "@/*": ["src/*"],
-      "@biosstel/shared-types": ["../../dist/libs/shared/index.js"],
+      "@biosstel/shared-types": ["../../dist/libs/shared-types/index.js"],
       "@biosstel/api-users": ["../../dist/libs/backend/api-users/index.js"],
       "@biosstel/api-shared": ["../../dist/libs/backend/api-shared/index.js"],
       "@biosstel/api-dashboard": ["../../dist/libs/backend/api-dashboard/index.js"]

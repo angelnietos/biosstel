@@ -12,7 +12,7 @@ WORKDIR /app
 # Copy package files for workspace
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/front-biosstel/package.json ./apps/front-biosstel/
-COPY libs/shared/package.json ./libs/shared/
+COPY libs/shared-types/package.json ./libs/shared-types/
 COPY libs/frontend/ui/package.json ./libs/frontend/ui/ 2>/dev/null || true
 COPY libs/frontend/shared/package.json ./libs/frontend/shared/ 2>/dev/null || true
 COPY libs/frontend/ui-layout/package.json ./libs/frontend/ui-layout/ 2>/dev/null || true
@@ -39,7 +39,7 @@ COPY tsconfig.base.json ./
 COPY apps/front-biosstel ./apps/front-biosstel
 
 # Copy shared libraries
-COPY libs/shared ./libs/shared
+COPY libs/shared-types ./libs/shared-types
 COPY libs/frontend ./libs/frontend
 
 WORKDIR /app/apps/front-biosstel

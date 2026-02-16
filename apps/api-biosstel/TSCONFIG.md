@@ -15,7 +15,7 @@ Este proyecto usa **múltiples tsconfig.json** para diferentes propósitos. Aqu�
 {
   "@biosstel/api-users": ["../../libs/backend/api-users/src/index.ts"],
   "@biosstel/api-dashboard": ["../../libs/backend/api-dashboard/src/index.ts"],
-  "@biosstel/shared-types": ["../../libs/shared/src/index.ts"]
+  "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"]
 }
 ```
 
@@ -37,7 +37,7 @@ Este proyecto usa **múltiples tsconfig.json** para diferentes propósitos. Aqu�
 {
   "@biosstel/api-users": ["../../libs/backend/api-users/src/index.ts"],
   "@biosstel/api-dashboard": ["../../libs/backend/api-dashboard/src/index.ts"],
-  "@biosstel/shared-types": ["../../libs/shared/src/index.ts"]
+  "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"]
 }
 ```
 
@@ -59,7 +59,7 @@ Este proyecto usa **múltiples tsconfig.json** para diferentes propósitos. Aqu�
 {
   "@biosstel/api-users": ["../../dist/libs/backend/api-users/index.js"],
   "@biosstel/api-dashboard": ["../../dist/libs/backend/api-dashboard/index.js"],
-  "@biosstel/shared-types": ["../../dist/libs/shared/index.js"]
+  "@biosstel/shared-types": ["../../dist/libs/shared-types/index.js"]
 }
 ```
 

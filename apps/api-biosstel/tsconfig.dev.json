@@ -23,13 +23,13 @@
       "@/*": ["src/*"],
       "@lib/*": ["../../libs/*/src/index.ts"],
       "@lib/backend/*": ["../../libs/backend/*/src/index.ts"],
-      "@biosstel/shared-types": ["../../libs/shared/src/index.ts"],
+      "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"],
       "@biosstel/api-users": ["../../libs/backend/api-users/src/index.ts"],
       "@biosstel/api-shared": ["../../libs/backend/api-shared/src/index.ts"],
       "@biosstel/api-dashboard": ["../../libs/backend/api-dashboard/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts", "dev.ts", "../../libs/backend/**/*.ts", "../../libs/shared/**/*.ts"],
+  "include": ["src/**/*.ts", "dev.ts", "../../libs/backend/**/*.ts", "../../libs/shared-types/**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"],
   "tsx": {
     "esbuild": {

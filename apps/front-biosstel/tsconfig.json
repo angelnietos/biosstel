@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@biosstel/shared-types": ["../../libs/shared/src/index.ts"],
+      "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"],
       "@biosstel/shared": ["../../libs/frontend/shared/src/index.ts"],
       "@biosstel/ui": ["../../libs/frontend/ui/src/index.ts"],
       "@biosstel/ui-layout": ["../../libs/frontend/ui-layout/src/index.ts"],
