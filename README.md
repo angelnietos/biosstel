@@ -11,162 +11,84 @@ biosstel-monorepo/
 │   └── api-biosstel/       # API GraphQL con microservicios (Backend)
 ├── libs/
 │   └── shared-types/       # Tipos TypeScript compartidos
-├── docker/
-│   ├── frontend.Dockerfile # Dockerfile para el frontend
-│   ├── api.Dockerfile      # Dockerfile para la API
-│   └── init-db.sql         # Script de inicialización de BD
-├── docker-compose.yml      # Producción
-├── docker-compose.dev.yml  # Desarrollo
-├── nx.json                 # Configuración de Nx
-├── package.json            # Dependencias raíz
-└── tsconfig.base.json      # Configuración TypeScript base
+├── docker/                 # Archivos Docker
+├── docker-compose.yml      # Producción completa
+└── docker-compose.dev.yml  # Solo base de datos
 ```
 
 ## 🚀 Inicio Rápido
 
-### Prerrequisitos
-
-- Node.js >= 20.0.0
-- Docker y Docker Compose
-- npm >= 10.0.0
-
-### Instalación
+### 1. Instalar dependencias
 
 ```bash
 npm install
 ```
 
-### Variables de Entorno
+### 2. Configurar variables de entorno
 
 ```bash
 cp .env.example .env
 # Edita .env con tus valores
 ```
 
-## 🐳 Docker
-
-### Desarrollo (Recomendado)
-
-Inicia solo la base de datos y ejecuta las apps localmente:
+### 3. Iniciar la base de datos
 
 ```bash
-# Iniciar base de datos PostgreSQL
-npm run docker:dev
-
-# Ejecutar en otro terminal
-npm run dev
-
-# Detener base de datos
-npm run docker:dev:down
+npm run db:start
 ```
 
-### Producción
-
-Construye y ejecuta todos los servicios:
+### 4. Iniciar las aplicaciones
 
 ```bash
-# Construir e iniciar todos los servicios
-npm run docker:prod
-
-# Ver logs
-npm run docker:logs
-
-# Detener servicios
-npm run docker:prod:down
+npm start
 ```
 
-### Servicios Disponibles
+¡Eso es todo! Ahora tienes:
+- Frontend: http://localhost:3000
+- API: http://localhost:4000
+- Adminer (admin BD): http://localhost:8080
 
-| Servicio | Puerto | URL |
-|----------|--------|-----|
-| Frontend | 3000 | http://localhost:3000 |
-| API GraphQL | 4000 | http://localhost:4000 |
-| PostgreSQL | 5432 | localhost:5432 |
-| Adminer (DB Admin) | 8080 | http://localhost:8080 |
+## 📋 Comandos Principales
 
-## 📦 Desarrollo Local
+### Desarrollo Diario
 
-### Sin Docker
+| Comando | Descripción |
+|---------|-------------|
+| `npm start` | Inicia frontend + API en paralelo |
+| `npm start:front` | Inicia solo el frontend |
+| `npm start:api` | Inicia solo la API |
+| `npm run build` | Construye todos los proyectos |
+| `npm run lint` | Ejecuta linter en todos los proyectos |
 
-```bash
-# Iniciar todos los servicios en paralelo
-npm run dev
+### Base de Datos
 
-# Iniciar solo el frontend
-npm run dev:front
+| Comando | Descripción |
+|---------|-------------|
+| `npm run db:start` | Inicia PostgreSQL + Adminer |
+| `npm run db:stop` | Detiene la base de datos |
+| `npm run db:reset` | Reinicia la base de datos (borra datos) |
+| `npm run db:logs` | Ver logs de la base de datos |
 
-# Iniciar solo la API
-npm run dev:api
-```
+### Docker (Producción)
 
-### Build
+| Comando | Descripción |
+|---------|-------------|
+| `npm run docker:build` | Construye imágenes Docker |
+| `npm run docker:up` | Inicia todos los servicios |
+| `npm run docker:down` | Detiene todos los servicios |
+| `npm run docker:logs` | Ver logs de todos los servicios |
 
-```bash
-# Build de todos los proyectos
-npm run build
+## 🐳 ¿Por qué Docker?
 
-# Build de un proyecto específico
-npm run nx build front-biosstel
-npm run nx build api-biosstel
-```
+### Sin Docker (Desarrollo Local)
+- Usas tu Node.js local
+- Ejecutas `npm start` directamente
+- La base de datos corre en Docker (PostgreSQL)
 
-### Linting
-
-```bash
-npm run lint
-```
-
-## 📦 Aplicaciones
-
-### Frontend (front-biosstel)
-
-Aplicación Next.js 16 con:
-- React 19
-- Tailwind CSS 4
-- next-intl para internacionalización
-- Redux Toolkit para estado global
-- Formik + Yup para formularios
-
-```bash
-npm run dev:front    # Desarrollo en http://localhost:3000
-npm run nx build front-biosstel
-```
-
-### API (api-biosstel)
-
-API GraphQL con arquitectura de microservicios:
-- Apollo Server 5
-- Express 5
-- PostgreSQL con Sequelize
-- Microservicio de autenticación
-
-```bash
-npm run dev:api      # Desarrollo en http://localhost:4000
-npm run nx build api-biosstel
-```
-
-## 📚 Librerías Compartidas
-
-### @biosstel/shared-types
-
-Tipos TypeScript compartidos entre frontend y backend.
-
-```typescript
-import { User, ApiResponse, ErrorCodes } from '@biosstel/shared-types';
-```
-
-## 🔧 Comandos Nx Útiles
-
-```bash
-# Ver grafo de dependencias
-npm run nx graph
-
-# Ver proyectos afectados por cambios
-npm run nx affected -t build
-
-# Ejecutar comando en proyecto específico
-npm run nx run <project>:<target>
-```
+### Con Docker (Producción)
+- Todos los servicios en contenedores
+- Mismo entorno en desarrollo y producción
+- Fácil despliegue
 
 ## 🗄️ Base de Datos
 
@@ -180,70 +102,89 @@ User: biosstel
 Password: biosstel123
 ```
 
-### Adminer
+### Adminer (UI para BD)
 
-Interfaz web para administrar la base de datos:
-- URL: http://localhost:8080
-- Sistema: PostgreSQL
-- Servidor: postgres
-- Usuario: biosstel
-- Contraseña: biosstel123
-- Base de datos: biosstel
+1. Abre http://localhost:8080
+2. Selecciona "PostgreSQL"
+3. Usa las credenciales de arriba
 
-### Resetear Base de Datos
+## 📦 Aplicaciones
 
-```bash
-npm run db:reset
-```
+### Frontend (front-biosstel)
 
-## 🏗️ Agregar Nuevos Proyectos
+- Next.js 16 + React 19
+- Tailwind CSS 4
+- next-intl (internacionalización)
+- Redux Toolkit
 
 ```bash
-# Nueva app Next.js
-npm run nx g @nx/next:app <nombre>
-
-# Nueva app Node.js
-npm run nx g @nx/node:app <nombre>
-
-# Nueva librería
-npm run nx g @nx/js:lib <nombre>
+npm start:front    # http://localhost:3000
 ```
 
-## 📝 Convenciones
+### API (api-biosstel)
 
-- **Apps**: Aplicaciones desplegables en `apps/`
-- **Libs**: Código compartido en `libs/`
-- **Tags**: Usar tags en `project.json` para organizar proyectos
-  - `type:app` / `type:lib`
-  - `scope:frontend` / `scope:backend` / `scope:shared`
-  - `framework:nextjs` / `framework:node`
+- Apollo Server 5 (GraphQL)
+- Express 5
+- PostgreSQL + Sequelize
+- Microservicio de autenticación
+
+```bash
+npm start:api    # http://localhost:4000
+```
+
+## 🔧 Comandos Nx
+
+```bash
+# Ver grafo de dependencias
+npm run nx graph
+
+# Ver proyectos
+npm run nx show projects
+
+# Ejecutar tarea específica
+npm run nx build front-biosstel
+```
 
 ## 🔐 Variables de Entorno
 
-Ver [`.env.example`](.env.example) para todas las variables disponibles.
+Ver [`.env.example`](.env.example) para todas las variables.
 
-### Variables Requeridas
+### Mínimas para desarrollo
 
-| Variable | Descripción |
-|----------|-------------|
-| `DATABASE_URL` | URL de conexión a PostgreSQL |
-| `JWT_SECRET` | Secreto para tokens JWT |
-| `NEXT_PUBLIC_API_URL` | URL de la API para el frontend |
+```env
+DATABASE_URL=postgresql://biosstel:biosstel123@localhost:5432/biosstel
+JWT_SECRET=tu-secreto-jwt
+NEXT_PUBLIC_API_URL=http://localhost:4000
+```
 
-## 📖 Documentación Adicional
+## 🤝 Flujo de Trabajo del Equipo
 
-- [Nx Documentation](https://nx.dev)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Apollo Server Documentation](https://www.apollographql.com/docs/apollo-server/)
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
+1. **Clonar el repositorio**
+   ```bash
+   git clone <repo-url>
+   cd biosstel-monorepo
+   ```
 
-## 🤝 Contribuir
+2. **Instalar dependencias**
+   ```bash
+   npm install
+   ```
 
-1. Clonar el repositorio
-2. Instalar dependencias: `npm install`
-3. Iniciar base de datos: `npm run docker:dev`
-4. Copiar variables de entorno: `cp .env.example .env`
-5. Iniciar desarrollo: `npm run dev`
+3. **Configurar entorno**
+   ```bash
+   cp .env.example .env
+   # Editar .env
+   ```
+
+4. **Iniciar base de datos**
+   ```bash
+   npm run db:start
+   ```
+
+5. **Desarrollar**
+   ```bash
+   npm start
+   ```
 
 ## 📄 Licencia
 
