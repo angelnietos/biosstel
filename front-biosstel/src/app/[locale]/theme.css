@@ -1,0 +1,74 @@
+@theme {
+  --font-family-sans: var(--font-inter), sans-serif;
+
+  --color-*: initial;
+
+  /* Primary Brand */
+  --color-primary: #004b93;
+
+  /* Buttons */
+  --color-button-primary: #1b1b1b;
+  --color-button-dark: #080808;
+
+  /* Accent Colors (categories/progress) */
+  --color-accent-blue: #185c80;
+  --color-accent-teal: #187980;
+  --color-accent-maroon: #80182f;
+  --color-accent-purple: #5353a5;
+  --color-accent-magenta: #873592;
+
+  /* Status Colors */
+  --color-success: #21b158;
+  --color-success-dark: #188040;
+  --color-error: #ef4444;
+  --color-info: #5966f4;
+
+  /* Gray Scale */
+  --color-gray-900: #080808;
+  --color-gray-800: #1b1b1b;
+  --color-gray-600: #646464;
+  --color-gray-500: #747474;
+  --color-gray-400: #7c7c7c;
+  --color-gray-350: #9c9c9c;
+  --color-gray-300: #b6b6b6;
+  --color-gray-200: #e6e6e6;
+  --color-gray-100: #f7f7f7;
+
+  /* Badge Backgrounds */
+  --color-badge-blue: #e8eaff;
+  --color-badge-purple: #f2ebff;
+  --color-badge-pink: #fbf4ff;
+  --color-badge-magenta: #ffe3fc;
+  --color-badge-red: #ffebef;
+  --color-badge-cyan: #eef5fc;
+
+  /* Blue Variations */
+  --color-blue-700: #004b93;
+  --color-blue-400: #59a8f4;
+  --color-blue-300: #86c4ff;
+  --color-blue-50: #eef5fc;
+
+  /* Base Colors */
+  --color-white: #fffefe;
+  --color-black: #080808;
+
+  /* TYPOGRAPHY SYSTEM */
+  /* Font Sizes */
+  --text-datos: 32px; /* Large data/stats display */
+  --text-h1: 24px; /* Main headings */
+  --text-h2: 20px; /* Section headings */
+  --text-h3: 18px; /* Subsection headings */
+  --text-body: 16px; /* Body text */
+  --text-mid: 12px; /* Secondary/supporting text */
+  --text-mini: 10px; /* Captions, labels, fine print */
+
+  /* Font Colors (from Figma)
+     Dark text:  text-black (#080808), text-gray-600 (#646464), text-gray-350 (#9C9C9C)
+     Blue text:  text-blue-400 (#59A8F4), text-blue-300 (#86C4FF), text-blue-50 (#EEF5FC) */
+
+  /* Border Radius */
+  --radius-20: 20px;
+
+  /* Border Colors */
+  --color-border-input: #d7d7d7;
+}

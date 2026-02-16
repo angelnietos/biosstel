@@ -1,0 +1,30 @@
+{
+  "name": "biosstel-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:front": "nx dev front-biosstel",
+    "dev:api": "nx dev api-biosstel",
+    "dev": "nx run-many -t dev --parallel",
+    "build": "nx run-many -t build",
+    "lint": "nx run-many -t lint",
+    "test": "nx run-many -t test",
+    "nx": "nx"
+  },
+  "devDependencies": {
+    "@nx/js": "^20.4.0",
+    "@nx/next": "^20.4.0",
+    "@nx/node": "^20.4.0",
+    "@nx/workspace": "^20.4.0",
+    "nx": "^20.4.0",
+    "typescript": "^5.8.3"
+  },
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

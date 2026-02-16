@@ -1,0 +1,122 @@
+# Auth GraphQL schema
+
+interface Response {
+  success: Boolean
+  message: String
+  error: String
+  version: String
+}
+
+type NoDataResponse implements Response {
+  success: Boolean
+  message: String
+  error: String
+  version: String
+}
+
+enum UserState {
+  ACTIVE
+  PENDING
+  DELETED
+  INACTIVE
+}
+
+type Organization {
+  id: ID!
+  name: String!
+  logo: String
+  parentId: ID
+  rootId: ID
+}
+
+type RootOrganization {
+  Id_Organization: ID!
+  Name: String!
+  Logo: String
+  BusinessName: String
+}
+
+type Role {
+  Id_Role: ID
+  Name: String
+  Description: String
+  Status: String
+  Source: String
+  CreatedAt: String
+  UpdatedAt: String
+}
+
+type User {
+  idUser: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  language: String
+  phone: String
+  photo: String
+  status: UserState!
+  twoFactorEnabled: String
+  parentOrganizationId: ID
+  createdAt: String
+  updatedAt: String
+  securityStamp: String
+  lastPasswordChange: String
+  timeBlocked: String
+  timeUntilBlocked: String
+  organization: Organization
+  rootOrganization: RootOrganization
+  primaryRole: Role
+  allRoles: [Role]
+}
+
+type LoginResponse {
+  success: Boolean!
+  message: String!
+  data: LoginData
+  error: String
+  version: String
+}
+
+type LoginData {
+  userData: User!
+  token: String!
+}
+
+type BasicDataResponse {
+  success: Boolean
+  message: String
+}
+
+type ForgotPasswordResponse {
+  success: Boolean
+  message: String
+  data: BasicDataResponse
+  error: String
+  version: String
+}
+
+type ResetPasswordResponse implements Response {
+  success: Boolean
+  message: String
+  error: String
+  version: String
+}
+
+type LoginWithAuthCodeResponse implements Response {
+  success: Boolean!
+  message: String!
+  data: LoginData
+  error: String
+  version: String
+}
+
+type Mutation {
+  login(email: String!, password: String!): LoginResponse!
+  loginWithAuthCode(userId: String!, authCode: Int!): LoginWithAuthCodeResponse!
+  loginWithAuthCodeAndEncryptedId(encryptedId: String!, authCode: Int!): LoginWithAuthCodeResponse!
+  forgotPassword(email: String!): ForgotPasswordResponse!
+  resetPassword(encryptedId: String!, newPassword: String!, repeatedPassword: String!): ResetPasswordResponse!
+  validateToken(id: String!): LoginWithAuthCodeResponse
+  refreshToken(id: String!): LoginResponse
+  socialLogin(email: String!, sub: String!): LoginResponse!
+}

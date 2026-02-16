@@ -1,0 +1,13 @@
+{
+  "form": {
+    "forgotPassword": "Olvidé mi contraseña",
+    "isRequired": "Este campo es requerido",
+    "minSixCharacters": "Mínimo 6 caracteres"
+  },
+  "loginPage": {
+    "title": "Iniciar sesión",
+    "firstInput": "Nombre de usuario",
+    "secondInput": "Contraseña",
+    "BtnSend": "Iniciar sesión"
+  }
+}
