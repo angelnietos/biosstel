@@ -1,52 +1,35 @@
-# API Dockerfile - NestJS
+# API Dockerfile - NestJS (pnpm workspace)
 FROM node:20-alpine AS base
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@10 --activate
 
-# Install dependencies only when needed
-FROM base AS deps
+# ---- Builder stage: install deps + build ----
+FROM base AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files for workspace
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Copy workspace config first (for layer caching)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY apps/api-biosstel/package.json ./apps/api-biosstel/
 COPY libs/shared-types/package.json ./libs/shared-types/
 COPY libs/backend/api-users/package.json ./libs/backend/api-users/
 COPY libs/backend/api-dashboard/package.json ./libs/backend/api-dashboard/
 COPY libs/backend/api-shared/package.json ./libs/backend/api-shared/
 
-# Install dependencies
+# Install ALL dependencies (including devDependencies for build tools like nest-cli)
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
-FROM base AS builder
-WORKDIR /app
-
-# Copy dependencies
-COPY --from=deps /app/node_modules ./node_modules
-
-# Copy workspace config
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY tsconfig.base.json ./
-
-# Copy app source
 COPY apps/api-biosstel ./apps/api-biosstel
-
-# Copy shared libraries
 COPY libs/shared-types ./libs/shared-types
-COPY libs/backend/api-users ./libs/backend/api-users
-COPY libs/backend/api-dashboard ./libs/backend/api-dashboard
-COPY libs/backend/api-shared ./libs/backend/api-shared
+COPY libs/backend ./libs/backend
 
-WORKDIR /app/apps/api-biosstel
+# Build from root using pnpm filter (ensures correct workspace resolution)
+RUN pnpm --filter api-biosstel run build
 
-# Build
-ENV NODE_ENV=production
-RUN pnpm run build
-
-# Production image
+# ---- Production image ----
 FROM base AS runner
 WORKDIR /app
 
@@ -65,6 +48,5 @@ USER nodejs
 EXPOSE 4000
 
 ENV PORT=4000
-ENV NODE_ENV=production
 
 CMD ["node", "dist/main.js"]

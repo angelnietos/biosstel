@@ -258,6 +258,75 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  libs/backend/api-dashboard:
+    dependencies:
+      '@biosstel/api-shared':
+        specifier: workspace:*
+        version: link:../api-shared
+      '@biosstel/shared-types':
+        specifier: workspace:*
+        version: link:../../shared-types
+      '@nestjs/common':
+        specifier: ^10.4.15
+        version: 10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/typeorm':
+        specifier: ^10.0.2
+        version: 10.0.2(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(pg@8.18.0)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.15))(@types/node@22.19.11)(typescript@5.9.3)))
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+      typeorm:
+        specifier: ^0.3.20
+        version: 0.3.28(babel-plugin-macros@3.1.0)(pg@8.18.0)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.15))(@types/node@22.19.11)(typescript@5.9.3))
+
+  libs/backend/api-shared:
+    dependencies:
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+
+  libs/backend/api-users:
+    dependencies:
+      '@biosstel/api-shared':
+        specifier: workspace:*
+        version: link:../api-shared
+      '@biosstel/shared-types':
+        specifier: workspace:*
+        version: link:../../shared-types
+      '@nestjs/common':
+        specifier: ^10.4.15
+        version: 10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/typeorm':
+        specifier: ^10.0.2
+        version: 10.0.2(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(pg@8.18.0)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.15))(@types/node@22.19.11)(typescript@5.9.3)))
+      bcrypt:
+        specifier: ^5.1.1
+        version: 5.1.1(encoding@0.1.13)
+      class-transformer:
+        specifier: ^0.5.1
+        version: 0.5.1
+      class-validator:
+        specifier: ^0.14.1
+        version: 0.14.3
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+      typeorm:
+        specifier: ^0.3.20
+        version: 0.3.28(babel-plugin-macros@3.1.0)(pg@8.18.0)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.15))(@types/node@22.19.11)(typescript@5.9.3))
+    devDependencies:
+      '@types/bcrypt':
+        specifier: ^5.0.2
+        version: 5.0.2
+
+  libs/frontend/shared: {}
+
   libs/shared-types:
     devDependencies:
       typescript:
