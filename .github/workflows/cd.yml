@@ -39,15 +39,66 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
+      - name: 📝 Extract version info
+        id: version
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${BRANCH_NAME//\//-}  # Replace / with -
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          
+          # Extract version from release branch (release/v1.2.3 -> v1.2.3)
+          if [[ "$BRANCH_NAME" == release-* ]]; then
+            VERSION=${BRANCH_NAME#release-}
+            VERSION=${VERSION//-/.}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "version=" >> $GITHUB_OUTPUT
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "branch=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "build_number=${{ github.run_number }}" >> $GITHUB_OUTPUT
+      
       - name: 📝 Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.service }}
           tags: |
-            type=ref,event=branch
-            type=sha,prefix={{branch}}-
+            # Branch name
+            type=raw,value=${{ steps.version.outputs.branch }}
+            
+            # Branch + build number
+            type=raw,value=${{ steps.version.outputs.branch }}-build-${{ steps.version.outputs.build_number }}
+            
+            # Branch + short SHA
+            type=raw,value=${{ steps.version.outputs.branch }}-${{ steps.version.outputs.short_sha }}
+            
+            # Full SHA
+            type=sha,format=long
+            
+            # Version tag (if release branch)
+            type=raw,value=${{ steps.version.outputs.version }},enable=${{ steps.version.outputs.is_release }}
+            
+            # Latest (only for main branch)
             type=raw,value=latest,enable={{is_default_branch}}
+          labels: |
+            org.opencontainers.image.title=${{ matrix.service }}
+            org.opencontainers.image.description=Biosstel ${{ matrix.service }} service
+            org.opencontainers.image.vendor=Biosstel
+            org.opencontainers.image.version=${{ steps.version.outputs.version || 'dev' }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ github.event.head_commit.timestamp || github.event.pull_request.updated_at || github.run_started_at }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.url=${{ github.server_url }}/${{ github.repository }}
+            com.biosstel.branch=${{ steps.version.outputs.branch }}
+            com.biosstel.build.number=${{ steps.version.outputs.build_number }}
+            com.biosstel.build.sha=${{ github.sha }}
+            com.biosstel.build.sha.short=${{ steps.version.outputs.short_sha }}
+            com.biosstel.workflow.run=${{ github.run_id }}
+            com.biosstel.workflow.run.url=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       
       - name: 🏗️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -81,10 +132,32 @@ jobs:
       
       - name: 🚀 Deploy to server
         run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${BRANCH_NAME//\//-}
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          
           echo "🚀 Deploying to ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}"
-          echo "📦 Images: ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}"
-          echo "📦 Images: ghcr.io/${{ github.repository }}/backend:${{ github.sha }}"
+          echo ""
+          echo "📦 Docker Images:"
+          echo "  Frontend:"
+          echo "    - ghcr.io/${{ github.repository }}/frontend:$BRANCH_NAME"
+          echo "    - ghcr.io/${{ github.repository }}/frontend:$BRANCH_NAME-build-${{ github.run_number }}"
+          echo "    - ghcr.io/${{ github.repository }}/frontend:$BRANCH_NAME-$SHORT_SHA"
+          echo "    - ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}"
+          echo "  Backend:"
+          echo "    - ghcr.io/${{ github.repository }}/backend:$BRANCH_NAME"
+          echo "    - ghcr.io/${{ github.repository }}/backend:$BRANCH_NAME-build-${{ github.run_number }}"
+          echo "    - ghcr.io/${{ github.repository }}/backend:$BRANCH_NAME-$SHORT_SHA"
+          echo "    - ghcr.io/${{ github.repository }}/backend:${{ github.sha }}"
+          echo ""
+          echo "📊 Build Info:"
+          echo "  Branch: $BRANCH_NAME"
+          echo "  Build #: ${{ github.run_number }}"
+          echo "  Commit: ${{ github.sha }}"
+          echo "  Short SHA: $SHORT_SHA"
+          echo ""
           # TODO: Add actual deployment commands here (SSH, kubectl, docker-compose, etc.)
+          # Example: docker pull ghcr.io/${{ github.repository }}/frontend:$BRANCH_NAME-build-${{ github.run_number }}
       
       - name: 📢 Notify deployment
         if: always()
@@ -113,7 +186,9 @@ jobs:
         id: tag
         run: |
           VERSION=$(date +'%Y.%m.%d')-${{ github.run_number }}
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
           git tag v$VERSION
           git push origin v$VERSION
       
@@ -144,7 +219,30 @@ jobs:
             
             ## 📦 Docker Images
             
-            - Frontend: `ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}`
-            - Backend: `ghcr.io/${{ github.repository }}/backend:${{ github.sha }}`
+            ### Tags disponibles:
+            
+            **Frontend:**
+            - `ghcr.io/${{ github.repository }}/frontend:main` (branch)
+            - `ghcr.io/${{ github.repository }}/frontend:main-build-${{ github.run_number }}` (build #)
+            - `ghcr.io/${{ github.repository }}/frontend:main-${{ steps.tag.outputs.short_sha }}` (short SHA)
+            - `ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}` (full SHA)
+            - `ghcr.io/${{ github.repository }}/frontend:latest` (latest)
+            - `ghcr.io/${{ github.repository }}/frontend:v${{ steps.tag.outputs.version }}` (version tag)
+            
+            **Backend:**
+            - `ghcr.io/${{ github.repository }}/backend:main` (branch)
+            - `ghcr.io/${{ github.repository }}/backend:main-build-${{ github.run_number }}` (build #)
+            - `ghcr.io/${{ github.repository }}/backend:main-${{ steps.tag.outputs.short_sha }}` (short SHA)
+            - `ghcr.io/${{ github.repository }}/backend:${{ github.sha }}` (full SHA)
+            - `ghcr.io/${{ github.repository }}/backend:latest` (latest)
+            - `ghcr.io/${{ github.repository }}/backend:v${{ steps.tag.outputs.version }}` (version tag)
+            
+            ## 📊 Build Information
+            
+            - **Build Number**: ${{ github.run_number }}
+            - **Commit SHA**: `${{ github.sha }}`
+            - **Short SHA**: `${{ steps.tag.outputs.short_sha }}`
+            - **Branch**: `main`
+            - **Workflow Run**: [View Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
           draft: false
           prerelease: false
