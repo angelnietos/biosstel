@@ -294,3 +294,31 @@ biosstel-monorepo/
 | `pnpm test:e2e:api` | Tests E2E de la API |
 | `pnpm test:e2e:front` | Tests E2E del Frontend |
 | `pnpm playwright:install` | Instalar navegadores de Playwright |
+
+## 🔄 CI/CD
+
+### GitHub Actions
+
+El proyecto incluye pipelines de CI/CD en `.github/workflows/`:
+
+| Workflow | Descripción | Trigger |
+|----------|-------------|---------|
+| `ci.yml` | Lint, TypeCheck, Unit Tests, Build | Push/PR a main, master, develop |
+| `e2e.yml` | Tests E2E con Playwright | Push/PR a main, master, develop |
+| `docker.yml` | Build de imágenes Docker | Push/PR a main, master |
+
+### Jobs del CI
+
+1. **Lint** - Ejecuta ESLint
+2. **TypeCheck** - Verifica tipos TypeScript
+3. **Unit Tests** - Ejecuta tests con Vitest
+4. **Build** - Compila API y Frontend
+
+### Jobs del E2E
+
+1. **Install dependencies** - Instala dependencias
+2. **Install Playwright browsers** - Instala navegadores
+3. **Start PostgreSQL** - Inicia base de datos
+4. **Start API** - Inicia servidor API
+5. **Start Frontend** - Inicia servidor Frontend
+6. **Run E2E tests** - Ejecuta tests E2E
