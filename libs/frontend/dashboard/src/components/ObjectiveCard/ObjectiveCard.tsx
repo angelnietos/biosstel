@@ -6,57 +6,83 @@
 
 'use client';
 
+import { Link } from '@biosstel/platform';
+
 export interface ObjectiveCardProps {
   title: string;
   achieved: number;
   objective: number;
   unit?: string;
+  accent?: 'maroon' | 'teal' | 'blue' | 'purple';
+  href?: string;
 }
 
-export const ObjectiveCard = ({ title, achieved, objective, unit = '' }: ObjectiveCardProps) => {
+export const ObjectiveCard = ({
+  title,
+  achieved,
+  objective,
+  unit = '',
+  accent = 'blue',
+  href,
+}: ObjectiveCardProps) => {
   const percentage = objective > 0 ? Math.min((achieved / objective) * 100, 100) : 0;
-  const isExceeded = achieved > objective;
+  const pctLabel = `${percentage.toFixed(0)}%`;
+
+  const accentClass =
+    accent === 'maroon'
+      ? 'bg-accent-maroon'
+      : accent === 'teal'
+        ? 'bg-accent-teal'
+        : accent === 'purple'
+          ? 'bg-accent-purple'
+          : 'bg-accent-blue';
+
+  const Container: any = href ? Link : 'div';
+  const containerProps = href ? { href } : {};
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
-      
-      <div className="space-y-3">
-        <div className="flex justify-between items-baseline">
-          <div>
-            <span className="text-2xl font-bold text-gray-900">
-              {achieved.toLocaleString()}
-            </span>
-            {unit && <span className="text-sm text-gray-500 ml-1">{unit}</span>}
+    <Container
+      {...containerProps}
+      className={`block rounded-2xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow ${
+        href ? 'cursor-pointer' : ''
+      }`}
+    >
+      <div className="text-mid font-semibold text-gray-900 mb-2">{title}</div>
+
+      <div className="flex items-end justify-between gap-4">
+        <div className="flex items-baseline gap-2">
+          <div className="text-datos font-bold text-gray-900 leading-none">
+            {achieved.toLocaleString()}
           </div>
-          <div className="text-right">
-            <div className="text-sm text-gray-500">Objetivo</div>
-            <div className="text-lg font-semibold text-gray-700">
-              {objective.toLocaleString()} {unit}
-            </div>
+          <div className="text-h3 font-semibold text-gray-350 leading-none">
+            / {objective.toLocaleString()}
+            {unit ? ` ${unit}` : ''}
           </div>
         </div>
 
-        <div className="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div className="text-mini font-semibold text-gray-600">{pctLabel}</div>
+      </div>
+
+      <div className="mt-3">
+        <div className="flex items-center gap-4 text-mini text-gray-350 mb-2">
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-gray-600" />
+            <span>Logrado</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-gray-300" />
+            <span>Objetivo</span>
+          </div>
+        </div>
+
+        <div className="h-1.5 w-full rounded-full bg-gray-100 overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-300 ${
-              isExceeded
-                ? 'bg-green-500'
-                : percentage >= 75
-                ? 'bg-blue-500'
-                : percentage >= 50
-                ? 'bg-yellow-500'
-                : 'bg-red-500'
-            }`}
+            className={`h-full ${accentClass}`}
             style={{ width: `${Math.min(percentage, 100)}%` }}
           />
         </div>
-
-        <div className="text-sm font-medium text-gray-700">
-          {percentage.toFixed(0)}% {isExceeded && '(Objetivo superado)'}
-        </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
