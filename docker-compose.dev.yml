@@ -13,6 +13,7 @@ services:
       POSTGRES_USER: biosstel
       POSTGRES_PASSWORD: biosstel123
       POSTGRES_DB: biosstel
+      POSTGRES_HOST_AUTH_METHOD: md5
     ports:
       - "5432:5432"
     volumes:

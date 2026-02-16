@@ -23,7 +23,7 @@ import { HealthModule } from './modules/health/health.module';
         username: configService.get('DB_USER', 'biosstel'),
         password: configService.get('DB_PASSWORD', 'biosstel123'),
         database: configService.get('DB_NAME', 'biosstel'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [__dirname + '/**/*.entity{.js}'],
         synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') === 'development',
       }),
