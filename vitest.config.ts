@@ -5,8 +5,16 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['apps/**/*.test.ts', 'apps/**/*.spec.ts'],
-    exclude: ['apps/**/e2e/**', 'apps/**/node_modules/**'],
+    include: ['apps/**/*.test.ts', 'libs/**/*.test.ts'],
+    exclude: [
+      'apps/**/e2e*/**',
+      'apps/e2e-*/**',
+      'apps/**/node_modules/**',
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      '.next/**',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],

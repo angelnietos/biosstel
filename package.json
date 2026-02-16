@@ -16,7 +16,7 @@
     "build:front": "cd apps/front-biosstel && pnpm next build",
     "build:api": "node node_modules/nx/bin/nx.js build api-biosstel",
     "lint": "node node_modules/nx/bin/nx.js run-many -t lint",
-    "test": "vitest",
+    "test": "vitest run",
     "nx": "node node_modules/nx/bin/nx.js",
     "db:start": "docker-compose -f docker-compose.dev.yml up -d postgres adminer",
     "db:stop": "docker-compose -f docker-compose.dev.yml down",

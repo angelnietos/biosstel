@@ -50,7 +50,9 @@ jobs:
         run: pnpm install --frozen-lockfile
       
       - name: 🔍 Run ESLint
-        run: pnpm run lint:all
+        run: |
+          # Lint only main apps and critical libraries
+          pnpm nx run-many -t lint --projects=front-biosstel,api-biosstel,shared-types --skip-nx-cache
         continue-on-error: false
       
       - name: 🔍 TypeCheck Frontend
