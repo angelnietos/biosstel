@@ -1,4 +1,4 @@
-# API Dockerfile - Node.js + GraphQL
+# API Dockerfile - NestJS
 FROM node:20-alpine AS base
 
 # Install dependencies only when needed
@@ -9,8 +9,6 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* ./
 COPY apps/api-biosstel/package.json ./apps/api-biosstel/
-COPY apps/api-biosstel/microservices/auth/package.json ./apps/api-biosstel/microservices/auth/
-COPY apps/api-biosstel/microservices/common/package.json ./apps/api-biosstel/microservices/common/
 COPY libs/shared-types/package.json ./libs/shared-types/
 
 # Install dependencies
@@ -40,9 +38,7 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodejs
 
-COPY --from=builder /app/apps/api-biosstel/build ./build
-COPY --from=builder /app/apps/api-biosstel/microservices/auth/build ./microservices/auth/build
-COPY --from=builder /app/apps/api-biosstel/microservices/common/build ./microservices/common/build
+COPY --from=builder /app/dist/apps/api-biosstel ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
 
@@ -53,4 +49,4 @@ EXPOSE 4000
 ENV PORT=4000
 ENV NODE_ENV=production
 
-CMD ["node", "build/app.js"]
+CMD ["node", "dist/main.js"]

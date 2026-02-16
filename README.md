@@ -1,190 +1,156 @@
 # Biosstel Monorepo
 
-Monorepo para el proyecto Biosstel gestionado con [Nx](https://nx.dev).
+Monorepo para el proyecto Biosstel.
 
-## 📁 Estructura del Proyecto
+## 🏗️ Arquitectura
+
+### Stack Tecnológico
+
+| Capa | Tecnología |
+|------|------------|
+| Frontend | Next.js 16 + React 19 |
+| Backend | NestJS + REST API |
+| Base de datos | PostgreSQL + TypeORM |
+| Autenticación | JWT |
+
+### Estructura
 
 ```
 biosstel-monorepo/
 ├── apps/
-│   ├── front-biosstel/     # Aplicación Next.js (Frontend)
-│   └── api-biosstel/       # API GraphQL con microservicios (Backend)
+│   ├── front-biosstel/     # Next.js (Frontend)
+│   └── api-biosstel/       # NestJS (REST API)
 ├── libs/
 │   └── shared-types/       # Tipos TypeScript compartidos
-├── docker/                 # Archivos Docker
-├── docker-compose.yml      # Producción completa
-└── docker-compose.dev.yml  # Solo base de datos
+└── docker/                 # Docker
 ```
 
 ## 🚀 Inicio Rápido
 
-### 1. Instalar dependencias
-
 ```bash
+# 1. Instalar dependencias
 npm install
-```
 
-### 2. Configurar variables de entorno
-
-```bash
+# 2. Configurar variables de entorno
 cp .env.example .env
-# Edita .env con tus valores
-```
 
-### 3. Iniciar la base de datos
-
-```bash
+# 3. Iniciar base de datos
 npm run db:start
-```
 
-### 4. Iniciar las aplicaciones
-
-```bash
+# 4. Iniciar desarrollo
 npm start
 ```
 
-¡Eso es todo! Ahora tienes:
-- Frontend: http://localhost:3000
-- API: http://localhost:4000
-- Adminer (admin BD): http://localhost:8080
+## 📋 Comandos
 
-## 📋 Comandos Principales
-
-### Desarrollo Diario
+### Desarrollo
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm start` | Inicia frontend + API en paralelo |
-| `npm start:front` | Inicia solo el frontend |
-| `npm start:api` | Inicia solo la API |
-| `npm run build` | Construye todos los proyectos |
-| `npm run lint` | Ejecuta linter en todos los proyectos |
+| `npm start` | Inicia todo (frontend + API) |
+| `npm start:front` | Solo frontend (:3000) |
+| `npm start:api` | Solo API (:4000) |
+| `npm run build` | Build de todo |
 
 ### Base de Datos
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm run db:start` | Inicia PostgreSQL + Adminer |
-| `npm run db:stop` | Detiene la base de datos |
-| `npm run db:reset` | Reinicia la base de datos (borra datos) |
-| `npm run db:logs` | Ver logs de la base de datos |
+| `npm run db:start` | Inicia PostgreSQL |
+| `npm run db:stop` | Detiene PostgreSQL |
+| `npm run db:reset` | Reinicia la BD |
 
-### Docker (Producción)
+## 🔌 API REST
 
-| Comando | Descripción |
-|---------|-------------|
-| `npm run docker:build` | Construye imágenes Docker |
-| `npm run docker:up` | Inicia todos los servicios |
-| `npm run docker:down` | Detiene todos los servicios |
-| `npm run docker:logs` | Ver logs de todos los servicios |
+### Endpoints
 
-## 🐳 ¿Por qué Docker?
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | /api/auth/login | Iniciar sesión |
+| POST | /api/auth/register | Registrarse |
+| GET | /api/auth/profile | Perfil (auth) |
+| GET | /api/users | Listar usuarios (auth) |
+| GET | /api/health | Estado de la API |
 
-### Sin Docker (Desarrollo Local)
-- Usas tu Node.js local
-- Ejecutas `npm start` directamente
-- La base de datos corre en Docker (PostgreSQL)
+### Documentación
 
-### Con Docker (Producción)
-- Todos los servicios en contenedores
-- Mismo entorno en desarrollo y producción
-- Fácil despliegue
+Swagger disponible en: http://localhost:4000/api/docs
 
-## 🗄️ Base de Datos
-
-### Conexión
-
-```
-Host: localhost
-Port: 5432
-Database: biosstel
-User: biosstel
-Password: biosstel123
-```
-
-### Adminer (UI para BD)
-
-1. Abre http://localhost:8080
-2. Selecciona "PostgreSQL"
-3. Usa las credenciales de arriba
-
-## 📦 Aplicaciones
-
-### Frontend (front-biosstel)
-
-- Next.js 16 + React 19
-- Tailwind CSS 4
-- next-intl (internacionalización)
-- Redux Toolkit
+## 🐳 Docker
 
 ```bash
-npm start:front    # http://localhost:3000
+# Desarrollo: solo base de datos
+npm run db:start
+
+# Producción: todo en contenedores
+npm run docker:build
+npm run docker:up
 ```
 
-### API (api-biosstel)
+### Puertos
 
-- Apollo Server 5 (GraphQL)
-- Express 5
-- PostgreSQL + Sequelize
-- Microservicio de autenticación
+| Servicio | Puerto |
+|----------|--------|
+| Frontend | 3000 |
+| API | 4000 |
+| API Docs | 4000/api/docs |
+| PostgreSQL | 5432 |
+| Adminer | 8080 |
 
-```bash
-npm start:api    # http://localhost:4000
+## 📦 Estructura del API (NestJS)
+
 ```
-
-## 🔧 Comandos Nx
-
-```bash
-# Ver grafo de dependencias
-npm run nx graph
-
-# Ver proyectos
-npm run nx show projects
-
-# Ejecutar tarea específica
-npm run nx build front-biosstel
+src/
+├── main.ts                 # Entry point
+├── app.module.ts           # Root module
+└── modules/
+    ├── auth/              # Autenticación JWT
+    │   ├── auth.controller.ts
+    │   ├── auth.service.ts
+    │   ├── strategies/
+    │   └── guards/
+    ├── users/             # Gestión de usuarios
+    │   ├── users.controller.ts
+    │   ├── users.service.ts
+    │   └── entities/
+    └── health/            # Health checks
 ```
 
 ## 🔐 Variables de Entorno
 
-Ver [`.env.example`](.env.example) para todas las variables.
-
-### Mínimas para desarrollo
-
 ```env
-DATABASE_URL=postgresql://biosstel:biosstel123@localhost:5432/biosstel
-JWT_SECRET=tu-secreto-jwt
-NEXT_PUBLIC_API_URL=http://localhost:4000
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=biosstel
+DB_PASSWORD=biosstel123
+DB_NAME=biosstel
+
+# JWT
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
+
+# App
+PORT=4000
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:3000
 ```
 
-## 🤝 Flujo de Trabajo del Equipo
+## 🤝 Contribuir
 
-1. **Clonar el repositorio**
-   ```bash
-   git clone <repo-url>
-   cd biosstel-monorepo
-   ```
+```bash
+# Clonar
+git clone <repo>
 
-2. **Instalar dependencias**
-   ```bash
-   npm install
-   ```
+# Instalar
+npm install
 
-3. **Configurar entorno**
-   ```bash
-   cp .env.example .env
-   # Editar .env
-   ```
+# Base de datos
+npm run db:start
 
-4. **Iniciar base de datos**
-   ```bash
-   npm run db:start
-   ```
-
-5. **Desarrollar**
-   ```bash
-   npm start
-   ```
+# Desarrollo
+npm start
+```
 
 ## 📄 Licencia
 
