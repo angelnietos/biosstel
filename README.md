@@ -22,7 +22,7 @@ Monorepo full-stack modular con arquitectura hexagonal y feature-driven developm
 El proyecto sigue una arquitectura **modular y escalable** donde:
 
 - **Frontend**: Features con `pages`, `shell`, `data-access`, `components`
-- **Backend**: Features con `domain`, `application`, `infrastructure`, `api`
+- **Backend**: Features con **Arquitectura Hexagonal** (Ports & Adapters)
 - **Shared**: Tipos, enums, utils compartidos entre frontend y backend
 
 ```
@@ -31,36 +31,57 @@ biosstel-monorepo/
 │   ├── front-biosstel/          # Next.js Frontend
 │   └── api-biosstel/             # NestJS Backend API
 ├── libs/
-│   ├── shared-types/            # Tipos TypeScript compartidos
-│   ├── ui/                      # Componentes UI reutilizables
-│   ├── ui-layout/               # Layouts y composiciones
-│   ├── platform/                # Utilidades de plataforma
-│   ├── auth/                    # Feature: Autenticación (frontend)
-│   ├── users/                   # Feature: Usuarios (frontend)
-│   ├── api-shared/              # Utilidades backend compartidas
-│   └── api-users/               # Feature: Usuarios (backend - hexagonal)
+│   ├── frontend/                # Features frontend organizadas
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   ├── users/
+│   │   ├── shared/
+│   │   └── ui*/
+│   ├── backend/                 # Features backend con hexagonal
+│   │   ├── api-users/           # 🏗️ Arquitectura Hexagonal
+│   │   │   ├── application/     # Use Cases y Ports
+│   │   │   │   ├── ports/
+│   │   │   │   │   ├── input/   # Interfaces de entrada (IUserManagement)
+│   │   │   │   │   └── output/  # Interfaces de salida (IUserRepository)
+│   │   │   │   └── use-cases/   # Lógica de aplicación
+│   │   │   └── infrastructure/  # Adapters
+│   │   │       ├── api/         # Input Adapters (Controllers)
+│   │   │       └── persistence/ # Output Adapters (TypeORM Entities + Repos)
+│   │   ├── api-dashboard/       # 🏗️ Arquitectura Hexagonal
+│   │   └── api-shared/          # Utilidades backend compartidas
+│   └── shared/                  # Código compartido
+│       └── shared-types/        # Tipos TypeScript compartidos
 └── docker/                      # Dockerfiles y scripts
 ```
+
+> 📖 **Documentación Completa**: Ver [libs/backend/HEXAGONAL_ARCHITECTURE.md](libs/backend/HEXAGONAL_ARCHITECTURE.md)
 
 ### Diagrama de Dependencias
 
 ```
 Frontend (Next.js)
-  ├── features/* (auth, users, etc.)
+  ├── features/* (auth, dashboard, users, etc.)
   │   ├── shell
   │   ├── data-access
-  │   └── pages
+  │   ├── components
+  │   └── layouts
   ├── libs/ui (componentes atómicos)
   ├── libs/ui-layout (composiciones)
   └── libs/shared-types (tipos compartidos)
 
-Backend (NestJS)
-  ├── libs/api-users (feature hexagonal)
-  │   ├── domain
-  │   ├── application
-  │   └── infrastructure
-  ├── libs/api-shared (utilidades)
-  └── libs/shared-types (tipos compartidos)
+Backend (NestJS) - Arquitectura Hexagonal
+  ├── libs/backend/api-users
+  │   ├── application/              # 🟢 Use Cases
+  │   │   ├── ports/input/         # Input Ports (interfaces)
+  │   │   ├── ports/output/        # Output Ports (interfaces)
+  │   │   └── use-cases/           # Business logic
+  │   └── infrastructure/           # 🟡 Adapters
+  │       ├── api/                 # Controllers REST (input)
+  │       └── persistence/         # TypeORM Entities + Repos (output)
+  │
+  ├── libs/backend/api-dashboard   # (misma estructura)
+  ├── libs/backend/api-shared      # Utilidades compartidas
+  └── libs/shared-types            # Tipos compartidos
 ```
 
 ## 🚀 Inicio Rápido

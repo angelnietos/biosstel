@@ -1,22 +1,17 @@
 /**
- * @biosstel/api-users - Application Layer: Users Service
+ * @biosstel/api-users - Application Layer: User Management Use Cases
  * 
- * NestJS service that uses the IUserRepository port.
- * This is the application service in the hexagonal architecture.
+ * Use cases contain the application business logic.
+ * They implement the input ports and use the output ports (repositories).
  */
 
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  IUserRepository,
-  User,
-  CreateUserData,
-  UpdateUserData,
-  PaginatedResult,
-} from './application/ports/output/IUserRepository';
-import { TypeOrmUserRepository } from './infrastructure/persistence/TypeOrmUserRepository';
+import type { IUserManagement } from '../ports/input/IUserManagement';
+import type { User, CreateUserData, UpdateUserData, PaginatedResult } from '@biosstel/shared-types';
+import { TypeOrmUserRepository } from '../../infrastructure/persistence/TypeOrmUserRepository';
 
 @Injectable()
-export class UsersService {
+export class UserManagementUseCase implements IUserManagement {
   constructor(
     private readonly userRepository: TypeOrmUserRepository,
   ) {}
@@ -38,6 +33,7 @@ export class UsersService {
   }
 
   async create(data: CreateUserData): Promise<User> {
+    // Business rule: Email must be unique
     const existingUser = await this.userRepository.findByEmail(data.email);
     if (existingUser) {
       throw new Error('User with this email already exists');

@@ -1,11 +1,23 @@
+/**
+ * @biosstel/api-dashboard - NestJS Module Adapter
+ * 
+ * Hexagonal Architecture:
+ * - Application: Use Cases and Ports
+ * - Infrastructure: Adapters (TypeORM, REST)
+ */
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DashboardController } from './dashboard.controller';
+import { DashboardController } from './infrastructure/api/dashboard.controller';
 import { DashboardService } from './dashboard.service';
-import { DashboardObjectiveEntity } from './infrastructure/persistence/DashboardObjectiveEntity';
-import { DashboardAlertEntity } from './infrastructure/persistence/DashboardAlertEntity';
-import { TerminalObjectiveEntity } from './infrastructure/persistence/TerminalObjectiveEntity';
-import { TerminalAssignmentEntity } from './infrastructure/persistence/TerminalAssignmentEntity';
+import { DashboardManagementUseCase } from './application/use-cases';
+import { TypeOrmDashboardRepository } from './infrastructure/persistence/TypeOrmDashboardRepository';
+import {
+  DashboardObjectiveEntity,
+  DashboardAlertEntity,
+  TerminalObjectiveEntity,
+  TerminalAssignmentEntity,
+} from './infrastructure';
 
 @Module({
   imports: [
@@ -17,8 +29,22 @@ import { TerminalAssignmentEntity } from './infrastructure/persistence/TerminalA
     ]),
   ],
   controllers: [DashboardController],
-  providers: [DashboardService],
-  exports: [DashboardService],
+  providers: [
+    // Output Adapters (Repositories)
+    TypeOrmDashboardRepository,
+    
+    // Application Layer (Use Cases)
+    DashboardManagementUseCase,
+    
+    // Legacy service (for backward compatibility)
+    DashboardService,
+  ],
+  exports: [
+    DashboardManagementUseCase,
+    TypeOrmDashboardRepository,
+    DashboardService, // For backward compatibility
+  ],
 })
 export class DashboardModule {}
+
 

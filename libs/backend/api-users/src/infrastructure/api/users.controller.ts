@@ -1,8 +1,9 @@
 /**
- * @biosstel/api-users - Interface Adapters: Users Controller
+ * @biosstel/api-users - Infrastructure Layer: Users Controller (Input Adapter)
  * 
  * REST controller that exposes user endpoints.
- * This is the primary adapter in the hexagonal architecture.
+ * This is the input adapter in the hexagonal architecture.
+ * It uses the Use Case (input port) to execute business logic.
  */
 
 import {
@@ -18,13 +19,13 @@ import {
   HttpStatus,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import {
+import { UserManagementUseCase } from '../../application/use-cases';
+import type {
   CreateUserData,
   UpdateUserData,
   User,
   PaginatedResult,
-} from './application/ports/IUserRepository';
+} from '@biosstel/shared-types';
 
 class CreateUserDto implements CreateUserData {
   email!: string;
@@ -49,24 +50,26 @@ class PaginationQueryDto {
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly userManagement: UserManagementUseCase,
+  ) {}
 
   @Get()
   async findAll(
     @Query() query: PaginationQueryDto,
   ): Promise<PaginatedResult<User>> {
-    return this.usersService.findAll(query.page || 1, query.pageSize || 10);
+    return this.userManagement.findAll(query.page || 1, query.pageSize || 10);
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
-    return this.usersService.findById(id);
+    return this.userManagement.findById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.create(createUserDto);
+    return this.userManagement.create(createUserDto);
   }
 
   @Put(':id')
@@ -74,12 +77,12 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
-    return this.usersService.update(id, updateUserDto);
+    return this.userManagement.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.usersService.delete(id);
+    return this.userManagement.delete(id);
   }
 }

@@ -15,7 +15,7 @@ import {
   CreateUserData,
   UpdateUserData,
   PaginatedResult,
-} from '../../application/ports/IUserRepository';
+} from '../../application/ports/output/IUserRepository';
 import { UserEntity } from './UserEntity';
 
 @Injectable()
@@ -33,7 +33,7 @@ export class TypeOrmUserRepository implements IUserRepository {
     });
 
     return {
-      items: items.map(this.mapToDomain),
+      items: items.map((item) => this.mapToDomain(item)),
       total,
       page,
       pageSize,

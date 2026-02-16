@@ -4,9 +4,15 @@
  * Hexagonal Architecture for NestJS Backend
  * 
  * LAYERS:
- * - application/ports: Repository interfaces (contracts)
- * - infrastructure/persistence: TypeORM implementations
- * - NestJS Module: users.module.ts, users.service.ts, users.controller.ts
+ * - application/ports: Input and Output ports (contracts)
+ * - application/use-cases: Business logic (use cases)
+ * - infrastructure/persistence: Output adapters (TypeORM)
+ * - infrastructure/api: Input adapters (Controllers)
+ * 
+ * PUBLIC EXPORTS:
+ * - NestJS Module, Controller, Service
+ * - Use Cases (for other modules to use)
+ * - Repositories (for advanced use)
  */
 
 export * from './application';
@@ -15,4 +21,4 @@ export * from './infrastructure';
 // NestJS Module exports
 export * from './users.module';
 export * from './users.service';
-export * from './users.controller';
+export * from './infrastructure/api/users.controller';
