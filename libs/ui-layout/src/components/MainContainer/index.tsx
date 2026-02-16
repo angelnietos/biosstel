@@ -17,7 +17,7 @@ export const MainContainer = ({
   className = '',
 }: MainContainerProps) => {
   return (
-    <div className={`w-full max-w-md space-y-8 ${className}`}>
+    <div className={`w-full max-w-80 px-4 md:max-w-86 md:px-0 ${className}`}>
       {children}
     </div>
   );
