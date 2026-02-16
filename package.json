@@ -13,7 +13,7 @@
     "build:front": "cd apps/front-biosstel && pnpm next build",
     "build:api": "node node_modules/nx/bin/nx.js build api-biosstel",
     "lint": "node node_modules/nx/bin/nx.js run-many -t lint",
-    "test": "node node_modules/nx/bin/nx.js run-many -t test",
+    "test": "vitest",
     "nx": "node node_modules/nx/bin/nx.js",
     "db:start": "docker-compose -f docker-compose.dev.yml up -d postgres adminer",
     "db:stop": "docker-compose -f docker-compose.dev.yml down",
@@ -29,7 +29,16 @@
     "lint:all": "node node_modules/nx/bin/nx.js run-many -t lint",
     "typecheck": "node node_modules/nx/bin/nx.js run-many -t typecheck",
     "typecheck:front": "node node_modules/nx/bin/nx.js typecheck front-biosstel",
-    "typecheck:api": "node node_modules/nx/bin/nx.js typecheck api-biosstel"
+    "typecheck:api": "node node_modules/nx/bin/nx.js typecheck api-biosstel",
+    "test:ui": "vitest --ui",
+    "test:api": "vitest run apps/api-biosstel",
+    "test:front": "vitest run apps/front-biosstel",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:api": "playwright test apps/e2e-api",
+    "test:e2e:front": "playwright test apps/e2e-front",
+    "test:e2e:all": "playwright test apps/e2e-api apps/e2e-front",
+    "playwright:install": "playwright install --with-deps chromium"
   },
   "devDependencies": {
     "@nx/eslint": "^20.4.0",
@@ -37,11 +46,20 @@
     "@nx/next": "^20.4.0",
     "@nx/node": "^20.4.0",
     "@nx/workspace": "^20.4.0",
+    "@playwright/test": "^1.58.2",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.19.11",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.0.0",
+    "happy-dom": "^16.8.1",
     "nx": "^20.4.0",
-    "typescript": "^5.8.3"
+    "playwright": "^1.58.2",
+    "typescript": "^5.8.3",
+    "vite": "^6.4.1",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^2.1.9"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

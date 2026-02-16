@@ -223,3 +223,74 @@ CORS_ORIGIN=http://localhost:3000
 ## 📄 Licencia
 
 ISC
+
+---
+
+## 🧪 Testing
+
+### Tests Unitarios (Vitest)
+
+```bash
+# Ejecutar todos los tests
+pnpm test
+
+# Ejecutar tests de API
+pnpm test:api
+
+# Ejecutar tests de Frontend
+pnpm test:front
+
+# Ejecutar tests con UI
+pnpm test:ui
+```
+
+### Tests E2E (Playwright)
+
+```bash
+# Instalar navegadores de Playwright
+pnpm playwright:install
+
+# Ejecutar todos los tests E2E
+pnpm test:e2e
+
+# Ejecutar tests E2E con UI interactiva
+pnpm test:e2e:ui
+
+# Ejecutar solo tests E2E de API
+pnpm test:e2e:api
+
+# Ejecutar solo tests E2E de Frontend
+pnpm test:e2e:front
+```
+
+### Estructura de Tests
+
+```
+biosstel-monorepo/
+├── apps/
+│   ├── api-biosstel/
+│   │   └── src/**/*.spec.ts       # Tests unitarios (Vitest)
+│   ├── e2e-api/
+│   │   ├── playwright.config.ts
+│   │   └── tests/                  # Tests E2E de API
+│   ├── e2e-front/
+│   │   ├── playwright.config.ts
+│   │   └── tests/                  # Tests E2E de Frontend
+│   └── front-biosstel/
+├── vitest.config.ts                # Configuración de Vitest
+└── playwright.config.ts            # Configuración de Playwright
+```
+
+### Scripts Disponibles
+
+| Comando | Descripción |
+|---------|-------------|
+| `pnpm test` | Ejecutar tests unitarios con Vitest |
+| `pnpm test:ui` | Tests unitarios con UI interactiva |
+| `pnpm test:api` | Solo tests de la API |
+| `pnpm test:front` | Solo tests del Frontend |
+| `pnpm test:e2e` | Todos los tests E2E |
+| `pnpm test:e2e:ui` | Tests E2E con UI interactiva |
+| `pnpm test:e2e:api` | Tests E2E de la API |
+| `pnpm test:e2e:front` | Tests E2E del Frontend |
+| `pnpm playwright:install` | Instalar navegadores de Playwright |
