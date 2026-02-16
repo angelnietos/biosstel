@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Home Page', () => {
-  test('should load the home page', async ({ page }) => {
+test.describe('Home / Root Page', () => {
+  test('should redirect root to login', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/Biosstel/i);
+    // Root page redirects to /login, middleware adds locale → /es/login
+    await page.waitForURL(/\/login/);
+    expect(page.url()).toContain('/login');
   });
 
-  test('should show login button', async ({ page }) => {
+  test('should have Biosstel in the title', async ({ page }) => {
     await page.goto('/');
-    // Check for login link or button
-    const loginLink = page.getByRole('link', { name: /login/i });
-    await expect(loginLink).toBeVisible();
+    await expect(page).toHaveTitle(/Biosstel/i);
   });
 });

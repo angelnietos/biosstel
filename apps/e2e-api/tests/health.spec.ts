@@ -6,9 +6,10 @@ test.describe('Health API', () => {
     expect(response.ok()).toBeTruthy();
   });
 
-  test('GET /api/health should return health status', async ({ request }) => {
+  test('GET /api/health should return status ok', async ({ request }) => {
     const response = await request.get('/api/health');
     const data = await response.json();
-    expect(data).toHaveProperty('status');
+    expect(data).toHaveProperty('status', 'ok');
+    expect(data).toHaveProperty('timestamp');
   });
 });

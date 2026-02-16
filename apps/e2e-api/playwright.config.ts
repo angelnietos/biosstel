@@ -10,6 +10,6 @@ export default defineConfig({
     command: 'pnpm dev:api',
     url: 'http://localhost:4000/api/health',
     reuseExistingServer: true,
-    timeout: 60000,
+    timeout: 120000,
   },
 });

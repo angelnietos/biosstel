@@ -3,8 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '@biosstel/api-users';
 import { DashboardModule } from '@biosstel/api-dashboard';
+import { HealthController } from './health.controller';
 
 @Module({
+  controllers: [HealthController],
   imports: [
     // Configuration
     ConfigModule.forRoot({
