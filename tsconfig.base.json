@@ -19,6 +19,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
+      "@lib/*": ["libs/*"],
       "@biosstel/shared-types": ["libs/shared-types/src/index.ts"],
       "@biosstel/ui": ["libs/ui/src/index.ts"],
       "@biosstel/ui-layout": ["libs/ui-layout/src/index.ts"],

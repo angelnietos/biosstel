@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './modules/users.module';
 
 @Module({
   imports: [
@@ -27,8 +28,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       inject: [ConfigService],
     }),
 
-    // Feature Modules - imported from modules folder
-    // TODO: Add UsersModule from libs when path resolution is fixed
+    // Feature Modules
+    UsersModule,
   ],
 })
 export class AppModule {}

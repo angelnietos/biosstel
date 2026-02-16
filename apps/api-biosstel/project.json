@@ -4,14 +4,13 @@
   "sourceRoot": "apps/api-biosstel/src",
   "projectType": "application",
   "tags": ["type:api", "framework:nestjs", "scope:backend"],
-  "implicitDependencies": ["api-users"],
   "targets": {
     "dev": {
-      "executor": "@nx/js:node",
+      "executor": "nx:run-commands",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api-biosstel:build",
-        "watch": true
+        "command": "tsx watch --tsconfig tsconfig.dev.json dev.ts",
+        "cwd": "apps/api-biosstel"
       }
     },
     "build": {
@@ -24,7 +23,13 @@
         "tsConfig": "apps/api-biosstel/tsconfig.app.json",
         "assets": ["apps/api-biosstel/src/**/*"],
         "buildableProjectDepsInPackageJsonType": "dependencies"
-      }
+      },
+      "dependsOn": [
+        {
+          "target": "api-users:build",
+          "projects": "dependencies"
+        }
+      ]
     },
     "start": {
       "executor": "@nx/js:node",
