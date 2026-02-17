@@ -2,6 +2,8 @@ name: CD Pipeline
 
 run-name: ${{ github.ref_name }} | Build #${{ github.run_number }} | SHA ${{ substr(github.sha, 0, 7) }}
 
+# CD solo corre en PUSH a estas ramas (no en pull_request).
+# Por eso: en PRs solo ves CI; al hacer merge/push a main/develop ves CI + CD.
 on:
   push:
     branches:
