@@ -48,7 +48,7 @@ jobs:
     
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       
       - name: 🔍 Detect changed files
         uses: dorny/paths-filter@v3
@@ -77,7 +77,7 @@ jobs:
     
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       
       - name: 📦 Setup pnpm
         uses: pnpm/action-setup@v3
@@ -104,7 +104,7 @@ jobs:
     
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       
       - name: 📦 Setup pnpm
         uses: pnpm/action-setup@v3
@@ -134,7 +134,7 @@ jobs:
     
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       
       - name: 📦 Setup pnpm
         uses: pnpm/action-setup@v3
