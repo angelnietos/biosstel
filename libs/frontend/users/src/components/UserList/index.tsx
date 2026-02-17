@@ -5,7 +5,7 @@
  * Uses application layer to get data.
  */
 
-import type { User } from '../types';
+import type { User } from '../../types';
 
 export interface UserListProps {
   users: User[];
