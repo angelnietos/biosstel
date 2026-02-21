@@ -1,0 +1,1 @@
+export { LocaleLang } from './LocaleLang';

@@ -1,0 +1,17 @@
+refactor: integración develop desde refactorgordo (squash)
+
+Cambios principales:
+
+- CI/CD: Pipelines multietapa (pipeline.yml, cd-pipeline.yml) con selección de tipo de build (frontend, backend, storybook, lint-only, test-only), stages (lint, test-unit, test-e2e, security, build) y tareas por etapa. workflow_dispatch en CI y CD para ejecuciones manuales. Docker por servicio (frontend/backend) y deploy/release configurables.
+
+- Storybook: Configuración unificada para todas las features. Mocks de platform y next-intl, Redux en preview. Stories en auth, usuarios, objetivos, fichajes, alertas, operaciones, empresa, productos, inventory, reports. Targets Nx storybook y build-storybook en front-biosstel.
+
+- Objetivos terminales: API POST/DELETE assignments, PATCH con achieved/objective/pct. Front: activar, editar meta, guardar con persistencia. Forgot password: flujo completo. Tests E2E y unitarios.
+
+- Dev: Export de flow log a BD (frontend_logs, POST /dev-logs, botón en shell en development). Sentry configurado.
+
+- Redux: Store global en shell con STORE_KEYS, useAppDispatch/useAppSelector. Sin dependencias entre features; shared con AddDepartmentModal, AlertsTable, createDepartment.
+
+- Estructura: Features con api/services, api/types, data-access, pages, shell. Backend hexagonal unificada. E2E de persistencia. Docs: CI_CD, TESTING, API_RESPONSES, REDUX_PATTERN, etc.
+
+- Otros: JWT expiresIn tipado, Sidebar con logout visible y nombre truncado, Swagger completo, scripts api:seed y api:postman-test, filtro global HTTP.

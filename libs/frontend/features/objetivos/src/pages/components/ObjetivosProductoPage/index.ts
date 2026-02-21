@@ -1,0 +1,1 @@
+export { ObjetivosProductoPage } from './ObjetivosProductoPage';

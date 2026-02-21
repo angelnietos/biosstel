@@ -1,0 +1,8 @@
+{
+  "watch": ["src", "../../libs/backend", "../../libs/shared-types"],
+  "ext": "ts,json",
+  "ignore": ["**/*.spec.ts", "**/*.test.ts", "**/dist/**", "**/node_modules/**"],
+  "exec": "pnpm exec ts-node -r tsconfig-paths/register --project tsconfig.dev.json dev.ts",
+  "legacyWatch": true,
+  "delay": "500"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@biosstel/shared-types",
+  "projectType": "library",
+  "tags": ["type:shared-types", "npm:private"],
+  "sourceRoot": "libs/shared-types/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "libs/shared-types/dist",
+        "rootDir": "libs/shared-types/src",
+        "main": "libs/shared-types/src/index.ts",
+        "tsConfig": "libs/shared-types/tsconfig.json",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

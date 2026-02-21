@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comparativa: Proyecto inicial vs Monorepo — Biosstel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #050510;
+      --bg-card: rgba(15, 23, 42, 0.85);
+      --bg-card-border: rgba(148, 163, 184, 0.08);
+      --text: #f1f5f9;
+      --text-soft: #94a3b8;
+      --accent: #22d3ee;
+      --accent-2: #a78bfa;
+      --gold: #fbbf24;
+      --success: #34d399;
+      --danger: #f87171;
+      --font: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --glow: 0 0 60px -15px rgba(34, 211, 238, 0.25);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      font-weight: 400;
+      background: var(--bg-deep);
+      color: var(--text);
+      line-height: 1.65;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(34, 211, 238, 0.12), transparent),
+        radial-gradient(ellipse 80% 50% at 100% 50%, rgba(167, 139, 250, 0.06), transparent),
+        radial-gradient(ellipse 60% 40% at 0% 80%, rgba(251, 191, 36, 0.04), transparent);
+    }
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+    }
+    .hero {
+      text-align: center;
+      padding: 4rem 0 3rem;
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent-2) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+    }
+    .hero .sub {
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      margin-top: 0.75rem;
+      font-weight: 500;
+    }
+    .hero .badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    .hero .badge {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero .badge-heredado { background: linear-gradient(135deg, rgba(71,85,105,0.4), rgba(51,65,85,0.5)); color: #cbd5e1; }
+    .hero .badge-actual { background: linear-gradient(135deg, rgba(34,211,238,0.15), rgba(167,139,250,0.1)); color: var(--accent); border-color: rgba(34,211,238,0.3); }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 3rem 0 1.25rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    h2::before {
+      content: '';
+      width: 4px;
+      height: 1.4em;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 0 0 0.75rem;
+    }
+    p { margin: 0.75rem 0; color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--glow);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { border-color: rgba(34, 211, 238, 0.15); box-shadow: 0 0 80px -20px rgba(34, 211, 238, 0.2); }
+    .card.ceo { border-left: 3px solid var(--success); }
+    .card.cto { border-left: 3px solid var(--accent); }
+    .card.negocio { border-left: 3px solid var(--gold); }
+    .card.recomendacion { border-left: 3px solid var(--accent-2); background: linear-gradient(135deg, rgba(34,211,238,0.06), rgba(167,139,250,0.04)); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.9rem;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    th, td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    th {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .winner { background: rgba(52, 211, 153, 0.12) !important; color: #6ee7b7; font-weight: 500; }
+    .muted { color: var(--text-soft); font-size: 0.9rem; }
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.3);
+      color: var(--accent);
+    }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+    li { margin: 0.4rem 0; }
+
+    .toc {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .toc a {
+      display: block;
+      padding: 0.65rem 1rem;
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      transition: background 0.2s, color 0.2s;
+    }
+    .toc a:hover { background: rgba(34, 211, 238, 0.08); color: var(--accent); }
+
+    .foot {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.1);
+      font-size: 0.85rem;
+      color: var(--text-soft);
+    }
+
+    @media print {
+      body { background: #fff; color: #111; background-image: none; }
+      .wrap { padding: 1rem; }
+      .hero h1 { background: none; color: #111; -webkit-text-fill-color: #111; }
+      .hero .sub, .muted { color: #444; }
+      .card { background: #f8fafc; border: 1px solid #e2e8f0; box-shadow: none; backdrop-filter: none; }
+      .card:hover { border-color: #e2e8f0; }
+      th, td { border-color: #e2e8f0; }
+      th { background: #e2e8f0; color: #0f172a; }
+      .winner { background: #dcfce7 !important; color: #166534; }
+      a { color: #0369a1; }
+      h2, h3 { color: #0f172a; }
+      h2::before { background: #0ea5e9; }
+      code { background: #e2e8f0; color: #0f172a; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <h1>Comparativa: Proyecto inicial vs Monorepo actual</h1>
+      <p class="sub">Biosstel — Documento objetivo para CEO, CTO y Negocio</p>
+      <div class="badges">
+        <span class="badge badge-heredado">Proyecto inicial · Dos repositorios (front + API)</span>
+        <span class="badge badge-actual">Solución actual · Un solo repositorio (monorepo)</span>
+      </div>
+    </header>
+
+    <div class="card">
+      <h2 style="margin-top:0">Objetivo del documento</h2>
+      <p>Comparar de forma <strong>objetiva</strong> la solución inicial (dos repositorios: interfaz y servidor) con la solución actual (monorepo único), para apoyar decisiones de inversión, organización del equipo y evolución del producto. Las conclusiones se basan en el análisis del código de ambas soluciones.</p>
+    </div>
+
+    <div class="card">
+      <h2>Índice</h2>
+      <ol class="toc">
+        <li><a href="#resumen">Resumen ejecutivo</a></li>
+        <li><a href="#ceo">Para el CEO</a></li>
+        <li><a href="#cto">Para el CTO</a></li>
+        <li><a href="#negocio">Para Negocio / Producto</a></li>
+        <li><a href="#comparativa">Comparativa técnica y operativa</a></li>
+        <li><a href="#riesgos">Riesgos y mitigación</a></li>
+        <li><a href="#metricas">Métricas y criterios</a></li>
+        <li><a href="#recomendacion">Recomendación</a></li>
+        <li><a href="#anexo">Anexo: documentación de soporte</a></li>
+      </ol>
+    </div>
+
+    <h2 id="resumen">1. Resumen ejecutivo</h2>
+    <div class="card">
+      <p><strong>En una frase:</strong> La solución actual (monorepo) mejora en organización, alineación front–back, tipos compartidos, un solo flujo de trabajo y base para escalar. La solución inicial era más “simple” de entender al primer vistazo pero con mayor riesgo de desincronización y coste de coordinación.</p>
+      <table>
+        <thead>
+          <tr><th>Criterio</th><th>Proyecto inicial (2 repos)</th><th>Monorepo actual</th><th>Ventaja</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ubicación del código</td><td>Dos repositorios (front + API)</td><td>Un repositorio (apps + libs)</td><td class="winner">Actual</td></tr>
+          <tr><td>Contrato interfaz–servidor</td><td>GraphQL en API no usado por front; REST disperso, puertos/rutas desalineados</td><td>Una API REST coherente; front y API alineados</td><td class="winner">Actual</td></tr>
+          <tr><td>Datos compartidos</td><td>Sin paquete común; definiciones duplicadas o distintas</td><td>Una fuente de verdad (shared-types)</td><td class="winner">Actual</td></tr>
+          <tr><td>Día a día del equipo</td><td>Dos clones, dos instalaciones, dos pipelines</td><td>Un clon, una instalación, comandos únicos</td><td class="winner">Actual</td></tr>
+          <tr><td>Escalabilidad y mantenimiento</td><td>Limitada; cambios coordinados más costosos</td><td>Módulos por dominio; tests y CI unificados</td><td class="winner">Actual</td></tr>
+          <tr><td>Facilidad inicial (onboarding)</td><td>Proyectos más pequeños, aparentemente más simples</td><td>Requiere entender monorepo y módulos</td><td class="winner">Inicial</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">Conclusión: el monorepo actual gana en todos los criterios excepto en la “simplicidad” inicial; esa ventaja es efímera frente a los beneficios a medio plazo.</p>
+    </div>
+
+    <h2 id="ceo">2. Para el CEO</h2>
+    <div class="card ceo">
+      <h3>Mensaje en un minuto</h3>
+      <ul>
+        <li><strong>Antes:</strong> Dos proyectos independientes (interfaz y servidor), sin definición única de datos, con tecnología en el servidor (GraphQL) que la interfaz no utilizaba. Dos sitios que mantener y coordinar.</li>
+        <li><strong>Ahora:</strong> Un solo proyecto (monorepo): misma interfaz y mismo servidor, datos y reglas definidos una vez y compartidos. Una única forma de desplegar, probar y documentar.</li>
+        <li><strong>¿Está mejor?</strong> Sí: menos duplicación, menos riesgo de desincronización, más rapidez para añadir funcionalidades y más facilidad para el equipo y para incorporar personas.</li>
+        <li><strong>Único punto a favor del pasado:</strong> Los proyectos antiguos parecían más simples al primer vistazo. A cambio, eran más frágiles y difíciles de escalar.</li>
+      </ul>
+      <p><strong>Recomendación:</strong> Mantener el monorepo actual. No hay motivo para volver atrás ni para añadir complejidad (p. ej. GraphQL) que no aporte valor en este producto.</p>
+    </div>
+
+    <h2 id="cto">3. Para el CTO</h2>
+    <div class="card cto">
+      <h3>Hallazgos del análisis en profundidad (proyecto inicial)</h3>
+      <ul>
+        <li><strong>Contrato login:</strong> La interfaz enviaba el campo <em>username</em> en la mutación GraphQL de login; el esquema del servidor y el resolver esperan <em>email</em>. Incompatibilidad directa entre front y back.</li>
+        <li><strong>Puertos por defecto:</strong> La interfaz apuntaba por defecto al puerto 3001; el gateway GraphQL corría en 8001 y el microservicio de auth en 5001. Sin configurar variables de entorno, las peticiones no alcanzaban el backend.</li>
+        <li><strong>CORS:</strong> Tanto el gateway como el microservicio de auth tenían <code>origin: "*"</code>, riesgo de seguridad en APIs con autenticación.</li>
+        <li><strong>JWT:</strong> El secreto por defecto era cadena vacía si no se configuraban variables de entorno.</li>
+        <li><strong>Inicialización duplicada:</strong> En el servidor del microservicio auth, middlewares y rutas se registraban dos veces (en el constructor y en <code>listen</code>).</li>
+        <li><strong>Datos mock:</strong> Múltiples listas de datos estáticos (usuarios, tareas, objetivos, departamentos, etc.) para desarrollo; la interfaz dependía de ellos en varias pantallas.</li>
+      </ul>
+      <h3>Aspectos técnicos clave (comparativa)</h3>
+      <table>
+        <thead>
+          <tr><th>Aspecto</th><th>Proyecto inicial</th><th>Monorepo actual</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>API</td><td>GraphQL (Apollo) + microservicios (auth Express); front no consumía GraphQL, llamaba a REST con puertos/rutas distintos</td><td>Una API NestJS REST; front consume la misma API; Swagger documentado</td></tr>
+          <tr><td>Tipos</td><td>Sin paquete común; <code>any</code> y mapeos manuales</td><td><code>shared-types</code> única fuente de verdad; type-safety front y back</td></tr>
+          <tr><td>Frontend</td><td>Todo en una app; rutas declaradas sin páginas; login no conectado a API; BASEURL 3001 vs API en 5001/8001</td><td>Features por dominio (auth, usuarios, objetivos, fichajes, etc.); shell + store global; rutas y API alineadas</td></tr>
+          <tr><td>Backend</td><td>Gateway GraphQL, auth en microservicio; CORS <code>*</code>; JWT secret por defecto vacío; sin endpoint /api/usuarios que el front esperaba</td><td>NestJS con módulos por dominio (hexagonal); CORS y JWT configurados; endpoints coherentes con el front</td></tr>
+          <tr><td>CI/CD</td><td>Dos pipelines (uno por repo)</td><td>Un pipeline; dependencias claras; build y tests unificados</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">El detalle de problemas detectados en el proyecto inicial y las decisiones de arquitectura (GraphQL, microservicios) están en la documentación de soporte de esta carpeta.</p>
+    </div>
+
+    <h2 id="negocio">4. Para Negocio / Producto</h2>
+    <div class="card negocio">
+      <h3>Impacto en el producto y en la organización</h3>
+      <ul>
+        <li><strong>Velocidad de entrega:</strong> En el monorepo, añadir una funcionalidad implica un solo repo, tipos compartidos y tests unificados; menos coordinación entre equipos front y back.</li>
+        <li><strong>Calidad y consistencia:</strong> Una sola definición de datos reduce errores (p. ej. pantallas que esperan campos que la API no devuelve) y retrabajos.</li>
+        <li><strong>Onboarding:</strong> El proyecto inicial podía parecer “más fácil” al principio (menos carpetas); el monorepo está mejor documentado y es más predecible a medio plazo.</li>
+        <li><strong>Riesgo operativo:</strong> En el inicial, desplegar front y API por separado con versiones desalineadas aumentaba el riesgo de incidencias; en el actual, un único flujo lo reduce.</li>
+      </ul>
+    </div>
+
+    <h2 id="comparativa">5. Comparativa técnica y operativa</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Área</th><th>Proyecto inicial</th><th>Monorepo actual</th><th>Ganador</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Organización del código</td><td>Front todo junto; back GraphQL + microservicios sin uso real por el front</td><td>App + módulos por área; API por dominio</td><td class="winner">Actual</td></tr>
+          <tr><td>Datos compartidos</td><td>No había paquete común</td><td>shared-types única fuente de verdad</td><td class="winner">Actual</td></tr>
+          <tr><td>Experiencia del equipo</td><td>Dos repos, dos instalaciones, varios procesos</td><td>Un repo, una instalación, comandos únicos (pnpm start, build, test)</td><td class="winner">Actual</td></tr>
+          <tr><td>API (GraphQL vs REST)</td><td>GraphQL en servidor no consumido; front usaba REST disperso</td><td>API REST coherente; documentación Swagger</td><td class="winner">Actual</td></tr>
+          <tr><td>Escalabilidad</td><td>Más coordinación para añadir dominios; sin estándar único de tests</td><td>Nuevo módulo en back y front; tests y CI unificados (Vitest, Playwright, Nx)</td><td class="winner">Actual</td></tr>
+          <tr><td>Facilidad inicial</td><td>Proyectos más pequeños a primera vista</td><td>Estructura de monorepo que hay que aprender</td><td class="winner">Inicial</td></tr>
+          <tr><td>Despliegue y CI/CD</td><td>Dos pipelines</td><td>Un pipeline; versiones y despliegues coherentes</td><td class="winner">Actual</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="riesgos">6. Riesgos y mitigación</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Riesgo</th><th>Proyecto inicial</th><th>Monorepo actual</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Desincronización front–back</td><td>Alto (contrato distinto, puertos, rutas); login no conectado; endpoints inexistentes</td><td>Bajo: tipos compartidos y API única</td></tr>
+          <tr><td>Seguridad</td><td>CORS abierto (<code>*</code>); JWT secret por defecto vacío</td><td>CORS y JWT configurados; buenas prácticas</td></tr>
+          <tr><td>Deuda técnica</td><td>Tipos <code>any</code>, rutas sin implementar, init duplicado, middleware mal ubicado</td><td>Arquitectura definida; documentación y patrones claros</td></tr>
+          <tr><td>Complejidad percibida</td><td>Baja al principio (dos proyectos “pequeños”)</td><td>Mayor curva inicial; mitigación: documentación y README en apps/docs</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="metricas">7. Métricas y criterios (objetivos)</h2>
+    <div class="card">
+      <p>Criterios usados para la comparación:</p>
+      <ul>
+        <li><strong>Un solo lugar de verdad:</strong> ¿Hay una única definición de datos entre front y back? (Inicial: no; Actual: sí.)</li>
+        <li><strong>Alineación de contrato:</strong> ¿El front usa lo que el back expone? (Inicial: no; Actual: sí.)</li>
+        <li><strong>Operación unificada:</strong> ¿Un clon, una instalación, un pipeline? (Inicial: no; Actual: sí.)</li>
+        <li><strong>Escalabilidad de dominio:</strong> ¿Añadir una nueva área de negocio es modular y claro? (Inicial: limitado; Actual: sí.)</li>
+        <li><strong>Onboarding:</strong> ¿Alguien nuevo entiende rápido? (Inicial: aparentemente sí; Actual: requiere documentación; a medio plazo el actual es más predecible.)</li>
+      </ul>
+      <p class="muted">La comparativa se centra en estructura, mantenibilidad y riesgo operativo; no en rendimiento ni coste exacto de migración.</p>
+    </div>
+
+    <h2 id="recomendacion">8. Recomendación</h2>
+    <div class="card recomendacion">
+      <p><strong>Mantener la solución actual (monorepo).</strong></p>
+      <ul>
+        <li>Mejor en organización, consistencia de datos, productividad del equipo, escalabilidad, mantenimiento y despliegue.</li>
+        <li>API coherente (REST) sin tecnología (GraphQL) que no se usaba.</li>
+        <li>El proyecto inicial solo gana en “simplicidad” inicial; esa ventaja es efímera frente a los beneficios del monorepo a medio y largo plazo.</li>
+      </ul>
+      <p>No se recomienda volver a la estructura de dos repos ni incorporar GraphQL sin una necesidad explícita; las decisiones están documentadas en la documentación de soporte.</p>
+    </div>
+
+    <h2 id="anexo">9. Anexo: documentación de soporte</h2>
+    <div class="card">
+      <p>En la misma carpeta de esta presentación se encuentra la documentación ampliada:</p>
+      <ul>
+        <li>Comparativa detallada (proyecto inicial vs monorepo actual).</li>
+        <li>Informe de problemas detectados en el proyecto inicial (front y back).</li>
+        <li>Decisión sobre GraphQL en la arquitectura actual.</li>
+        <li>Notas sobre arquitectura y microservicios (Config Server, API Gateway, Circuit Breaker).</li>
+        <li>Índice de toda la documentación.</li>
+      </ul>
+    </div>
+
+    <footer class="foot">
+      Documento para apoyo a decisiones (CEO, CTO, Negocio). Basado en el análisis en profundidad del código del proyecto inicial y del monorepo actual.
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+{
+  "name": "front-biosstel",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/front-biosstel/src",
+  "projectType": "application",
+  "tags": ["type:app", "framework:nextjs", "scope:frontend"],
+  "targets": {
+    "dev": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "front-biosstel:build-app",
+        "dev": true,
+        "port": 3001
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "front-biosstel:build-app:development"
+        },
+        "production": {
+          "buildTarget": "front-biosstel:build-app:production"
+        }
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/front-biosstel",
+        "command": "nx run front-biosstel:build-app",
+        "env": {
+          "NODE_ENV": "production"
+        },
+        "cwd": "."
+      },
+      "configurations": {
+        "development": {
+          "command": "nx run front-biosstel:build-app:development",
+          "env": {
+            "NODE_ENV": "development"
+          },
+          "outputPath": "apps/front-biosstel/.next"
+        },
+        "production": {
+          "command": "nx run front-biosstel:build-app:production",
+          "env": {
+            "NODE_ENV": "production"
+          }
+        }
+      }
+    },
+    "build-app": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/front-biosstel",
+        "buildMode": "compile",
+        "useTurbopack": false,
+        "swc": true
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/front-biosstel/.next"
+        },
+        "production": {}
+      }
+    },
+    "start": {
+      "executor": "@nx/next:server",
+      "options": {
+        "buildTarget": "front-biosstel:build-app",
+        "dev": false
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec tsc --noEmit --project tsconfig.json",
+        "cwd": "apps/front-biosstel"
+      }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec storybook dev -p 6006",
+        "cwd": "."
+      },
+      "cache": false
+    },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/storybook-static"],
+      "options": {
+        "command": "pnpm exec storybook build",
+        "cwd": "."
+      }
+    }
+  }
+}

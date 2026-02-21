@@ -1,0 +1,17 @@
+{
+  "name": "@biosstel/api-objetivos",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": "./src/index.js",
+    "./dashboard.module": "./src/dashboard.module.js",
+    "./dashboard.service": "./src/dashboard.service.js",
+    "./dashboard.controller": "./src/dashboard.controller.js"
+  },
+  "dependencies": {
+    "@biosstel/api-shared": "workspace:*",
+    "@biosstel/shared-types": "workspace:*"
+  }
+}

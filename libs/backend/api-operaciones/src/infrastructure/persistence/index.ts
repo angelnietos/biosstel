@@ -1,0 +1,2 @@
+// Output adapters - TODO
+export {};

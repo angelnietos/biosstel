@@ -1,0 +1,17 @@
+﻿
+[2m> [22m[2mnx run[22m api-objetivos:lint
+
+Linting "api-objetivos"...
+[7m[1m[31m NX [39m[22m[27m  [31mESLint is not a constructor[39m
+Pass --verbose to see the stacktrace.
+
+[2m[31m[39m[22m
+
+[7m[1m[31m NX [39m[22m[27m  [31mRunning target [1mlint[22m for project api-objetivos failed[39m
+
+[2mFailed tasks:[22m
+
+[2m-[22m api-objetivos:lint
+
+[2mHint: run the command with[22m --verbose [2mfor more details.[22m
+

@@ -1,0 +1,14 @@
+{
+  "name": "api-biosstel",
+  "version": "1.0.0",
+  "description": "Biosstel API - NestJS REST API",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "start:prod": "node dist/main.js",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
+    "test": "jest"
+  }
+}

@@ -1,0 +1,42 @@
+# Dependencies (installed inside container)
+node_modules
+**/node_modules
+.pnpm-store
+
+# Build outputs
+dist
+**/dist
+.next
+**/.next
+out
+
+# Nx cache
+.nx
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+.cursor
+*.swp
+*.swo
+
+# Test artifacts
+coverage
+playwright-report
+test-results
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (mounted separately or set via compose)
+.env
+.env.local
+.env.*.local
+
+# Docker volumes
+docker/volumes

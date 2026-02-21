@@ -1,0 +1,64 @@
+# CD multietapa: permite elegir qué imágenes Docker construir y si ejecutar deploy/release.
+# En push usa valores por defecto; con "Run workflow" puedes elegir servicios y tareas.
+
+name: CD Pipeline
+
+run-name: ${{ github.ref_name }} | Build #${{ github.run_number }} | SHA ${{ substr(github.sha, 0, 7) }}
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+  workflow_dispatch:
+    inputs:
+      docker_services:
+        description: 'Servicios Docker a construir'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - frontend
+          - backend
+      run_deploy:
+        description: 'Ejecutar deploy'
+        required: false
+        default: true
+        type: boolean
+      run_release:
+        description: 'Crear release (solo aplica en main)'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  set-cd-inputs:
+    name: 📋 Set CD inputs
+    runs-on: ubuntu-latest
+    outputs:
+      docker_services: ${{ steps.out.outputs.docker_services }}
+      run_deploy: ${{ steps.out.outputs.run_deploy }}
+      run_release: ${{ steps.out.outputs.run_release }}
+    steps:
+      - id: out
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "docker_services=${{ github.event.inputs.docker_services }}" >> $GITHUB_OUTPUT
+            echo "run_deploy=${{ github.event.inputs.run_deploy }}" >> $GITHUB_OUTPUT
+            echo "run_release=${{ github.event.inputs.run_release }}" >> $GITHUB_OUTPUT
+          else
+            echo "docker_services=full" >> $GITHUB_OUTPUT
+            echo "run_deploy=true" >> $GITHUB_OUTPUT
+            echo "run_release=true" >> $GITHUB_OUTPUT
+          fi
+
+  cd-pipeline:
+    name: 🚀 Run CD pipeline
+    uses: ./.github/workflows/cd-pipeline.yml
+    needs: [set-cd-inputs]
+    with:
+      docker_services: ${{ needs.set-cd-inputs.outputs.docker_services }}
+      run_deploy: ${{ needs.set-cd-inputs.outputs.run_deploy }}
+      run_release: ${{ needs.set-cd-inputs.outputs.run_release }}

@@ -1,0 +1,265 @@
+# CD multietapa reutilizable: Docker, Deploy, Release.
+# Permite elegir qué imágenes construir (frontend, backend, ambas) y si ejecutar deploy/release.
+
+name: CD Pipeline (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      docker_services:
+        description: 'Servicios Docker a construir'
+        required: false
+        default: 'full'
+        type: string
+      run_deploy:
+        description: 'Ejecutar deploy'
+        required: false
+        default: true
+        type: boolean
+      run_release:
+        description: 'Ejecutar release (solo main)'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  cd-params:
+    name: 📋 CD Params
+    runs-on: ubuntu-latest
+    outputs:
+      build_frontend: ${{ steps.out.outputs.build_frontend }}
+      build_backend: ${{ steps.out.outputs.build_backend }}
+      run_deploy: ${{ steps.out.outputs.run_deploy }}
+      run_release: ${{ steps.out.outputs.run_release }}
+    steps:
+      - id: out
+        run: |
+          SVC="${{ inputs.docker_services }}"
+          RUN_FRONT="false"; RUN_BACK="false"
+          case "$SVC" in
+            full) RUN_FRONT="true"; RUN_BACK="true" ;;
+            frontend) RUN_FRONT="true" ;;
+            backend) RUN_BACK="true" ;;
+            *) RUN_FRONT="true"; RUN_BACK="true" ;;
+          esac
+          echo "build_frontend=$RUN_FRONT" >> $GITHUB_OUTPUT
+          echo "build_backend=$RUN_BACK" >> $GITHUB_OUTPUT
+          echo "run_deploy=${{ inputs.run_deploy }}" >> $GITHUB_OUTPUT
+          echo "run_release=${{ inputs.run_release }}" >> $GITHUB_OUTPUT
+
+  # ========================================
+  # STAGE: DOCKER (jobs separados por servicio)
+  # ========================================
+  docker-frontend:
+    name: 🐳 Docker Frontend
+    runs-on: ubuntu-latest
+    needs: [cd-params]
+    if: needs.cd-params.outputs.build_frontend == 'true'
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      packages: write
+    env:
+      SERVICE: frontend
+      DOCKERFILE: ./docker/frontend.Dockerfile
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: version
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${BRANCH_NAME//\//-}
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          if [[ "$BRANCH_NAME" == release-* ]]; then
+            VERSION=${BRANCH_NAME#release-}
+            VERSION=${VERSION//-/.}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "version=" >> $GITHUB_OUTPUT
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+          echo "branch=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "build_number=${{ github.run_number }}" >> $GITHUB_OUTPUT
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend
+          tags: |
+            type=raw,value=${{ steps.version.outputs.branch }}
+            type=raw,value=${{ steps.version.outputs.branch }}-build-${{ steps.version.outputs.build_number }}
+            type=raw,value=${{ steps.version.outputs.branch }}-${{ steps.version.outputs.short_sha }}
+            type=sha,format=long
+            type=raw,value=${{ steps.version.outputs.version }},enable=${{ steps.version.outputs.is_release }}
+            type=raw,value=latest,enable={{is_default_branch}}
+          labels: |
+            org.opencontainers.image.title=frontend
+            org.opencontainers.image.revision=${{ github.sha }}
+            com.biosstel.branch=${{ steps.version.outputs.branch }}
+            com.biosstel.build.sha=${{ github.sha }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  docker-backend:
+    name: 🐳 Docker Backend
+    runs-on: ubuntu-latest
+    needs: [cd-params]
+    if: needs.cd-params.outputs.build_backend == 'true'
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      packages: write
+    env:
+      SERVICE: backend
+      DOCKERFILE: ./docker/api.Dockerfile
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: version
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${BRANCH_NAME//\//-}
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          if [[ "$BRANCH_NAME" == release-* ]]; then
+            VERSION=${BRANCH_NAME#release-}
+            VERSION=${VERSION//-/.}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "version=" >> $GITHUB_OUTPUT
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+          echo "branch=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "build_number=${{ github.run_number }}" >> $GITHUB_OUTPUT
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend
+          tags: |
+            type=raw,value=${{ steps.version.outputs.branch }}
+            type=raw,value=${{ steps.version.outputs.branch }}-build-${{ steps.version.outputs.build_number }}
+            type=raw,value=${{ steps.version.outputs.branch }}-${{ steps.version.outputs.short_sha }}
+            type=sha,format=long
+            type=raw,value=${{ steps.version.outputs.version }},enable=${{ steps.version.outputs.is_release }}
+            type=raw,value=latest,enable={{is_default_branch}}
+          labels: |
+            org.opencontainers.image.title=backend
+            org.opencontainers.image.revision=${{ github.sha }}
+            com.biosstel.branch=${{ steps.version.outputs.branch }}
+            com.biosstel.build.sha=${{ github.sha }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ========================================
+  # STAGE: DEPLOY
+  # ========================================
+  deploy:
+    name: 🚀 Deploy
+    runs-on: ubuntu-latest
+    needs: [cd-params, docker-frontend, docker-backend]
+    if: |
+      always() &&
+      needs.cd-params.outputs.run_deploy == 'true' &&
+      (needs.docker-frontend.result == 'success' || needs.docker-frontend.result == 'skipped') &&
+      (needs.docker-backend.result == 'success' || needs.docker-backend.result == 'skipped')
+    timeout-minutes: 10
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || (github.ref == 'refs/heads/develop' && 'development' || 'staging') }}
+      url: ${{ github.ref == 'refs/heads/main' && 'https://biosstel.com' || (github.ref == 'refs/heads/develop' && 'https://dev.biosstel.com' || 'https://staging.biosstel.com') }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy info
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${BRANCH_NAME//\//-}
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          echo "## 🚀 Deploy" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Images: ghcr.io/${{ github.repository }}/frontend:$BRANCH_NAME-build-${{ github.run_number }}, backend idem" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Branch: $BRANCH_NAME | Build #${{ github.run_number }} | SHA $SHORT_SHA" >> $GITHUB_STEP_SUMMARY
+          # TODO: SSH/kubectl/docker-compose deploy
+
+  # ========================================
+  # STAGE: RELEASE (solo main)
+  # ========================================
+  release:
+    name: 🏷️ Release
+    runs-on: ubuntu-latest
+    needs: [cd-params, deploy]
+    if: |
+      github.ref == 'refs/heads/main' &&
+      needs.cd-params.outputs.run_release == 'true'
+    permissions:
+      contents: write
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: tag
+        run: |
+          VERSION=$(date +'%Y.%m.%d')-${{ github.run_number }}
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          git tag v$VERSION
+          git push origin v$VERSION
+      - id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$PREVIOUS_TAG" ]; then
+            CHANGELOG=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges | head -20)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.tag.outputs.version }}
+          release_name: Release v${{ steps.tag.outputs.version }}
+          body: |
+            ## 🚀 Changes
+            ${{ steps.changelog.outputs.changelog }}
+            ## 📦 Docker
+            - `ghcr.io/${{ github.repository }}/frontend:v${{ steps.tag.outputs.version }}`
+            - `ghcr.io/${{ github.repository }}/backend:v${{ steps.tag.outputs.version }}`
+          draft: false
+          prerelease: false

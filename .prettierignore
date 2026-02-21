@@ -1,0 +1,17 @@
+# Dependencies and build
+node_modules
+dist
+build
+.next
+out
+coverage
+*.min.js
+
+# Lockfiles and generated
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Docs / assets (optional: remove if you want to format md/json)
+# *.md
+# *.json

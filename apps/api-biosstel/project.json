@@ -1,0 +1,54 @@
+{
+  "name": "api-biosstel",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api-biosstel/src",
+  "projectType": "application",
+  "tags": ["type:api", "framework:nestjs", "scope:api"],
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "options": {
+        "command": "nodemon --watch src --watch ../../libs/backend --ext ts --exec \"ts-node -r tsconfig-paths/register --project tsconfig.dev.json dev.ts\"",
+        "cwd": "apps/api-biosstel"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/api-biosstel"],
+      "defaultConfiguration": "production",
+      "options": {
+        "commands": ["pnpm exec tsc -p tsconfig.build.json"],
+        "cwd": "apps/api-biosstel",
+        "parallel": false
+      },
+      "configurations": {
+        "production": {}
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node dist/apps/api-biosstel/main.js"
+      },
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec tsc --noEmit --project tsconfig.json",
+        "cwd": "apps/api-biosstel"
+      }
+    }
+  }
+}

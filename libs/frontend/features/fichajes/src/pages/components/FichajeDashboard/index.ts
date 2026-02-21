@@ -1,0 +1,1 @@
+export { FichajeDashboard } from './FichajeDashboard';

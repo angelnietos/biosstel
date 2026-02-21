@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+/* Tailwind v4: content sources (monorepo libs + app) */
+@source "../../../../libs/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
+
+/* Theme and base: from app src/styles (no cross-workspace path) */
+@import '../styles/theme.css';
+@import '../styles/globals-base.css';
+
+@import 'react-toastify/dist/ReactToastify.css';

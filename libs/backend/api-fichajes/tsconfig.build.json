@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "../../..",
+    "paths": {
+      "@biosstel/shared-types": ["libs/shared-types/src/index.ts"],
+      "@biosstel/api-shared": ["dist/libs/backend/api-shared/src/index.d.ts"],
+      "@biosstel/api-usuarios": ["libs/backend/api-usuarios/src/index.ts"],
+      "@biosstel/api-objetivos": ["libs/backend/api-objetivos/src/index.ts"],
+      "@biosstel/api-fichajes": ["libs/backend/api-fichajes/src/index.ts"],
+      "@biosstel/api-auth": ["libs/backend/api-auth/src/index.ts"],
+      "@biosstel/api-alertas": ["libs/backend/api-alertas/src/index.ts"],
+      "@biosstel/api-operaciones": ["libs/backend/api-operaciones/src/index.ts"],
+      "@biosstel/api-empresa": ["libs/backend/api-empresa/src/index.ts"]
+    }
+  }
+}

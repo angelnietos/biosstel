@@ -1,0 +1,171 @@
+# RULE: Arquitectura Microservicios + Gateway
+
+## Patrón Arquitectónico
+Sigue una arquitectura híbrida con microservicios REST independientes y gateway unificado (GraphQL/REST).
+
+## Estructura de Carpetas Obligatoria
+
+### Para Microservicios REST:
+
+backend/
+└── microservices/
+    └── [domain]/
+        ├── src/
+        │   ├── routes/v1/endpoints.ts      # REGISTRO DE RUTAS
+        │   ├── controllers/                # Controladores por método HTTP
+        │   ├── services/                   # Lógica de negocio
+        │   ├── middlewares/                # Validaciones y auth
+        │   └── server.ts                   # Servidor del microservicio
+        ├── package.json
+        └── tsconfig.json
+```
+
+### Para Gateway GraphQL:
+```
+backend/
+└── src/
+    ├── subgraphs/
+    │   ├── index.ts                       # REGISTRO DE SUBGRAPHS
+    │   └── [domain]/
+    │       ├── subgraph.ts                # Configuración schema
+    │       ├── resolvers.ts               # Resolvers GraphQL
+    │       └── typedef.graphql            # Schema GraphQL
+    ├── dataSources/
+    │   └── [domain]API.ts                 # Clientes HTTP
+    └── server.ts                          # Servidor principal
+```
+
+### Para Módulos Compartidos:
+```
+backend/
+└── microservices/
+    └── common/
+        └── src/
+            ├── models/                    # Modelos de datos
+            ├── utils/                     # Utilidades compartidas
+            └── types/                     # Tipos TypeScript
+```
+
+## Convenciones de Nombrado
+
+### Archivos:
+- **Controladores**: `kebab-case` en carpetas por método HTTP
+  - Ej: `controllers/post/create-user.ts`
+- **Servicios**: `kebab-case` con sufijo `.service.ts`
+  - Ej: `user.service.ts`
+- **Modelos**: `kebab-case` con sufijo `.model.ts`
+  - Ej: `user.model.ts`
+- **DataSources**: `camelCase` para datasources `[domain]API.ts`
+  - Ej: `usersAPI.ts`
+
+### Funciones y Clases:
+- **Controladores**: `camelCase` para funciones
+  - Ej: `createUser`, `getUserById`
+- **Servicios**: `PascalCase` para clases y `camelCase` para métodos
+  - Ej: `class UserService { async createUser() {} }`
+- **Modelos**: `PascalCase` para modelos Sequelize
+  - Ej: `class User extends Model {}`
+
+## Flujos de Implementación
+
+### Cuando se crea nueva funcionalidad:
+
+1. **¿Nuevo dominio?** → Crear microservicio completo
+2. **¿Extensión de dominio existente?** → Extender microservicio existente
+
+### Pasos específicos:
+
+#### Para Nuevo Endpoint REST:
+1. Agregar ruta en `microservices/[domain]/src/routes/v1/endpoints.ts`
+2. Crear controller en `microservices/[domain]/src/controllers/[http-method]/`
+3. Crear/actualizar service en `microservices/[domain]/src/services/`
+4. Si necesita nuevo modelo: crear en `microservices/common/src/models/`
+
+#### Para Nuevo Endpoint GraphQL:
+1. Crear/actualizar subgraph en `src/subgraphs/[domain]/`
+2. Crear/actualizar dataSource en `src/dataSources/[domain]API.ts`
+3. Registrar subgraph en `src/subgraphs/index.ts`
+
+#### Para Nuevos Modelos:
+1. Crear modelo en `microservices/common/src/models/[entity]/[entity].model.ts`
+2. Registrar modelo en `microservices/common/src/models/index.ts`
+3. Crear asociaciones si es necesario
+
+## Patrones de Código
+
+### Controlador Típico:
+```typescript
+export const createEntity = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const result = await service.createEntity(req.body);
+    res.status(201).json({ 
+      success: true, 
+      data: result,
+      message: "Entity created successfully" 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      message: "Failed to create entity" 
+    });
+  }
+};
+```
+
+### Servicio Típico:
+```typescript
+class EntityService {
+  async createEntity(data: any) {
+    const sequelize = await Database.getConnection();
+    const { Entity } = sharedModels(sequelize).sequelizeModels;
+    return await Entity.create(data);
+  }
+}
+```
+
+### DataSource Típico:
+```typescript
+class EntityAPI extends RESTDataSource {
+  async createEntity(input: any) {
+    return this.post(`api/v1/entity/create`, { body: input });
+  }
+}
+```
+
+## Validaciones y Middlewares
+
+- Usar middlewares para validación de datos
+- Implementar autenticación con JWT en rutas protegidas
+- Validar permisos con roles en middlewares
+- Usar express-validator para validación de input
+
+## Manejo de Errores
+
+- Formato de respuesta estandarizado: `{ success, data, error, message }`
+- Códigos HTTP apropiados (200, 201, 400, 401, 403, 404, 500)
+- Logging de errores en consola
+- Mensajes de error informativos pero seguros
+
+## Puntos de Registro Obligatorios
+
+1. **Subgraphs**: Registrar en `src/subgraphs/index.ts`
+2. **DataSources**: Exportar en `src/dataSources/index.ts` (si existe)
+3. **Modelos**: Registrar en `microservices/common/src/models/index.ts`
+4. **Rutas**: Definir en `microservices/[domain]/src/routes/v1/endpoints.ts`
+
+## Restricciones
+
+- ❌ NO mezclar lógica de negocio en controllers
+- ❌ NO acceder directamente a base de datos desde controllers
+- ❌ NO crear modelos fuera de `microservices/common/src/models/`
+- ❌ NO crear rutas GraphQL sin subgraph correspondiente
+- ❌ NO olvidar registrar nuevos componentes en sus índices
+
+## Recomendaciones
+
+- ✅ Separar claramente las capas (route → controller → service → model)
+- ✅ Usar el módulo common para código compartido
+- ✅ Mantener consistencia en nombres y estructuras
+- ✅ Documentar endpoints y tipos GraphQL
+- ✅ Seguir convenciones de versionado en rutas (`/api/v1/`)

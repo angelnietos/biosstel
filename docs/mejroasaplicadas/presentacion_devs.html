@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Arquitectura para desarrolladores — Monorepo Biosstel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #050510;
+      --bg-card: rgba(15, 23, 42, 0.85);
+      --bg-card-border: rgba(148, 163, 184, 0.08);
+      --text: #f1f5f9;
+      --text-soft: #94a3b8;
+      --accent: #22d3ee;
+      --accent-2: #a78bfa;
+      --gold: #fbbf24;
+      --success: #34d399;
+      --font: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --glow: 0 0 60px -15px rgba(34, 211, 238, 0.25);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      font-weight: 400;
+      background: var(--bg-deep);
+      color: var(--text);
+      line-height: 1.65;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(34, 211, 238, 0.12), transparent),
+        radial-gradient(ellipse 80% 50% at 100% 50%, rgba(167, 139, 250, 0.06), transparent);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+    .hero { text-align: center; padding: 4rem 0 3rem; margin-bottom: 2rem; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent-2) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero .sub { font-size: 1.1rem; color: var(--text-soft); margin-top: 0.75rem; font-weight: 500; }
+    .hero .badge {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      background: linear-gradient(135deg, rgba(34,211,238,0.15), rgba(167,139,250,0.1));
+      color: var(--accent);
+    }
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 3rem 0 1.25rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    h2::before {
+      content: '';
+      width: 4px;
+      height: 1.4em;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    }
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin: 1rem 0 0.5rem; }
+    p { margin: 0.75rem 0; color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--glow);
+    }
+    .card.dev { border-left: 3px solid var(--accent); }
+    .card.ui { border-left: 3px solid var(--accent-2); }
+    .card.arch { border-left: 3px solid var(--success); }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(148, 163, 184, 0.08); }
+    th {
+      background: rgba(30, 41, 59, 0.9);
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .muted { color: var(--text-soft); font-size: 0.9rem; }
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.3);
+      color: var(--accent);
+    }
+    pre {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      background: rgba(0,0,0,0.4);
+      overflow-x: auto;
+      margin: 1rem 0;
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    pre code { padding: 0; background: none; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+    li { margin: 0.4rem 0; }
+    .toc { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+    .toc a {
+      display: block;
+      padding: 0.65rem 1rem;
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      transition: background 0.2s, color 0.2s;
+    }
+    .toc a:hover { background: rgba(34, 211, 238, 0.08); color: var(--accent); }
+    .foot { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid rgba(148, 163, 184, 0.1); font-size: 0.85rem; color: var(--text-soft); }
+    .tree { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-soft); white-space: pre; }
+    @media print {
+      body { background: #fff; color: #111; background-image: none; }
+      .wrap { padding: 1rem; }
+      .hero h1 { background: none; color: #111; -webkit-text-fill-color: #111; }
+      .card { background: #f8fafc; border: 1px solid #e2e8f0; }
+      code { background: #e2e8f0; color: #0f172a; }
+      pre { background: #f1f5f9; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <h1>Arquitectura para desarrolladores</h1>
+      <p class="sub">Monorepo — Libs, productos verticales, libs comercializables y escalado a microservicios cuando haga falta (arquitectura tipo Lego)</p>
+      <span class="badge">Audiencia: desarrollo y diseño</span>
+    </header>
+
+    <div class="card">
+      <h2 style="margin-top:0">Objetivo</h2>
+      <p>Explicar por qué la arquitectura actual (monorepo con apps + libs) es mejor para el equipo, cómo crear y mantener features como libs, cómo escala (productos verticales, libs comercializables), agnosticismo por feature (incl. módulos federados para migraciones y legacy), por qué no usar microservicios desde el principio y cómo escalar a microservicios cuando haga falta — como un Lego.</p>
+    </div>
+
+    <div class="card">
+      <h2>Índice</h2>
+      <ol class="toc">
+        <li><a href="#porque">Por qué esta solución es mejor</a></li>
+        <li><a href="#front-antiguo">Front antiguo (átomos/moléculas) vs nuevo</a></li>
+        <li><a href="#back-antiguo">Back antiguo vs nuevo</a></li>
+        <li><a href="#nx">Qué es Nx, por qué y cómo funciona</a></li>
+        <li><a href="#cicd-tests">CI/CD y tests: núcleo del proyecto</a></li>
+        <li><a href="#arquitectura">Arquitectura: apps + libs</a></li>
+        <li><a href="#crear-feature">Cómo crear una feature (libs)</a></li>
+        <li><a href="#escala">Cómo escala la arquitectura</a></li>
+        <li><a href="#verticales">Productos verticales y libs como producto</a></li>
+        <li><a href="#agnostica">Agnóstica en tecnología por feature</a></li>
+        <li><a href="#ui-design">Libs de UI y diseño</a></li>
+        <li><a href="#no-micro">Por qué no microservicios desde el principio</a></li>
+        <li><a href="#lego">Escalar a microservicios: la arquitectura es un Lego</a></li>
+        <li><a href="#flujo">Flujo de trabajo recomendado</a></li>
+        <li><a href="#mocks">Servidor de mocks (no depender de datos ni del back)</a></li>
+      </ol>
+    </div>
+
+    <h2 id="porque">1. Por qué esta solución es mejor (para devs)</h2>
+    <div class="card dev">
+      <ul>
+        <li><strong>Una sola fuente de verdad:</strong> Tipos compartidos (<code>shared-types</code>) entre front y back. Sin duplicar DTOs ni desalinear contratos.</li>
+        <li><strong>Contrato alineado:</strong> La app de front consume la misma API REST que expone la app de back; mismos endpoints, mismos tipos.</li>
+        <li><strong>Un clon, una instalación:</strong> Un solo repo, <code>pnpm install</code>, y arrancar front y API desde la raíz. Sin coordinar dos repos ni versiones.</li>
+        <li><strong>Features como libs:</strong> Cada dominio (auth, usuarios, objetivos, fichajes, etc.) vive en su lib. Cambios acotados, tests por lib, dependencias claras.</li>
+        <li><strong>Boundaries y tags:</strong> Las dependencias entre libs están definidas (shell → features → ui/platform → shared-types). Menos acoplamiento y más refactors seguros.</li>
+        <li><strong>CI/CD y cache:</strong> El CI/CD es el núcleo inicial del proyecto: un solo pipeline (build, lint, tests de integración y E2E); Nx ejecuta solo lo afectado. Menos tiempo de build y calidad automática en cada commit.</li>
+        <li><strong>Módulos federados (opcional):</strong> Con Module Federation se pueden usar distintos frameworks en la misma app (React, Vue, Angular, legacy). Facilita migraciones graduales y traer proyectos heredados al monorepo sin reescribir todo de golpe.</li>
+      </ul>
+    </div>
+
+    <h2 id="front-antiguo">2. Front antiguo (átomos/moléculas) vs nuevo: mejor para todos los devs</h2>
+    <div class="card dev">
+      <h3>Por qué la arquitectura del front antiguo era peor</h3>
+      <p>En el proyecto inicial el front se organizaba por <strong>Atomic Design</strong> (átomos, moléculas, organismos, templates) y por tipo de componente, no por dominio ni por feature:</p>
+      <ul>
+        <li><strong>Todo mezclado por “tamaño”:</strong> Carpetas <code>atoms/</code>, <code>molecules/</code>, <code>organisms/</code>, <code>templates/</code>. Un mismo dominio (ej. objetivos, usuarios, login) queda repartido: un átomo aquí, una molécula allí, un organismo en otra carpeta. No hay un solo lugar “objetivos” o “auth”; hay que saltar entre capas atómicas para entender una funcionalidad.</li>
+        <li><strong>Lógica, UI y mocks revueltos:</strong> Los mocks vivían en <code>constants/mock/</code>; las pantallas (Home por rol, usuarios, etc.) importaban de atoms/molecules/organisms y de esos mocks. Sin separación clara entre “datos de dominio”, “componente reutilizable” y “página”. Difícil saber qué tocar para cambiar una feature.</li>
+        <li><strong>Inconsistencia átomo vs molécula:</strong> ¿Un botón con icono es átomo o molécula? ¿Un formulario de login es organismo o template? La frontera es arbitraria y genera discusiones y estructura poco estable. No hay reglas claras de dependencia (quién puede importar a quién).</li>
+        <li><strong>Acoplado a una sola app Next:</strong> Toda la estructura (App Router, layouts, páginas) es de Next. No hay una “lib de UI” ni “lib de feature” reutilizable; todo es parte del proyecto Next. Un dev de Angular o Vue no puede reutilizar nada sin meterse en el mundo Next.</li>
+      </ul>
+      <h3>Por qué una arquitectura “solo Next” es peor para equipos con devs Angular, Vue, etc.</h3>
+      <ul>
+        <li>Si todo el front es “la app Next” (App Router, Server Components, convenciones de Next), cualquier persona que venga de <strong>Angular</strong>, <strong>Vue</strong> o otro stack tiene que aprender primero Next y su modelo mental (rutas, layouts, client/server). El proyecto no es “común”; es “de Next”.</li>
+        <li>No hay contrato reutilizable: la UI y la lógica viven dentro del repo Next. Para que un dev Angular contribuya, tendría que tocar Next o duplicar componentes. No hay una lib de UI ni de features que cualquier framework pueda consumir.</li>
+      </ul>
+      <h3>Por qué la nueva arquitectura es mejor para todos</h3>
+      <ul>
+        <li><strong>Organización por feature (dominio), no por átomo/molécula:</strong> Hay una lib por dominio (auth, usuarios, objetivos, fichajes…). Quien trabaja en “objetivos” va a <code>libs/frontend/features/objetivos</code>. No hay que buscar en cuatro capas atómicas; la feature está en un solo sitio.</li>
+        <li><strong>UI en una lib:</strong> Componentes reutilizables (botones, inputs, cards) viven en <code>ui</code> / <code>ui-layout</code>. Cualquier app (Next, otra SPA, en el futuro Angular o Vue) puede consumir esa lib. Diseño y dev comparten el mismo sistema de componentes; un dev Angular que entre al proyecto puede trabajar en la lib de UI o en una feature sin tener que dominar Next al 100%.</li>
+        <li><strong>Contrato común (shared-types, API):</strong> Lo que une a front y back (y a distintos fronts) es el contrato: tipos y endpoints. Eso es independiente del framework. Tanto un dev React/Next como uno Angular pueden leer los tipos, entender la API y contribuir a una feature o a la UI.</li>
+        <li><strong>Común a todos:</strong> La arquitectura no es “para devs de Next”; es “apps + libs por feature + lib de UI + contrato”. Quien venga de Angular o Vue puede trabajar en libs (features o UI) con TypeScript y el mismo contrato; la app que orquesta puede ser Next hoy y otra cosa mañana sin tirar el trabajo de nadie.</li>
+      </ul>
+      <p class="muted">Resumen: la estructura átomos/moléculas/organismos mezcla todo por tipo de componente y no por dominio; una arquitectura centrada solo en Next deja fuera a quien no trabaje en Next. La nueva (libs por feature + UI lib + contrato común) es mejor para cualquier dev y para equipos con perfiles diversos.</p>
+    </div>
+
+    <h2 id="back-antiguo">3. Back antiguo vs nuevo: por qué esta arquitectura es mejor</h2>
+    <div class="card arch">
+      <h3>Por qué la arquitectura del back antiguo era peor</h3>
+      <p>En el proyecto inicial el back se organizaba como <strong>API Gateway (Apollo) + subgraphs GraphQL + microservicio de auth en Express</strong>, con varios procesos y sin contrato compartido con el front:</p>
+      <ul>
+        <li><strong>GraphQL que el front no consumía:</strong> El gateway exponía un esquema GraphQL (login, usuarios, etc.), pero el front llamaba a REST con otros puertos y rutas. El contrato GraphQL no era la interfaz real entre front y back; había desalineación (p. ej. login con <code>username</code> en front y <code>email</code> en el esquema).</li>
+        <li><strong>Varios procesos y puertos:</strong> Gateway en un puerto, microservicio de auth en otro. El front apuntaba por defecto a un puerto donde no corría nada; para que funcionara había que configurar varios entornos. Más despliegues, más redes, más puntos de fallo.</li>
+        <li><strong>Sin tipos compartidos:</strong> No existía un paquete común (shared-types). Los DTOs y el esquema GraphQL vivían en el back; el front tenía sus propias interfaces y mocks. Cualquier cambio de contrato obligaba a tocar ambos sitios a mano y era fácil desincronizar.</li>
+        <li><strong>Complejidad innecesaria para el tamaño del producto:</strong> Subgraphs, dataSources, resolvers y un microservicio solo para auth añadían complejidad operativa y de desarrollo (CORS, JWT, init duplicado) sin beneficio para un equipo pequeño y una sola app cliente.</li>
+      </ul>
+      <h3>Por qué una arquitectura “solo GraphQL/microservicios” es peor para equipos y operación</h3>
+      <ul>
+        <li>Un dev acostumbrado a <strong>REST y una sola API</strong> (Node, Nest, Spring, etc.) tiene que aprender GraphQL (esquema, resolvers, subgraphs) y a operar varios servicios. La curva de entrada es mayor sin necesidad real para este tipo de producto.</li>
+        <li>Dos (o más) despliegues, configuración de red entre gateway y microservicio, trazabilidad distribuida y secretos por servicio: todo eso tiene sentido con muchos equipos o muchos dominios; para una API interna con pocos dominios es sobrecarga.</li>
+      </ul>
+      <h3>Por qué la nueva arquitectura del back es mejor</h3>
+      <ul>
+        <li><strong>Una sola API REST (NestJS):</strong> Un proceso, un puerto, un despliegue. El front consume esa API con los mismos endpoints y tipos. Sin gateway ni subgraphs; menos piezas que configurar y depurar.</li>
+        <li><strong>Organización por dominio (libs api-*):</strong> Cada dominio (auth, usuarios, objetivos, fichajes, etc.) vive en su lib (<code>api-auth</code>, <code>api-usuarios</code>, …). Quien trabaja en “auth” va a una lib; no hay que repartir la lógica entre gateway, subgraph y microservicio.</li>
+        <li><strong>Contrato común (shared-types):</strong> DTOs e interfaces compartidos entre front y back. Un cambio de contrato se hace en un sitio y ambos lados lo usan; menos errores y menos desalineación.</li>
+        <li><strong>Escalable cuando haga falta:</strong> Si en el futuro un dominio crece o un equipo lo “posee”, esa lib se puede extraer a microservicio; la arquitectura actual (libs por dominio) ya está preparada para eso sin reescribir todo.</li>
+      </ul>
+      <p class="muted">Resumen: el back antiguo (GraphQL + gateway + microservicio auth) no estaba alineado con el front y añadía complejidad operativa sin beneficio. El nuevo (una API NestJS + libs api-* + shared-types) es más simple de desarrollar, desplegar y entender, y sigue siendo común para cualquier dev (REST, tipos compartidos) y preparado para escalar si hace falta.</p>
+    </div>
+
+    <h2 id="nx">4. Qué es Nx, por qué y cómo funciona</h2>
+    <div class="card arch">
+      <h3>Qué es Nx</h3>
+      <p><strong>Nx</strong> es un sistema de build y herramienta para monorepos (y proyectos grandes). No es un framework: trabaja junto a React, Next.js, NestJS, Angular, etc. Gestiona proyectos (apps y libs), sus dependencias, la caché de builds y la ejecución de tareas (build, test, lint, serve) de forma incremental.</p>
+      <h3>Por qué Nx en este proyecto</h3>
+      <ul>
+        <li><strong>Grafo de dependencias:</strong> Nx conoce qué libs usa cada app y cada lib. Con <code>nx graph</code> ves el grafo de proyectos y puedes hacer cumplir reglas (ej. “las features no se importan entre sí”).</li>
+        <li><strong>Affected (solo lo tocado):</strong> <code>nx affected -t build</code> (o <code>test</code>, <code>lint</code>) ejecuta la tarea solo en los proyectos afectados por tus cambios. Menos tiempo en CI y en local.</li>
+        <li><strong>Caché local y remota:</strong> Si algo no ha cambiado, Nx reutiliza el resultado del build/test anterior (local o, con Nx Cloud, entre máquinas). Builds y tests mucho más rápidos cuando la mayoría del código no cambia.</li>
+        <li><strong>Boundaries y tags:</strong> Cada proyecto tiene <code>tags</code> en <code>project.json</code> (ej. <code>type:feature</code>, <code>scope:auth</code>). Con <code>@nx/enforce-module-boundaries</code> se prohíben imports no permitidos (ej. que una feature importe otra feature).</li>
+        <li><strong>Generadores y consistencia:</strong> <code>nx g @nx/js:library</code> (u otros) generan libs con la misma estructura y configuración. Menos configuración manual y menos errores.</li>
+      </ul>
+      <h3>Cómo funciona (resumen)</h3>
+      <ul>
+        <li><strong>nx.json</strong> en la raíz: configuración global (cache, task pipeline, plugins).</li>
+        <li><strong>project.json</strong> (o <code>project</code> en <code>package.json</code>) por proyecto: nombre, sourceRoot, targets (build, test, lint, dev), tags.</li>
+        <li><strong>Dependencias entre proyectos:</strong> Se derivan de los imports en el código (TypeScript/JavaScript). Nx construye el grafo leyendo esos imports.</li>
+        <li><strong>Ejecución:</strong> <code>nx run &lt;proyecto&gt;:&lt;target&gt;</code> (ej. <code>nx run front-biosstel:dev</code>). <code>nx run-many -t build --all</code> para todos; <code>nx affected -t build</code> solo los afectados.</li>
+      </ul>
+      <p class="muted">En resumen: Nx da estructura al monorepo, velocidad por caché y affected, y control por boundaries. Es el “motor” que hace que apps y libs encajen sin caos.</p>
+    </div>
+
+    <h2 id="cicd-tests">5. CI/CD y tests: núcleo del proyecto</h2>
+    <div class="card dev">
+      <h3>CI/CD como núcleo inicial</h3>
+      <p>El <strong>CI/CD</strong> no debe ser algo que se añade “cuando haya tiempo”: debe ser el <strong>núcleo inicial</strong> del proyecto. Antes de tener funcionalidades complejas, el pipeline debe estar funcionando (build, lint, tests) para que cada commit o cada PR se valide de forma automática.</p>
+      <ul>
+        <li><strong>Desde el primer día:</strong> Un pipeline que falle si el build o los tests fallan evita que se acumule deuda y que “en mi máquina funciona” se convierta en el estándar. Sin CI, es fácil acabar con merge directo a rama principal, sin revisión ni garantías.</li>
+        <li><strong>Un solo pipeline en monorepo:</strong> Con Nx, el CI puede ejecutar solo lo afectado (<code>nx affected -t build</code>, <code>nx affected -t test</code>), lo que mantiene los tiempos de feedback bajos. El CD puede desplegar solo las apps o libs que hayan cambiado, según la estrategia del equipo.</li>
+        <li><strong>Reglas de calidad en el pipeline:</strong> Lint, format, tests unitarios e integración (y opcionalmente E2E) como puerta de entrada. Si algo no pasa, no se mergea. Así la calidad no depende de que alguien “recuerde” ejecutar los tests.</li>
+      </ul>
+      <h3>Importancia de tests de integración y end-to-end (E2E)</h3>
+      <ul>
+        <li><strong>Tests unitarios</strong> validan unidades aisladas (un componente, una función, un servicio). Son rápidos y útiles, pero no garantizan que las piezas encajen ni que el flujo completo funcione.</li>
+        <li><strong>Tests de integración</strong> validan que varios módulos trabajen juntos (p. ej. un controlador + servicio + repositorio, o una feature de front que llama al API). Detectan desalineaciones de contrato, errores de configuración y fallos en la integración entre capas. Deberían ejecutarse en el CI (con API real o con mocks controlados).</li>
+        <li><strong>Tests end-to-end (E2E)</strong> simulan al usuario: abren el front, navegan, rellenan formularios, comprueban que la respuesta sea la esperada. Cubren el flujo completo (navegador → front → API → BD o mocks) y son la última línea de defensa antes de producción. Herramientas como Playwright o Cypress encajan bien en un monorepo (tests E2E como target de la app front o de un proyecto dedicado).</li>
+      </ul>
+      <p><strong>Resumen:</strong> CI/CD desde el inicio y tests en varios niveles (unitarios, integración, E2E) forman el núcleo de un proyecto mantenible. Sin ellos, la velocidad a corto plazo se paga con bugs en producción y miedo a refactorizar; con ellos, el equipo puede iterar con confianza.</p>
+    </div>
+
+    <h2 id="arquitectura">6. Arquitectura: apps + libs</h2>
+    <div class="card arch">
+      <p>El monorepo se organiza en <strong>apps</strong> (lo que se despliega) y <strong>libs</strong> (código reutilizable y por dominio).</p>
+      <table>
+        <thead>
+          <tr><th>Capas</th><th>Contenido</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Apps</strong></td><td>Front (Next.js) y API (NestJS). Solo orquestan: importan shell/features en front y módulos api-* en back.</td></tr>
+          <tr><td><strong>Shell (front)</strong></td><td>Layout, rutas, store global, providers. Punto de entrada de la SPA.</td></tr>
+          <tr><td><strong>Features (front)</strong></td><td>Una lib por dominio: auth, usuarios, objetivos, fichajes, reportes, productos, inventario, alertas, empresa, operaciones. Cada una: data-access (acciones/efectos), componentes de página, hooks.</td></tr>
+          <tr><td><strong>UI / UI-Layout (front)</strong></td><td>Componentes reutilizables (botones, inputs, cards) y layouts. Para que diseño trabaje sobre una lib estable.</td></tr>
+          <tr><td><strong>Platform / Shared (front)</strong></td><td>Utilidades, hooks genéricos, configuración compartida.</td></tr>
+          <tr><td><strong>Backend api-*</strong></td><td>Una lib por dominio (api-auth, api-usuarios, api-objetivos, etc.). Controladores, servicios, entidades. La app API los registra como módulos.</td></tr>
+          <tr><td><strong>shared-types</strong></td><td>DTOs, enums e interfaces compartidos entre front y back. Contrato por feature; la tecnología de cada feature puede ser distinta.</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">Lo importante es organizar por <strong>feature (dominio)</strong>, no por tecnología: cada feature puede elegir su stack (back, front, base de datos) según necesidad; el contrato (shared-types o API) une las piezas.</p>
+      <h3>Dependencias (resumido)</h3>
+      <p class="tree">app front → shell → features
+features → ui | platform | shared
+front (features, ui, etc.) → shared-types
+app API → api-* libs
+api-* libs → shared-types</p>
+      <p class="muted">Así se mantiene una sola dirección: de apps hacia libs, y de features hacia UI/platform/shared y shared-types.</p>
+    </div>
+
+    <h2 id="crear-feature">7. Cómo crear una feature (libs)</h2>
+    <div class="card dev">
+      <p>Para un nuevo dominio (ej. “pedidos”):</p>
+      <ol>
+        <li><strong>Tipos compartidos:</strong> Añadir en <code>shared-types</code> los DTOs y enums que necesiten front y back (ej. <code>Pedido</code>, <code>CreatePedidoDto</code>).</li>
+        <li><strong>Backend:</strong> Crear lib <code>api-pedidos</code> (o el nombre del dominio): módulo NestJS con controlador, servicio y entidad. Exportar el módulo. Registrar el módulo en la app API.</li>
+        <li><strong>Frontend:</strong> Crear lib de feature <code>pedidos</code> bajo <code>libs/frontend/features/</code>:
+          <ul>
+            <li><code>data-access</code>: acciones Redux, efectos (llamadas a API), selectores. Usar servicios que llamen a la API; no llamadas sueltas desde componentes.</li>
+            <li>Componentes de página y contenedores que usen <code>useAppDispatch</code> / <code>useAppSelector</code> y las acciones de la feature.</li>
+            <li>Registrar el slice en el store global (shell) y exponer rutas en el shell si aplica.</li>
+          </ul>
+        </li>
+        <li><strong>Tags Nx:</strong> Marcar la lib con <code>type:feature</code>, <code>scope:pedidos</code> (o el nombre del dominio) para que las reglas de boundaries y el grafo sigan siendo correctos.</li>
+      </ol>
+      <p><strong>Regla de oro:</strong> La API de cada feature en front se usa solo desde su data-access (acciones/efectos). Los componentes no llaman al API directamente; disparan acciones.</p>
+    </div>
+
+    <h2 id="escala">8. Cómo escala la arquitectura</h2>
+    <div class="card arch">
+      <ul>
+        <li><strong>Más dominios:</strong> Añadir una lib de feature (front) y su api-* (back) no afecta al resto. Cada feature puede usar tecnología distinta (back en Python/Java/Node, BD distinta); el grafo y el CI siguen por feature.</li>
+        <li><strong>Más apps:</strong> Distintas apps de front (Next.js, React Native, Vue, etc.) pueden consumir las mismas APIs de features. Cada app elige qué features usa; las APIs pueden estar en distintos lenguajes o servicios.</li>
+        <li><strong>Más equipos:</strong> Los boundaries (tags Nx, reglas de import) permiten que un equipo “posea” un conjunto de libs (ej. auth + usuarios) y otro otro (fichajes, reportes), con integración en el shell y en la app API.</li>
+        <li><strong>Escalabilidad por composición:</strong> No hace falta reescribir nada: se compone. Nueva vertical = nueva app + selección de libs existentes + libs nuevas solo para lo específico de esa vertical.</li>
+      </ul>
+    </div>
+
+    <h2 id="verticales">9. Productos verticales y libs como producto</h2>
+    <div class="card dev">
+      <h3>Productos verticales</h3>
+      <p>Un producto vertical es una aplicación concreta para un segmento (ej. solo fichajes + reportes para un cliente, o una white-label). Con esta arquitectura:</p>
+      <ul>
+        <li>Creas una nueva <strong>app</strong> (front y/o back) que importa solo las <strong>libs que necesite</strong> ese producto.</li>
+        <li>Reutilizas <code>shared-types</code>, las api-* que toquen al dominio y las features de UI correspondientes. Cero duplicación de lógica.</li>
+        <li>Puedes tener una API “completa” para el producto principal y APIs o BFFs más pequeños para verticales concretos.</li>
+      </ul>
+      <h3>Vender o exponer libs (UI, API, módulos en general)</h3>
+      <ul>
+        <li><strong>Libs de UI:</strong> La lib de componentes (botones, inputs, layouts, design tokens) se puede empaquetar y publicar (npm privado o público, con licencia). Otros productos o clientes pueden consumirla como dependencia. Diseño y marca quedan centralizados; el “producto” es la lib de UI.</li>
+        <li><strong>Módulos de API:</strong> Cada lib <code>api-*</code> (auth, usuarios, fichajes, etc.) es un módulo con contrato claro (endpoints, DTOs en shared-types). Se pueden ofrecer como paquetes npm privados para que terceros monten su propia API registrando solo los módulos que quieran, o como base para SaaS por dominio (ej. “solo módulo de fichajes”).</li>
+        <li><strong>En general:</strong> Cualquier lib bien acotada (shared-types, ui, api-auth, etc.) puede convertirse en producto: documentación, versionado semántico, changelog. La arquitectura ya está preparada porque cada lib es independiente y con dependencias explícitas.</li>
+      </ul>
+    </div>
+
+    <h2 id="agnostica">10. Agnóstica en tecnología por feature (back, front, base de datos)</h2>
+    <div class="card arch">
+      <p>Cada <strong>feature</strong> es la unidad de organización. Lo que se comparte es el <strong>contrato</strong> (tipos, API), no la tecnología. Por tanto, cada feature puede ser agnóstica en tecnología tanto en back como en front.</p>
+      <ul>
+        <li><strong>Backend por feature:</strong> No hace falta que todas las APIs sean NestJS. Una feature puede estar en Node/NestJS, otra en Python (FastAPI, Django), otra en Java (Spring), etc., según lo que pida ese dominio (rendimiento, ecosistema, equipo). Lo importante es que expongan el mismo contrato (endpoints, DTOs definidos en shared-types o en una especificación compartida).</li>
+        <li><strong>Bases de datos distintas por feature:</strong> Cada feature puede usar la base de datos que mejor le encaje: PostgreSQL para una, MongoDB para otra, Redis para caché de otra. Persistencia políglota por dominio, sin obligar a todo el sistema a una sola BD.</li>
+        <li><strong>Frontends distintos por producto:</strong> Puedes tener una app Next.js para el producto principal, otra en React Native para móvil, otra en Vue o en otro framework para un vertical concreto. Cada app consume las APIs de las features que necesite; el contrato es común, la tecnología del front puede variar por app.</li>
+        <li><strong>Organizar por feature, no por capa:</strong> La arquitectura gana porque el límite es el dominio (auth, fichajes, reportes…), no “todo el back en Java” o “todo el front en React”. Así se puede escalar, vender o extraer cada feature con independencia tecnológica.</li>
+      </ul>
+      <h3>Módulos federados: distintos frameworks en la misma app (migraciones y legacy)</h3>
+      <p>Con <strong>módulos federados</strong> (Module Federation, p. ej. Webpack o Nx) puedes tener <strong>varios frameworks en la misma aplicación</strong>. Eso hace la arquitectura aún más flexible:</p>
+      <ul>
+        <li><strong>Migraciones graduales:</strong> En lugar de reescribir toda la app de golpe, se puede ir sustituyendo por partes: una ruta o un bloque en React, otro en Vue o Angular, conviviendo en la misma shell. Se migra feature a feature sin “big bang”.</li>
+        <li><strong>Integrar proyectos legacy:</strong> Un front antiguo (jQuery, AngularJS, React clásico) se puede envolver como remoto federado y cargar dentro del shell nuevo. Poco a poco se van reemplazando pantallas o features por las nuevas libs; el legacy sigue funcionando hasta que se retire. Es la forma ordenada de traer proyectos heredados al monorepo y a la nueva arquitectura.</li>
+        <li><strong>En general es mejor:</strong> Permite elegir el mejor momento y el mejor alcance para cada migración, reducir riesgo y repartir el esfuerzo en el tiempo. La app sigue siendo una sola desde el punto de vista del usuario; por dentro, cada módulo puede ser tecnología distinta.</li>
+      </ul>
+      <p><strong>Resumen:</strong> shared-types (o el contrato de API) es la fuente de verdad entre features. Que el back de auth sea NestJS, el de analytics Python y el de facturación Java es compatible con esta arquitectura; en front, los módulos federados permiten mezclar frameworks en la misma app y migrar o integrar legacy sin reescribir todo de una vez.</p>
+    </div>
+
+    <h2 id="ui-design">11. Libs de UI y diseño</h2>
+    <div class="card ui">
+      <p>Las libs de UI (<code>ui</code>, <code>ui-layout</code>) están pensadas para que <strong>diseño</strong> y desarrollo trabajen sobre el mismo sistema de componentes:</p>
+      <ul>
+        <li><strong>Componentes en una lib:</strong> Botones, inputs, cards, modales, etc. viven en la lib de UI. Diseño puede documentar (Storybook u otra herramienta) y definir variantes sin tocar la lógica de negocio.</li>
+        <li><strong>Design tokens / temas:</strong> Colores, espaciados y tipografías se pueden centralizar (tokens o CSS variables) y consumir desde la lib de UI. Un cambio de tema se hace en un solo sitio.</li>
+        <li><strong>Consistencia:</strong> Todas las features usan los mismos componentes. Menos duplicación de estilos y comportamientos; más coherencia visual entre productos verticales.</li>
+        <li><strong>Colaboración diseño–dev:</strong> Diseño define en la lib de UI; desarrollo la importa en las features. Si hay una lib de iconos o de ilustraciones, también puede vivir como lib compartida.</li>
+      </ul>
+      <p class="muted">Documentación de design tokens y Figma puede vivir en <code>docs/</code> y referenciar la misma lib de UI que usa el código.</p>
+    </div>
+
+    <h2 id="no-micro">12. Por qué no microservicios desde el principio (auth, etc.)</h2>
+    <div class="card arch">
+      <p>Usar microservicios para todos los módulos (auth, usuarios, fichajes, etc.) desde el día uno suele ser contraproducente:</p>
+      <ul>
+        <li><strong>Coste operativo:</strong> Varios despliegues, varias bases de datos o esquemas, redes entre servicios, trazabilidad distribuida, configuración por servicio. Para un equipo pequeño o un solo producto, es sobrecarga sin beneficio real.</li>
+        <li><strong>Complejidad antes de tiempo:</strong> API Gateway, service discovery, circuit breakers entre servicios, gestión de secretos y config por servicio solo tienen sentido cuando hay muchos servicios y equipos que los operan.</li>
+        <li><strong>Una API ya escala:</strong> Una sola API NestJS que agrupa módulos (libs api-*) es más simple de desarrollar, desplegar y depurar. Escala bien en carga con réplicas y base de datos única hasta que el dominio o el equipo realmente pida separación.</li>
+        <li><strong>Microservicios cuando aporten valor:</strong> Tiene sentido cuando un dominio crece mucho, un equipo lo “posee” y quiere desplegarlo aparte, o cuando hay requisitos de escalado/aislamiento muy distintos por dominio. No por defecto para “auth” o “usuarios” solo porque sean módulos.</li>
+      </ul>
+      <p class="muted">Resumen: empezar con una API modular (libs) y extraer a microservicios solo donde y cuando compense. La arquitectura actual está pensada para eso.</p>
+    </div>
+
+    <h2 id="lego">13. Escalar a microservicios cuando haga falta: la arquitectura es un Lego</h2>
+    <div class="card dev">
+      <p>Esta arquitectura permite escalar a microservicios <strong>sin reescribir</strong>: cada lib es una pieza que se puede sacar o dejar dentro.</p>
+      <ul>
+        <li><strong>Cada api-* es un bounded context:</strong> api-auth, api-usuarios, api-fichajes, etc. ya están acotados por dominio. Para convertirlos en microservicio: se extrae la lib a un proyecto/servicio que exponga HTTP (o gRPC), se despliega aparte y se pone delante un API Gateway que enrute (ej. <code>/auth/*</code> → servicio auth). El contrato (shared-types) no cambia; el cliente sigue llamando al mismo gateway.</li>
+        <li><strong>Migración gradual:</strong> Puedes sacar primero solo uno (p. ej. auth) a un microservicio y dejar el resto en la API monolítica. No hace falta “pasarse a microservicios” de golpe. Donde quieras, cuando quieras.</li>
+        <li><strong>Lego:</strong> Las piezas (libs/features) encajan por contrato (tipos, endpoints). Pueden vivir dentro de una sola API o en servicios separados; la frontera es de despliegue y operación, no de código. Incluso puedes reescribir una pieza en otro lenguaje (Python, Java…) al extraerla; lo que une todo es el contrato, no la tecnología.</li>
+      </ul>
+      <p><strong>Conclusión:</strong> La arquitectura no te cierra la puerta a microservicios ni a tecnologías distintas por feature. Es un Lego: mismo contrato por feature; cada pieza puede ser NestJS, Python, Java, otra BD u otra app front según necesidad. Añadir API Gateway, Config Server o circuit breakers tiene sentido cuando ya existan varios servicios (ver documentación de microservicios en esta carpeta).</p>
+    </div>
+
+    <h2 id="flujo">14. Flujo de trabajo recomendado</h2>
+    <div class="card dev">
+      <ul>
+        <li><strong>Nueva funcionalidad:</strong> Definir tipos en shared-types → implementar o extender api-* en back → implementar data-access y pantallas en la feature de front → registrar en shell (store, rutas).</li>
+        <li><strong>Cambio solo en UI:</strong> Modificar componentes en <code>ui</code> o <code>ui-layout</code>; las features que los usan se benefician sin tocar lógica.</li>
+        <li><strong>Nuevo producto vertical:</strong> Nueva app que importe shell (o un shell ligero) y solo las features necesarias; misma API y shared-types.</li>
+        <li><strong>Build y tests:</strong> Desde la raíz, construir y testear por proyecto (Nx solo afecta lo cambiado). Revisar <code>nx graph</code> para ver dependencias antes de refactors grandes.</li>
+      </ul>
+    </div>
+
+    <h2 id="mocks">15. Servidor de mocks (no depender de datos ni del back)</h2>
+    <div class="card dev">
+      <p>Para no crear mocks aleatorios en código ni estar bloqueado cuando el backend o los datos no están listos, conviene usar un <strong>servidor de mocks</strong> que simule la API con respuestas coherentes y reutilizables.</p>
+      <h3>Por qué usar un mock server</h3>
+      <ul>
+        <li>El front puede desarrollarse y probarse sin depender de la API real ni de la base de datos.</li>
+        <li>Las respuestas son consistentes (mismo contrato que la API real) y versionables (en archivos o imágenes Docker), no datos “random” repartidos por el código.</li>
+        <li>Útil en CI, demos y para QA cuando no se quiere levantar todos los servicios.</li>
+      </ul>
+      <h3>Opciones y cómo usarlas</h3>
+      <table>
+        <thead>
+          <tr><th>Herramienta</th><th>Uso típico</th><th>Cómo instalar / arrancar</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>json-server</strong></td>
+            <td>API REST simple a partir de un JSON. Muy rápido para prototipar y para CRUD.</td>
+            <td><code>pnpm add -D json-server</code>. Crear un <code>db.json</code> con las entidades (ej. <code>{"users": [], "objetivos": []}</code>). Arrancar: <code>npx json-server --watch db.json --port 3001</code>. Opcional: <code>--routes routes.json</code> para rutas custom.</td>
+          </tr>
+          <tr>
+            <td><strong>MockServer</strong></td>
+            <td>Simula HTTP/HTTPS con expectativas (request → response). Muy flexible, ideal para contratos complejos y tests E2E.</td>
+            <td>Docker: <code>docker run -d -p 1080:1080 mockserver/mockserver</code>. Configurar expectativas vía API REST en <code>localhost:1080</code> o con archivos. Cliente Node: <code>pnpm add -D mockserver-client</code> para definir mocks desde tests.</td>
+          </tr>
+          <tr>
+            <td><strong>MSW (Mock Service Worker)</strong></td>
+            <td>Intercepta peticiones en el navegador (o en Node). No requiere servidor aparte; los mocks viven en el proyecto (handlers).</td>
+            <td><code>pnpm add -D msw</code>. Definir handlers (GET/POST por path) y usar <code>setupServer(...)</code> en tests o en desarrollo. Bueno para tests unitarios e integración sin levantar backend.</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Recomendación rápida</h3>
+      <ul>
+        <li><strong>Desarrollo local sin API:</strong> json-server con un <code>db.json</code> alineado con <code>shared-types</code> (mismos nombres y estructura). El front apunta a <code>http://localhost:3001</code> (o el puerto que uses) cuando se usa el mock.</li>
+        <li><strong>Tests E2E o contratos estrictos:</strong> MockServer en Docker; las expectativas se cargan al arrancar y devuelven siempre las mismas respuestas.</li>
+        <li><strong>Tests unitarios / integración en front:</strong> MSW para no tocar la red real; los mismos handlers pueden usarse en Jest/Vitest y en dev.</li>
+      </ul>
+      <p class="muted">Tener un único “contrato” de mocks (archivos o imagen Docker) evita mocks dispersos y aleatorios en el código y desbloquea al equipo cuando faltan datos o el back no está disponible.</p>
+    </div>
+
+    <footer class="foot">
+      Presentación para desarrollo y diseño. Para comparativa de negocio/CTO, ver la presentación de comparativa en esta misma carpeta.
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+---
+description: Cada vez que se cree un nuevo plan de cursor añade esta regla para crear el plan de forma correcta
+alwaysApply: false
+---
+
+Cuando crees el plan hazlo bien detallado y estructurado:
+
+El plan debe dividirse en pasos claros y ordenados.
+Cada paso debe tener las siguientes secciones EXACTAS, con esos títulos:
+
+1. Objetivo
+   - Qué se quiere resolver en este paso
+   - Por qué es necesario para el objetivo final
+
+2. Qué se va a construir o decidir
+   - Qué parte del sistema, lógica o funcionalidad se define aquí
+   - Qué decisiones clave se toman en este punto
+
+3. Código de ejemplo o de implementación
+   - Incluye código real si ayuda a aclarar la solución
+   - Puede ser pseudocódigo o código listo para usarse
+   - Prioriza ejemplos que eviten errores comunes
+
+4. Resolución de ambigüedades
+   - Si algo puede interpretarse de varias formas:
+     - Muestra directamente ejemplos concretos de cómo resolverlo
+     - Explica brevemente por qué esa solución es la más adecuada
+
+5. Resultado esperado
+   - Qué debería quedar claro o resuelto al terminar este paso
+   - Cómo saber que este paso está bien definido
+
+Reglas de formato para el modelo:
+- Usa un lenguaje claro y directo.
+- Prefiere listas y subtítulos.
+- Asume que este plan se usará directamente como guía de implementación.
+- Evita explicaciones genéricas; cada paso debe ser directamente útil para implementar
+
+El plan se usará como guía de implementación completa, así que el código y los ejemplos son importantes en cada paso.
+
+No supongas que conoces las reglas de desarrollo, leelas de ``.cursor/rules/agents.mdc`` para saber como construir el proyecto, sus patrones, donde y como crear microservicios, sus grafos de graphql, etc.
+
+Hay mas informacion en el ``README.md`` del proyecto.
