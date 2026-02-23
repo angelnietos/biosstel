@@ -70,7 +70,7 @@
     "typescript": "^5.8.3",
     "vite": "^6.4.1",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.9"
+    "vitest": "^4.0.18"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
