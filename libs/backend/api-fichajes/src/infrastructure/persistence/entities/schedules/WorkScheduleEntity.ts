@@ -5,7 +5,7 @@ export class WorkScheduleEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, default: '' })
   name!: string;
 
   @Column({ type: 'int', default: 0 })

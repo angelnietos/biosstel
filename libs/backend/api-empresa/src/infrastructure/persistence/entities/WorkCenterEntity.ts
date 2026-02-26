@@ -14,7 +14,7 @@ export class WorkCenterEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, default: '' })
   name!: string;
 
   @Column({ type: 'varchar', length: 500, nullable: true })

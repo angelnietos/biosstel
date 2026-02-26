@@ -13,6 +13,6 @@ export class SubfamilyEntity {
   @JoinColumn({ name: 'familyId' })
   family?: FamilyEntity;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, default: '' })
   name!: string;
 }

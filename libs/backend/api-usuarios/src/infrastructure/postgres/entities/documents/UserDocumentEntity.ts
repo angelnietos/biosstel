@@ -20,7 +20,7 @@ export class UserDocumentEntity {
   @JoinColumn({ name: 'userId' })
   user?: UserEntity;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, default: '' })
   name!: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })

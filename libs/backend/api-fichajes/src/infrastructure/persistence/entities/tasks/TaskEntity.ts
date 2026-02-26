@@ -28,7 +28,7 @@ export class TaskEntity implements FichajeTask {
   @JoinColumn({ name: 'agenda_id' })
   agenda?: AgendaEntity;
 
-  @Column()
+  @Column({ default: '' })
   title!: string;
 
   @Column({ type: 'text', nullable: true })

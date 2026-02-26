@@ -11,7 +11,7 @@ export class ProductOrmEntity {
   @Column({ type: 'varchar', length: 100, nullable: true })
   codigo?: string;
 
-  @Column({ type: 'varchar', length: 150 })
+  @Column({ type: 'varchar', length: 150, default: '' })
   name!: string;
 
   @Column({ type: 'varchar', length: 100, default: '' })

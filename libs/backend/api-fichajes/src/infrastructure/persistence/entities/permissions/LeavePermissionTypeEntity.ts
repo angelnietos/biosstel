@@ -5,7 +5,7 @@ export class LeavePermissionTypeEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, default: '' })
   name!: string;
 
   @Column({ default: true })

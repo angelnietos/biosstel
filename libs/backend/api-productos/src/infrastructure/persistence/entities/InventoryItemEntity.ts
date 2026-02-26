@@ -6,10 +6,10 @@ export class InventoryItemEntity implements InventoryItem {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, default: '' })
   codigo!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, default: '' })
   nombre!: string;
 
   @Column({ type: 'int', default: 0 })
