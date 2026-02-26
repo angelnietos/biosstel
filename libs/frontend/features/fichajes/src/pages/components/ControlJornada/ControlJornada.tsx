@@ -51,11 +51,11 @@ function getStatusMessage(status: FichajeStatus, fueraHorario: boolean): string 
 }
 
 export const ControlJornada = () => {
-  const dispatch = useDispatch<any>(); // Typed dispatch for thunks
+  const dispatch = useDispatch();
   const locale = useLocale();
-  const { currentFichaje, tasks, status, error } = useSelector((state: any) => state.fichajes as FichajesState);
-  const authRestored = useSelector((state: any) => state.auth?.authRestored);
-  const authUser = useSelector((state: any) => (state.auth as { user?: { id?: string; role?: string } })?.user);
+  const { currentFichaje, tasks, status, error } = useSelector((state: {fichajes: FichajesState}) => state.fichajes);
+  const authRestored = useSelector((state: {auth?: {authRestored?: boolean}}) => state.auth?.authRestored);
+  const authUser = useSelector((state: {auth?: {user?: {id?: string; role?: string} | null}}) => state.auth?.user);
   const authUserId = authUser?.id;
   const userId = isValidUserId(authUserId) ? authUserId : undefined;
   const canFichar = useCanFichar();

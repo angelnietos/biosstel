@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card } from '@biosstel/ui';
 import { Link } from '@biosstel/platform';
-import { fetchTasks, isValidUserId } from '@biosstel/fichajes';
-import type { FichajesState, Tarea } from '@biosstel/fichajes';
+import { fetchTasks, isValidUserId } from '../../../data-access';
+import type { FichajesState, Tarea } from '../../../data-access';
 import type { TareasPaths } from './types';
 import { DEFAULT_TAREAS_PATHS } from './types';
 
@@ -16,9 +16,9 @@ export interface PendingTasksPageProps {
 export function PendingTasksPage({ paths: pathsProp }: PendingTasksPageProps = {}) {
   const paths = { ...DEFAULT_TAREAS_PATHS, ...pathsProp };
   const dispatch = useDispatch<any>();
-  const authUserId = useSelector((state: any) => (state.auth as { user?: { id?: string } })?.user?.id);
+  const authUserId = useSelector((state: {auth?: {user?: {id?: string} | null}}) => state.auth?.user?.id);
   const userId = isValidUserId(authUserId) ? authUserId : undefined;
-  const { tasks, status, error } = useSelector((state: any) => state.fichajes as FichajesState);
+  const { tasks, status, error } = useSelector((state: {fichajes: FichajesState}) => state.fichajes);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

@@ -9,8 +9,8 @@ import {
   completeTask,
   deleteTask,
   clearSelectedTask,
-} from '@biosstel/fichajes';
-import type { FichajesState, Tarea } from '@biosstel/fichajes';
+} from '../../../data-access';
+import type { FichajesState, Tarea } from '../../../data-access';
 import type { TareasPaths } from './types';
 import { DEFAULT_TAREAS_PATHS } from './types';
 

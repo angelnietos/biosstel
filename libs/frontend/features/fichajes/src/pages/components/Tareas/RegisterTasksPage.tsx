@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Button, Input } from '@biosstel/ui';
 import { Link } from '@biosstel/platform';
-import { addTask, isValidUserId } from '@biosstel/fichajes';
-import type { FichajesState } from '@biosstel/fichajes';
+import { addTask, isValidUserId } from '../../../data-access';
+import type { FichajesState } from '../../../data-access';
 import type { TareasPaths } from './types';
 import { DEFAULT_TAREAS_PATHS } from './types';
 
@@ -16,9 +16,9 @@ export interface RegisterTasksPageProps {
 export function RegisterTasksPage({ paths: pathsProp }: RegisterTasksPageProps = {}) {
   const paths = { ...DEFAULT_TAREAS_PATHS, ...pathsProp };
   const dispatch = useDispatch<any>();
-  const authUserId = useSelector((state: any) => (state.auth as { user?: { id?: string } })?.user?.id);
+  const authUserId = useSelector((state: {auth?: {user?: {id?: string} | null}}) => state.auth?.user?.id);
   const userId = isValidUserId(authUserId) ? authUserId : undefined;
-  const { status, error } = useSelector((state: any) => state.fichajes as FichajesState);
+  const { status, error } = useSelector((state: {fichajes: FichajesState}) => state.fichajes);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [success, setSuccess] = useState(false);

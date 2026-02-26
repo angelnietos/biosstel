@@ -46,9 +46,9 @@ import {
   fetchCurrentFichaje,
   clearError,
   isValidUserId,
-  fichajesService,
-} from '@biosstel/fichajes';
-import type { FichajesState } from '@biosstel/fichajes';
+} from '../../../data-access';
+import type { FichajesState } from '../../../data-access';
+import { fichajesService } from '../../../api/services';
 
 interface ScheduleItem {
   id: string;
