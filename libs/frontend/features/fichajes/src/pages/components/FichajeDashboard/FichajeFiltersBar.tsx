@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef } from 'react';
 import { Button, Card, Input, Stack, Text } from '@biosstel/ui';
 
 export interface FichajeFiltersBarProps {
@@ -36,7 +35,8 @@ export function FichajeFiltersBar({
   filterPanelRef,
 }: FichajeFiltersBarProps) {
   return (
-    <Stack ref={filterPanelRef} direction="row" gap={3} align="center" className="flex-wrap shrink-0 relative">
+    <div ref={filterPanelRef} className="flex flex-wrap shrink-0 relative">
+    <Stack direction="row" gap={3} align="center" className="flex-wrap shrink-0">
       <Button variant="secondary" type="button" className="shrink-0" onClick={onToggleFilterPanel} aria-expanded={showFilterPanel}>
         Filtros
       </Button>
@@ -92,5 +92,6 @@ export function FichajeFiltersBar({
         {dateLabel} / mes actual / {todayLabel}
       </span>
     </Stack>
+    </div>
   );
 }

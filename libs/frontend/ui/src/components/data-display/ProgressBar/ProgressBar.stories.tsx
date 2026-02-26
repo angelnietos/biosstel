@@ -29,7 +29,7 @@ export const Success: Story = {
   args: { value: 100, variant: 'success', showLabel: true },
 };
 
-export const Error: Story = {
+export const ErrorVariant: Story = {
   args: { value: 25, variant: 'error', showLabel: true },
 };
 

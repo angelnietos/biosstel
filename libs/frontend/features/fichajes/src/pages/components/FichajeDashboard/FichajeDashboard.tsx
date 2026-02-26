@@ -9,7 +9,7 @@
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { API_BASE_URL, getAuthHeaders, useRouter } from '@biosstel/platform';
-import { Button, Card, Heading, Pagination, Skeleton, Stack, Tabs, Text } from '@biosstel/ui';
+import { Button, Card, Heading, Pagination, Skeleton, Stack, Tabs, Text, useToast } from '@biosstel/ui';
 import { PageContainer } from '@biosstel/ui-layout';
 import { useCanFichar, useCanManageFichajes } from '@biosstel/shared';
 import {
@@ -46,6 +46,7 @@ const TODAY_ISO = () => new Date().toISOString().split('T')[0];
 export const FichajeDashboard = () => {
   const dispatch = useDispatch<unknown>();
   const router = useRouter();
+  const { addToast } = useToast();
   const authRestored = useSelector((state: { auth?: { authRestored?: boolean } }) => state.auth?.authRestored);
   const authUser = useSelector((state: { auth?: { user?: { id?: string; role?: string } | null } }) => state.auth?.user);
   const authUserId = authUser?.id;
@@ -282,9 +283,7 @@ export const FichajeDashboard = () => {
             <CalendariosTab
               loading={loadingCalendars}
               calendars={calendars}
-              onRepeatYear={() => {
-                // Toast from parent if needed; for now same message as before
-              }}
+              onRepeatYear={() => addToast('Repetir calendario para el siguiente año. Contacte con el administrador si necesita esta acción.', 'info')}
             />
           </Card>
         )}

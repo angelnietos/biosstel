@@ -2,8 +2,6 @@
  * Shared types and pure helpers for FichajeDashboard and its subcomponents.
  */
 
-import { StatusBadge } from '@biosstel/ui';
-
 export const HOURS_OBJETIVO = 2400;
 
 export interface ScheduleItem {
@@ -55,19 +53,6 @@ export function getRoleVariant(role: string): 'info' | 'purple' | 'warning' | 'd
       return 'purple';
     default:
       return 'default';
-  }
-}
-
-export function getStatusBadge(status: string) {
-  switch (status) {
-    case 'working':
-      return <StatusBadge label="Fichado" status="success" />;
-    case 'paused':
-      return <StatusBadge label="Pausado" status="warning" />;
-    case 'finished':
-      return <StatusBadge label="Finalizado" status="muted" />;
-    default:
-      return <StatusBadge label="Sin fichar" status="error" />;
   }
 }
 

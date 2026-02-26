@@ -9,12 +9,12 @@ import {
   formatTime,
   pct,
   getRoleVariant,
-  getStatusBadge,
   getProgressVariant,
   HOURS_OBJETIVO,
   SKELETON_ROW_IDS,
   SKELETON_CELL_IDS,
 } from './utils';
+import { StatusBadgeByStatus } from './StatusBadgeByStatus';
 
 export interface FichajesTabProps {
   isLoading: boolean;
@@ -113,7 +113,7 @@ export function FichajesTab({ isLoading, rows, filteredRows }: FichajesTabProps)
             <TableRow key={row.userId}>
               <TableCell>
                 <Stack direction="row" gap={2} align="center">
-                  {getStatusBadge(row.status)}
+                  <StatusBadgeByStatus status={row.status} />
                   <Text variant="body" as="span">
                     {row.firstName} {row.lastName}
                   </Text>

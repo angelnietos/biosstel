@@ -3,16 +3,6 @@
 import { Button, Heading, Input, Modal, Stack } from '@biosstel/ui';
 import type { ScheduleItem } from './utils';
 
-const EMPTY_SCHEDULE: Omit<ScheduleItem, 'id' | 'name'> & { name: string } = {
-  name: '',
-  hoursPerYear: 0,
-  vacationDays: 0,
-  freeDisposalDays: 0,
-  hoursPerDayWeekdays: 0,
-  hoursPerDaySaturday: 0,
-  hoursPerWeek: 0,
-};
-
 export interface FichajeScheduleModalProps {
   open: boolean;
   form: ScheduleItem & { name: string };
