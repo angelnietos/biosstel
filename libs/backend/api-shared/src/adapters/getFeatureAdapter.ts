@@ -59,9 +59,11 @@ function loadGraphQLConfig(): GraphQLConfig {
   if (cachedGraphql) return cachedGraphql;
   const envEnabled = process.env['GRAPHQL_ENABLED'] === 'true' || process.env['GRAPHQL_ENABLED'] === '1';
   const envFeatures = process.env['GRAPHQL_FEATURES']?.split(',').map((s) => s.trim()).filter(Boolean) as FeatureKey[] | undefined;
+  // When GraphQL is enabled without explicit features, default to 'users' so schema has a Query root
+  const features = envFeatures && envFeatures.length > 0 ? envFeatures : (envEnabled ? (['users'] as FeatureKey[]) : []);
   return {
     enabled: envEnabled,
-    features: envFeatures ?? [],
+    features,
     path: process.env['GRAPHQL_PATH'] ?? '/graphql',
   };
 }
