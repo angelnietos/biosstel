@@ -165,8 +165,8 @@ export const TerminalObjectivesPage = () => {
      return card.rows.map((r, i) => ({
         id: (r as { id?: string }).id ?? `${card.title}-${i}`,
         name: r.label,
-        achieved: typeof r.value === 'number' ? r.value : parseInt(String(r.value), 10) || 0,
-        target: typeof r.total === 'number' ? r.total : parseInt(String(r.total), 10) || 0,
+        achieved: typeof r.value === 'number' ? r.value : Number.parseInt(String(r.value), 10) || 0,
+        target: typeof r.total === 'number' ? r.total : Number.parseInt(String(r.total), 10) || 0,
         assigned: true,
      }));
   };

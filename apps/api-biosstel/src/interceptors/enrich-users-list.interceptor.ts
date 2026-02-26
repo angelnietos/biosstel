@@ -54,7 +54,7 @@ export class EnrichUsersListInterceptor implements NestInterceptor {
     if (!this.isListUsersPath(request)) return value;
     if (!isPaginatedUsers(value)) return value;
 
-    const body = value as PaginatedResult<User>;
+    const body = value;
     const items = body.items ?? body.data;
     const userIds = items.map((u) => u.id).filter(Boolean);
     if (userIds.length === 0) return value;

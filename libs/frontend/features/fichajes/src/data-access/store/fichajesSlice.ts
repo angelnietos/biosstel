@@ -19,7 +19,7 @@ export const fetchTasks = createAsyncThunk(
 export const clockIn = createAsyncThunk(
     'fichajes/clockIn',
     async (data: { userId: string; location?: { lat: number; lng: number } }, thunkAPI) => {
-        const userId = data?.userId != null ? String(data.userId).trim() : '';
+        const userId = data?.userId == null ? '' : String(data.userId).trim();
         if (isValidUserId(userId)) {
             return await fichajesService.clockIn({ userId, location: data?.location });
         }

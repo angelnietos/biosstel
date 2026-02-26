@@ -16,7 +16,7 @@ export function ForgotPasswordPage() {
     logFormSubmit('forgot_password', undefined, { email: values.email });
     await forgotPassword(values.email);
     const locale =
-      typeof globalThis.window === 'undefined'
+      globalThis.window === undefined
         ? 'es'
         : globalThis.window.location.pathname.split('/').find(Boolean) || 'es';
     router.push(`/${locale}/email-send`);

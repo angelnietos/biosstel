@@ -5,20 +5,18 @@
 
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Card, Heading, Text, Skeleton, Alert, Button, ClockArc } from '@biosstel/ui';
 import { Grid, Stack } from '@biosstel/ui-layout';
 import { Link } from '@biosstel/platform';
-import { useCanFichar, useCanManageFichajes } from '@biosstel/shared';
+import { useCanFichar, useCanManageFichajes, AlertsTable } from '@biosstel/shared';
 import { FilterBar, type FilterBarValues } from '../FilterBar';
 import { FamilyObjectiveCard } from '../FamilyObjectiveCard';
-import { AlertsTable } from '@biosstel/shared';
 import { useDashboardHome } from '../../..';
 import { DASHBOARD_FILTER_OPTIONS, type ThemeColor } from '../../../data-access/models';
 
 export const DashboardHomePage = () => {
-  const authUser = useSelector((state: any) => state.auth?.user);
   const currentFichaje = useSelector((state: any) => state.fichajes?.currentFichaje);
   const [filterValues, setFilterValues] = useState<FilterBarValues>({
     marca: 'all',

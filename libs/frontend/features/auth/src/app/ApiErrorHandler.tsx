@@ -24,7 +24,7 @@ export function ApiErrorHandler() {
       }
       clearRefreshToken();
       dispatch(logout());
-      if (typeof globalThis.window !== 'undefined') {
+      if (globalThis.window !== undefined) {
         const locale = globalThis.window.location.pathname.split('/').find(Boolean) || 'es';
         globalThis.window.location.href = `/${locale}/login`;
       }

@@ -19,7 +19,7 @@ export interface PendingTaskDetailPageProps {
   paths?: Partial<TareasPaths>;
 }
 
-export function PendingTaskDetailPage({ taskId, paths: pathsProp }: PendingTaskDetailPageProps) {
+export function PendingTaskDetailPage({ taskId, paths: pathsProp }: Readonly<PendingTaskDetailPageProps>) {
   const paths = { ...DEFAULT_TAREAS_PATHS, ...pathsProp };
   const id = taskId;
   const dispatch = useDispatch<any>();
@@ -45,7 +45,7 @@ export function PendingTaskDetailPage({ taskId, paths: pathsProp }: PendingTaskD
   const handleConfirmDelete = () => {
     dispatch(deleteTask(id));
     setShowDeleteModal(false);
-    window.history.back();
+    globalThis.window.history.back();
   };
 
   if (status === 'loading' && !task) {

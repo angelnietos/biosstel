@@ -26,12 +26,11 @@ import type { FichajesState, Tarea } from '../../../data-access';
 import { HistorialFichajes } from '../HistorialFichajes';
 import { isValidUserId } from '../../../data-access';
 import { Stack } from '@biosstel/ui-layout';
-import { useRouter, useLocale, logUserAction } from '@biosstel/platform';
+import { useLocale, logUserAction } from '@biosstel/platform';
 import { useCanFichar } from '@biosstel/shared';
 
 export const ControlJornada = () => {
   const dispatch = useDispatch<any>(); // Typed dispatch for thunks
-  const router = useRouter();
   const locale = useLocale();
   const { currentFichaje, tasks, status, error } = useSelector((state: any) => state.fichajes as FichajesState);
   const authRestored = useSelector((state: any) => state.auth?.authRestored);
@@ -51,11 +50,11 @@ export const ControlJornada = () => {
   useEffect(() => {
     if (!mounted || !authRestored) return;
     if (!authUser) {
-      window.location.replace(`/${locale}/login`);
+      globalThis.window.location.replace(`/${locale}/login`);
       return;
     }
     if (!canFichar) {
-      window.location.replace(`/${locale}/fichajes`);
+      globalThis.window.location.replace(`/${locale}/fichajes`);
     }
   }, [mounted, authRestored, authUser, canFichar, locale]);
 
@@ -121,25 +120,18 @@ export const ControlJornada = () => {
 
   // Figma Base-15: "Ficho mal fuera de horario" cuando la API indique fueraHorario
   const fueraHorario = (currentFichaje as { fueraHorario?: boolean } | undefined)?.fueraHorario === true;
-  const arcVariant =
-    fichajeStatus === 'working'
-      ? fueraHorario
-        ? 'red'
-        : 'green'
-      : fichajeStatus === 'paused'
-        ? 'red'
-        : 'gray';
-  const arcProgress = fichajeStatus === 'working' ? 50 : fichajeStatus === 'paused' ? 25 : 0;
-  const statusMessage =
-    fichajeStatus === 'working'
-      ? fueraHorario
-        ? "Ficho 'mal' fuera de su horario"
-        : 'Ficho bien dentro de su horario'
-      : fichajeStatus === 'paused'
-        ? 'Jornada pausada'
-        : fichajeStatus === 'finished'
-          ? 'Jornada finalizada'
-          : null;
+  let arcVariant: 'red' | 'green' | 'gray' = 'gray';
+  if (fichajeStatus === 'working') arcVariant = fueraHorario ? 'red' : 'green';
+  else if (fichajeStatus === 'paused') arcVariant = 'red';
+
+  let arcProgress = 0;
+  if (fichajeStatus === 'working') arcProgress = 50;
+  else if (fichajeStatus === 'paused') arcProgress = 25;
+
+  let statusMessage: string | null = null;
+  if (fichajeStatus === 'working') statusMessage = fueraHorario ? "Ficho 'mal' fuera de su horario" : 'Ficho bien dentro de su horario';
+  else if (fichajeStatus === 'paused') statusMessage = 'Jornada pausada';
+  else if (fichajeStatus === 'finished') statusMessage = 'Jornada finalizada';
 
   // No mostrar nada de esta ruta hasta saber si redirigir o mostrar el formulario.
   // Así no se pinta "Gestión de jornada" ni ningún mensaje mientras carga/auth.
@@ -297,11 +289,13 @@ export const ControlJornada = () => {
               </div>
             ) : (
               tasks.map((task: Tarea) => {
-                const timeRange = task.startTime
-                  ? task.endTime
-                    ? `${new Date(task.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(task.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-                    : new Date(task.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                  : '12:00 - 12:40'; // Fallback to match Figma screenshot example
+                let timeRange = '12:00 - 12:40';
+                if (task.startTime) {
+                  const startStr = new Date(task.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                  timeRange = task.endTime
+                    ? `${startStr} - ${new Date(task.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                    : startStr;
+                }
 
                 return (
                   <div

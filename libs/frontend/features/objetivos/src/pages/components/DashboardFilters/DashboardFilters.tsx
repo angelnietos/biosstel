@@ -211,14 +211,14 @@ export const DashboardFilters = ({ onFilterChange }: DashboardFiltersProps) => {
           <button
             onClick={() => setOpenDropdown(openDropdown === key ? null : key)}
             className={`px-4 py-2.5 rounded-lg border text-sm font-medium transition-all ${
-              (filters as Record<string, string[]>)[key]?.length > 0
+              filters[key]?.length > 0
                 ? 'bg-gray-900 text-white border-gray-900 shadow-sm'
                 : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:shadow-sm'
             }`}
           >
             {getFilterLabel(key)}
-            {(filters as Record<string, string[]>)[key]?.length > 0 &&
-              ` (${(filters as Record<string, string[]>)[key].length})`}
+            {filters[key]?.length > 0 &&
+              ` (${filters[key].length})`}
           </button>
         </div>
       ))}

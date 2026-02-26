@@ -36,11 +36,11 @@ export function AuthRestore() {
   const hasRunRestore = useRef(false);
 
   useEffect(() => {
-    if (typeof globalThis.window !== 'undefined' && !authRestored) {
+    if (globalThis.window !== undefined && !authRestored) {
     if (hasRunRestore.current) return;
     hasRunRestore.current = true;
 
-    let tokenToUse = token ?? (typeof globalThis.window !== 'undefined' ? globalThis.window.localStorage.getItem('token') : null);
+    let tokenToUse = token ?? (globalThis.window !== undefined ? globalThis.window.localStorage.getItem('token') : null);
     const tryRefresh = async (): Promise<string | null> => {
       const result = await refreshAuth();
       return result?.token ?? null;

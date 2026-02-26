@@ -60,11 +60,17 @@ export const alertasSlice = createSlice({
           items = (payload as { items: DashboardAlert[] }).items;
         }
         state.alerts = items;
-        const totalVal = Array.isArray(payload) ? payload.length : (typeof (payload as { total?: number })?.total === 'number' ? (payload as { total: number }).total : items.length);
+        let totalVal: number;
+        if (Array.isArray(payload)) totalVal = payload.length;
+        else totalVal = typeof (payload as { total?: number })?.total === 'number' ? (payload as { total: number }).total : items.length;
         state.totalAlerts = totalVal;
-        const pageVal = Array.isArray(payload) ? 1 : (typeof (payload as { page?: number })?.page === 'number' ? (payload as { page: number }).page : 1);
+        let pageVal: number;
+        if (Array.isArray(payload)) pageVal = 1;
+        else pageVal = typeof (payload as { page?: number })?.page === 'number' ? (payload as { page: number }).page : 1;
         state.currentPage = pageVal;
-        const pageSizeVal = Array.isArray(payload) ? 10 : (typeof (payload as { pageSize?: number })?.pageSize === 'number' ? (payload as { pageSize: number }).pageSize : 10);
+        let pageSizeVal: number;
+        if (Array.isArray(payload)) pageSizeVal = 10;
+        else pageSizeVal = typeof (payload as { pageSize?: number })?.pageSize === 'number' ? (payload as { pageSize: number }).pageSize : 10;
         state.pageSize = pageSizeVal;
         state.isLoading = false;
         state.error = null;

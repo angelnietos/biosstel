@@ -1,4 +1,4 @@
-import { Heading, Text, Card } from '@biosstel/ui';
+import { Heading } from '@biosstel/ui';
 import { Stack, Grid } from '@biosstel/ui-layout';
 import type { TerminalAssignmentCard } from '@biosstel/shared-types';
 import { ObjectivesHeader } from './ObjectivesHeader';

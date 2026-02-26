@@ -63,7 +63,7 @@ export const Plantillas = () => {
                 type="button"
                 variant="raw"
                 className="!p-0 !bg-transparent !border-0 text-sm font-medium text-accent-blue hover:underline"
-                onClick={() => {}}
+                onClick={handleDescargarEjemplo}
               >
                 Descargar plantilla ejemplo
               </Button>

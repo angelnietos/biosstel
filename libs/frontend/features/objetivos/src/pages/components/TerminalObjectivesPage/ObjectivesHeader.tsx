@@ -5,7 +5,6 @@ import type { TerminalObjectivesHeader } from '@biosstel/shared-types';
 type ObjectivesHeaderProps = {
   header?: TerminalObjectivesHeader | null;
   className?: string;
-  isLoading?: boolean;
 };
 
 export const ObjectivesHeader = ({ header, className }: ObjectivesHeaderProps) => {

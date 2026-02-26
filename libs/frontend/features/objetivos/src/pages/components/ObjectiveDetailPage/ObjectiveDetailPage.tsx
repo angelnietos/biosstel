@@ -16,13 +16,13 @@ export interface ObjectiveDetailPageProps {
   objectiveId: string;
 }
 
-const accents: ThemeColor[] = ['maroon', 'teal', 'blue', 'purple', 'magenta'];
+const ACCENTS = new Set<ThemeColor>(['maroon', 'teal', 'blue', 'purple', 'magenta']);
 
 export const ObjectiveDetailPage = ({ objectiveId }: ObjectiveDetailPageProps) => {
   const { data, isLoading, error } = useDashboardHome({}, true);
   const objectives = data?.objectives ?? [];
   const objective = objectives.find((o) => o.id === objectiveId);
-  const accent = (objective?.accent && accents.includes(objective.accent as ThemeColor)
+  const accent = (objective?.accent && ACCENTS.has(objective.accent as ThemeColor)
     ? objective.accent
     : 'blue') as ThemeColor;
   const typeLink = objective ? OBJECTIVE_TYPE_LINKS[getObjectiveTypeFromTitle(objective.title)] : OBJECTIVE_TYPE_LINKS.terminal;

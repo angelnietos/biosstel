@@ -69,8 +69,9 @@ function loadGraphQLConfig(): GraphQLConfig {
 let cached: FeatureAdapterConfig | null = null;
 
 export function getConfig(): FeatureAdapterConfig {
-  cached ??= loadSettings();
-  return cached!;
+  const config = cached ?? loadSettings();
+  cached = config;
+  return config;
 }
 
 /**

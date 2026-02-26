@@ -10,12 +10,12 @@ const REFRESH_TOKEN_KEY = 'refresh_token';
 const TOKEN_EXPIRES_AT_KEY = 'token_expires_at';
 
 export function getStoredRefreshToken(): string | null {
-  if (typeof globalThis.window === 'undefined') return null;
+  if (globalThis.window === undefined) return null;
   return globalThis.window.localStorage.getItem(REFRESH_TOKEN_KEY);
 }
 
 export function clearRefreshToken(): void {
-  if (typeof globalThis.window !== 'undefined') {
+  if (globalThis.window !== undefined) {
     globalThis.window.localStorage.removeItem(REFRESH_TOKEN_KEY);
     globalThis.window.localStorage.removeItem(TOKEN_EXPIRES_AT_KEY);
   }
@@ -25,7 +25,7 @@ export function clearRefreshToken(): void {
  * Guarda access token, refresh token y hora de caducidad del access token.
  */
 function saveAuthToStorage(token: string, refreshToken?: string | null, expiresIn?: number): void {
-  if (typeof globalThis.window === 'undefined') return;
+  if (globalThis.window === undefined) return;
   globalThis.window.localStorage.setItem('token', token);
   if (refreshToken) {
     globalThis.window.localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
@@ -47,9 +47,9 @@ export async function login(credentials: LoginCredentials): Promise<AuthResponse
     const errorData = await response.json().catch(() => ({}));
     const message =
       errorData.message ||
-      (response.status !== 401
-        ? 'Error al conectar con el servidor'
-        : 'Usuario o contraseña incorrectos');
+      (response.status === 401
+        ? 'Usuario o contraseña incorrectos'
+        : 'Error al conectar con el servidor');
     throw new Error(message);
   }
 

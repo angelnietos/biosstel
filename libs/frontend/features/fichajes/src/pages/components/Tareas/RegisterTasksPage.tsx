@@ -23,7 +23,7 @@ export function RegisterTasksPage({ paths: pathsProp }: RegisterTasksPageProps =
   const [description, setDescription] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!userId || !title.trim()) return;
     setSuccess(false);

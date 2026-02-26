@@ -29,7 +29,7 @@ export const forgotPasswordThunk = createAsyncThunk(
 
 const initialState: AuthState = {
   user: null,
-  token: typeof globalThis.window !== 'undefined' ? globalThis.window.localStorage.getItem('token') : null,
+  token: globalThis.window === undefined ? null : globalThis.window.localStorage.getItem('token'),
   isLoading: false,
   error: null,
   authRestored: false,
@@ -89,7 +89,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.authRestored = true;
-        if (token && typeof globalThis.window !== 'undefined') {
+        if (token && globalThis.window !== undefined) {
           globalThis.window.localStorage.setItem('token', token);
         }
       })
