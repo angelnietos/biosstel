@@ -10,7 +10,7 @@ import { IMediator, type IMediatorPort } from '@biosstel/api-shared';
 import type { DashboardHomeResponse, TerminalObjectivesResponse } from '@biosstel/shared-types';
 import { GetDashboardHomeQuery } from '../../../../application/cqrs/queries/dashboard/GetDashboardHome.query';
 import { GetTerminalObjectivesQuery } from '../../../../application/cqrs/queries/dashboard/GetTerminalObjectives.query';
-import type { DashboardService } from '../../../../dashboard.service';
+import { DashboardService } from '../../../../dashboard.service';
 import type { CreateAssignmentDto, PatchTerminalObjectiveDto } from '../../../../application/dto/dashboard';
 
 @ApiTags('objetivos')
