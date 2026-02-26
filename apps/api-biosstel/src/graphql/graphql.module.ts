@@ -9,7 +9,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'node:path';
 import { getGraphQLConfig, isGraphQLEnabledForFeature } from '@biosstel/api-shared';
-import { UsersResolver } from '@biosstel/api-usuarios';
+import { UsersResolver, UserGraphQLMapper } from '@biosstel/api-usuarios';
 
 const gqlConfig = getGraphQLConfig();
 const graphqlEnabled = gqlConfig.enabled === true;
@@ -30,6 +30,8 @@ const usersEnabled = isGraphQLEnabledForFeature('users');
         ]
       : []),
   ],
-  providers: [...(graphqlEnabled && usersEnabled ? [UsersResolver] : [])],
+  providers: [
+    ...(graphqlEnabled && usersEnabled ? [UsersResolver, UserGraphQLMapper] : []),
+  ],
 })
 export class AppGraphQLModule {}

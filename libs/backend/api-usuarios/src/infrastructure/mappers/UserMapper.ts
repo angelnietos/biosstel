@@ -1,5 +1,5 @@
 import type { User } from '../../domain/repositories';
-import { UserEntity } from '../persistence/entities/users/UserEntity';
+import { UserEntity } from '../postgres/entities/users/UserEntity';
 
 export class UserMapper {
   public static toDomain(entity: UserEntity): User {

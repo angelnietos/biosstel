@@ -1,6 +1,6 @@
 /**
  * @biosstel/api-usuarios - API Usuarios (CRUD, roles, clientes, documentos)
- * Arquitectura hexagonal: application (ports + use-cases) + infrastructure (api + persistence).
+ * Arquitectura hexagonal: application (ports + use-cases) + infrastructure (api, graphql, postgres).
  */
 export * from './domain';
 export * from './application';

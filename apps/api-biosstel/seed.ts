@@ -10,14 +10,14 @@ import * as dotenv from 'dotenv';
 import { resolve } from 'path';
 import { DataSource, IsNull } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { UserEntity } from '../../libs/backend/api-usuarios/src/infrastructure/persistence/UserEntity';
+import { UserEntity } from '../../libs/backend/api-usuarios/src/infrastructure/postgres/entities/users/UserEntity';
 import { DashboardObjectiveEntity } from '../../libs/backend/api-objetivos/src/infrastructure/persistence/DashboardObjectiveEntity';
 import { DashboardAlertEntity } from '../../libs/backend/api-objetivos/src/infrastructure/persistence/DashboardAlertEntity';
 import { TerminalObjectiveEntity } from '../../libs/backend/api-objetivos/src/infrastructure/persistence/TerminalObjectiveEntity';
 import { TerminalAssignmentEntity } from '../../libs/backend/api-objetivos/src/infrastructure/persistence/TerminalAssignmentEntity';
 import { FichajeEntity } from '../../libs/backend/api-fichajes/src/infrastructure/persistence/FichajeEntity';
 import { TaskEntity } from '../../libs/backend/api-fichajes/src/infrastructure/persistence/TaskEntity';
-import { ClientEntity } from '../../libs/backend/api-usuarios/src/infrastructure/persistence/ClientEntity';
+import { ClientEntity } from '../../libs/backend/api-usuarios/src/infrastructure/postgres/entities/clients/ClientEntity';
 import { DepartmentEntity } from '../../libs/backend/api-empresa/src/infrastructure/persistence/DepartmentEntity';
 import { WorkCenterEntity } from '../../libs/backend/api-empresa/src/infrastructure/persistence/WorkCenterEntity';
 

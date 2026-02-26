@@ -8,7 +8,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getFeatureAdapter } from '@biosstel/api-shared';
-import { USUARIOS_POSTGRES_ENTITIES, PostgresUserRepository } from './infrastructure/persistence/postgres';
+import { USUARIOS_POSTGRES_ENTITIES, PostgresUserRepository } from './infrastructure/postgres';
 import { MongoUserRepositoryAdapter, HttpUserRepositoryAdapter } from './infrastructure/adapters';
 import { USER_REPOSITORY } from './domain/repositories';
 import { UserManagementUseCase } from './application/use-cases';

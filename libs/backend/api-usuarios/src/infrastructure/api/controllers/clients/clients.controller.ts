@@ -8,7 +8,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiProperty, ApiProp
 import { IsString, IsEmail, IsOptional } from 'class-validator';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
-import { ClientEntity } from '../../../persistence';
+import { ClientEntity } from '../../../postgres';
 
 class CreateClientDto {
   @IsString()

@@ -1,17 +1,24 @@
 /**
+ * @biosstel/api-users - Infrastructure Layer: GraphQL Users Resolver
+ *
  * Resolver GraphQL para Users (feature con GraphQL activable por config).
  * Usa el mismo port USER_REPOSITORY que REST; REST sigue funcionando.
+ * La transformación de dominio a GraphQL se hace mediante UserGraphQLMapper.
  */
 
-import { Resolver, Query, Args } from '@nestjs/graphql';
+import { Resolver, Query, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 import { USER_REPOSITORY, type IUserRepository } from '../../domain/repositories';
-import type { UserRoleEnum } from './user.graphql-types';
+import type { User } from '@biosstel/shared-types';
 import { UserType, UsersPaginatedType } from './user.graphql-types';
+import { UserGraphQLMapper } from './mappers/UserGraphQLMapper';
 
 @Resolver(() => UserType)
 export class UsersResolver {
-  constructor(@Inject(USER_REPOSITORY) private readonly userRepo: IUserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY) private readonly userRepo: IUserRepository,
+    private readonly userMapper: UserGraphQLMapper
+  ) {}
 
   @Query(() => UsersPaginatedType, { name: 'users', description: 'Lista paginada de usuarios' })
   async users(
@@ -19,32 +26,17 @@ export class UsersResolver {
     @Args('pageSize', { type: () => Number, nullable: true, defaultValue: 10 }) pageSize: number
   ) {
     const result = await this.userRepo.findAll(page, pageSize);
-    const list = result.items ?? result.data ?? [];
-    const items = list.map((u) => this.toUserType(u));
-    return {
-      items,
-      total: result.total,
-      totalPages: result.totalPages,
-      page: result.page,
-      pageSize: result.pageSize,
-    };
+    return this.userMapper.toPaginatedGraphQL(
+      result.items ?? result.data ?? [],
+      result.total,
+      result.page,
+      result.pageSize
+    );
   }
 
   @Query(() => UserType, { nullable: true, name: 'user', description: 'Usuario por ID' })
   async user(@Args('id') id: string) {
     const u = await this.userRepo.findById(id);
-    return u ? this.toUserType(u) : null;
-  }
-
-  private toUserType(u: { id: string; email?: string; firstName?: string; lastName?: string; name?: string; role?: string; isActive?: boolean }) {
-    return {
-      id: u.id,
-      email: u.email,
-      firstName: u.firstName,
-      lastName: u.lastName,
-      name: u.name ?? ([u.firstName, u.lastName].filter(Boolean).join(' ') || undefined),
-      role: u.role as UserRoleEnum | undefined,
-      isActive: u.isActive,
-    };
+    return u ? this.userMapper.toGraphQL(u) : null;
   }
 }

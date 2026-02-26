@@ -20,7 +20,7 @@ import { IsString, IsOptional } from 'class-validator';
 import type { Response } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
-import { UserDocumentEntity } from '../../../persistence';
+import { UserDocumentEntity } from '../../../postgres';
 
 class UploadDocumentDto {
   @IsString()
