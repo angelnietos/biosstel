@@ -10,7 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '@biosstel/api-usuarios';
 import { AuthController } from './infrastructure/api';
 import { AuthManagementUseCase } from './application/use-cases';
-import { LoginHandler, GetMeHandler, RefreshTokenHandler, ForgotPasswordHandler, LogoutHandler } from './application/cqrs/handlers';
+import { LoginHandler, GetMeHandler, RefreshTokenHandler, ForgotPasswordHandler, LogoutHandler } from './application/cqrs';
 import { AuthMediatorRegistration } from './application/AuthMediatorRegistration';
 import { I_AUTH_REPOSITORY } from './domain/repositories';
 import { PostgresAuthRepository, AUTH_POSTGRES_ENTITIES } from './infrastructure/persistence';
