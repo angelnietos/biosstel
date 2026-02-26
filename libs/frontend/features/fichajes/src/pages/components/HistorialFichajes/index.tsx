@@ -6,8 +6,7 @@ import type { FichajesState } from '../../../data-access';
 import { Heading, StatusBadge, Table, TableHead, TableBody, TableRow, TableTh, TableCell } from '@biosstel/ui';
 
 export const HistorialFichajes = () => {
-    // Use any to avoid circular dependency issues for now
-    const { history } = useSelector((state: any) => state.fichajes as FichajesState);
+    const { history } = useSelector((state: {fichajes: FichajesState}) => state.fichajes);
 
     const formatTime = (isoString?: string) => {
         if (!isoString) return '—';

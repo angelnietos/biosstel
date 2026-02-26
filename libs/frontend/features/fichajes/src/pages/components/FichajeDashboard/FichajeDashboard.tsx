@@ -124,14 +124,14 @@ export const FichajeDashboard = () => {
   const dispatch = useDispatch<any>();
   const router = useRouter();
   const { addToast } = useToast();
-  const authRestored = useSelector((state: any) => state.auth?.authRestored);
-  const authUser = useSelector((state: any) => (state.auth as { user?: { id?: string; role?: string } })?.user);
+  const authRestored = useSelector((state: {auth?: {authRestored?: boolean}}) => state.auth?.authRestored);
+  const authUser = useSelector((state: {auth?: {user?: {id?: string; role?: string} | null}}) => state.auth?.user);
   const authUserId = authUser?.id;
   const userId = isValidUserId(authUserId) ? authUserId : undefined;
   const userRole = authUser?.role;
   const showReloj = useCanFichar();
   const showGestionFichajes = useCanManageFichajes();
-  const { currentFichaje, status: fichajeStatus, error: fichajeError } = useSelector((state: any) => state.fichajes as FichajesState);
+  const { currentFichaje, status: fichajeStatus, error: fichajeError } = useSelector((state: {fichajes: FichajesState}) => state.fichajes);
   const [rows, setRows] = useState<DashboardRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>('fichajes');

@@ -24,7 +24,7 @@ export function PendingTaskDetailPage({ taskId, paths: pathsProp }: Readonly<Pen
   const id = taskId;
   const dispatch = useDispatch<any>();
   const { selectedTask, tasks, status, error } = useSelector(
-    (state: any) => state.fichajes as FichajesState
+    (state: {fichajes: FichajesState}) => state.fichajes
   );
 
   const task = selectedTask ?? (tasks || []).find((t: Tarea) => t.id === id);

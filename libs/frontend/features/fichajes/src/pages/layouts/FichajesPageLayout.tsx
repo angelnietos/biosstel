@@ -5,7 +5,7 @@
 
 'use client';
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { PageContainer, Stack } from '@biosstel/ui-layout';
 import { Heading } from '@biosstel/ui';
 
