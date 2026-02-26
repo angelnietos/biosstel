@@ -1,0 +1,18 @@
+# Parámetros y valores por defecto del pipeline.
+# Uso: en workflows que llaman al pipeline, se pueden pasar inputs (workflow_dispatch)
+# o usar estos valores cuando el trigger es push/PR.
+#
+# build_type:
+#   - full          → build frontend + backend + storybook
+#   - frontend      → solo build frontend
+#   - backend       → solo build backend
+#   - storybook     → solo build storybook
+#   - lint-only     → solo etapas lint/typecheck/format
+#   - test-only     → solo etapas test (unit + opcional e2e)
+#
+# stages (CI): lint, test-unit, test-e2e, security, build
+# tasks_lint: all | lint,typecheck,format
+# tasks_test: all | unit,e2e
+# tasks_security: all | snyk,sonar
+#
+# CD (cd-pipeline): docker_services = full | frontend | backend; run_deploy; run_release

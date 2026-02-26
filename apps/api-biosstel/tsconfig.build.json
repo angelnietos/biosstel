@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/apps/api-biosstel",
+    "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "ES2021",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "paths": {
+      "@/*": ["src/*"],
+      "@biosstel/shared-types": ["../../dist/libs/shared-types/index.js"],
+      "@biosstel/api-usuarios": ["../../dist/libs/backend/api-usuarios/src/index.d.ts"],
+      "@biosstel/api-shared": ["../../dist/libs/backend/api-shared/src/index.d.ts"],
+      "@biosstel/api-objetivos": ["../../dist/libs/backend/api-objetivos/src/index.d.ts"],
+      "@biosstel/api-fichajes": ["../../dist/libs/backend/api-fichajes/src/index.d.ts"],
+      "@biosstel/api-auth": ["../../dist/libs/backend/api-auth/src/index.d.ts"],
+      "@biosstel/api-alertas": ["../../dist/libs/backend/api-alertas/src/index.d.ts"],
+      "@biosstel/api-operaciones": ["../../dist/libs/backend/api-operaciones/src/index.d.ts"],
+      "@biosstel/api-empresa": ["../../dist/libs/backend/api-empresa/src/index.d.ts"],
+      "@biosstel/api-productos": ["../../dist/libs/backend/api-productos/src/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "node_modules", "dist"]
+}

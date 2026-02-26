@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "../../..",
+    "paths": {
+      "@biosstel/shared-types": ["libs/shared-types/src/index.ts"],
+      "@biosstel/api-shared": ["dist/libs/backend/api-shared/src/index.d.ts"]
+    }
+  }
+}

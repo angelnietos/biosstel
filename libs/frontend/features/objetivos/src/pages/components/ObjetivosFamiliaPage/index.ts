@@ -1,0 +1,1 @@
+export { ObjetivosFamiliaPage } from './ObjetivosFamiliaPage';

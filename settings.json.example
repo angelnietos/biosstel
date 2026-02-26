@@ -1,0 +1,25 @@
+{
+  "database": {
+    "defaultAdapter": "postgres",
+    "features": {
+      "users": "postgres",
+      "fichajes": "postgres",
+      "alertas": "postgres",
+      "objetivos": "postgres",
+      "empresa": "postgres",
+      "productos": "postgres",
+      "auth": "postgres",
+      "operaciones": "postgres"
+    },
+    "serviceUrls": {
+      "users": "http://localhost:4001/api/v1",
+      "fichajes": "http://localhost:4002/api/v1"
+    },
+    "connectionStrings": {}
+  },
+  "graphql": {
+    "enabled": true,
+    "features": ["users"],
+    "path": "/graphql"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@biosstel/api-auth",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": { ".": "./src/index.js" },
+  "dependencies": {
+    "@biosstel/api-shared": "workspace:*",
+    "@biosstel/api-usuarios": "workspace:*",
+    "@biosstel/shared-types": "workspace:*",
+    "@nestjs/common": "^11.1.13",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/swagger": "^11.2.6"
+  }
+}

@@ -1,0 +1,254 @@
+# =============================================================
+# Biosstel — Local Development (Docker Compose)
+# =============================================================
+# Everything runs inside containers:
+#   • Same Node 20 + pnpm 10 for all developers
+#   • pnpm install runs inside Linux container → lockfile is OS-agnostic
+#   • Hot reload via bind-mounted source code
+#   • node_modules in named volume (Linux binaries, not on host)
+#
+# Quick start:
+#   docker compose -f docker-compose.dev.yml up
+#
+# First time / after adding deps:
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# Reset everything:
+#   docker compose -f docker-compose.dev.yml down -v
+#   docker compose -f docker-compose.dev.yml up --build
+# =============================================================
+
+services:
+  # ─── Database ───────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: biosstel-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: biosstel
+      POSTGRES_PASSWORD: biosstel123
+      POSTGRES_DB: biosstel
+      POSTGRES_HOST_AUTH_METHOD: md5
+    ports:
+      - '5434:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./docker/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U biosstel -d biosstel']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - biosstel
+
+  # ─── DB Admin UI ────────────────────────────────────────────
+  adminer:
+    image: adminer:latest
+    container_name: biosstel-adminer
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - biosstel
+
+  # ─── Install dependencies (runs once, then exits) ──────────
+  deps:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    container_name: biosstel-deps
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: >
+      sh -c "
+        echo '📦 Installing dependencies...' &&
+        pnpm install &&
+        echo '✅ Dependencies installed'
+      "
+    networks:
+      - biosstel
+
+  # ─── API Backend (NestJS) ──────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    container_name: biosstel-api
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    ports:
+      - '4000:4000'
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      HOST: '0.0.0.0'
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: biosstel
+      DB_PASSWORD: biosstel123
+      DB_NAME: biosstel
+      JWT_SECRET: dev-jwt-secret-do-not-use-in-production
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGIN: '*'
+      # File watching through Docker bind mounts (Windows/Mac)
+      CHOKIDAR_USEPOLLING: 'true'
+    command: >
+      sh -c "
+        echo '⏳ Waiting for Postgres...' &&
+        node scripts/wait-for-db.js &&
+        echo '🚀 Starting API (NestJS) with live reload...' &&
+        cd apps/api-biosstel &&
+        pnpm exec nodemon
+      "
+    depends_on:
+      deps:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://127.0.0.1:4000/api/v1/health/live',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    networks:
+      - biosstel
+
+  # ─── Frontend (Next.js) ────────────────────────────────────
+  # Turbopack (sin --webpack) para compilaciones mucho más rápidas.
+  # Primera carga: la caché .next vive en el volumen frontend_next; tras el primer
+  # compile mejora. Si necesitas la menor latencia posible, sube solo DB (+ opcionalmente API)
+  # y ejecuta el front en local: pnpm db:start && pnpm dev:front (y pnpm dev:api en otra terminal).
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    container_name: biosstel-frontend
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      # .next in a volume so dev/logs and cache are writable (avoids ENOENT on Windows bind mount)
+      - frontend_next:/app/apps/front-biosstel/.next
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      HOSTNAME: '0.0.0.0'
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NEXT_TELEMETRY_DISABLED: 1
+      # File watching through Docker bind mounts (Windows/Mac)
+      WATCHPACK_POLLING: 'true'
+      CHOKIDAR_USEPOLLING: 'true'
+      # Turbopack (Next.js 16 default) file watching in Docker
+      NEXT_PRIVATE_POLL_FOR_CHANGES: 'true'
+    command: >
+      sh -c "
+        echo '🌐 Starting Frontend (Next.js) — Turbopack + polling for Docker bind mounts' &&
+        cd apps/front-biosstel &&
+        mkdir -p .next/dev/logs &&
+        pnpm exec next dev --hostname 0.0.0.0 --port 3000
+      "
+    depends_on:
+      deps:
+        condition: service_completed_successfully
+    networks:
+      - biosstel
+
+  # ─── Monitoring (opt-in: docker compose --profile monitoring up) ─
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: biosstel-prometheus
+    restart: unless-stopped
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./docker/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+    networks:
+      - biosstel
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: biosstel-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_SERVER_HTTP_PORT: 3002
+      GF_SERVER_ROOT_URL: 'http://localhost:3002'
+    ports:
+      - '3002:3002'
+    volumes:
+      - ./docker/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    profiles:
+      - monitoring
+    networks:
+      - biosstel
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: biosstel-loki
+    restart: unless-stopped
+    ports:
+      - '3100:3100'
+    volumes:
+      - ./docker/monitoring/loki.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    profiles:
+      - monitoring
+    networks:
+      - biosstel
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: biosstel-promtail
+    restart: unless-stopped
+    volumes:
+      - ./docker/monitoring/promtail.yml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    profiles:
+      - monitoring
+    networks:
+      - biosstel
+
+# ─── Volumes ───────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    name: biosstel-postgres-data
+  node_modules:
+    name: biosstel-node-modules
+  frontend_next:
+    name: biosstel-frontend-next
+  loki_data:
+    name: biosstel-loki-data
+
+# ─── Network ──────────────────────────────────────────────────
+networks:
+  biosstel:
+    driver: bridge

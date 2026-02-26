@@ -1,0 +1,30 @@
+{
+  "name": "api-usuarios",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/api-usuarios/src",
+  "projectType": "library",
+  "tags": ["type:feature", "scope:api", "scope:api-usuarios"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/backend/api-usuarios/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/api-usuarios",
+        "main": "libs/backend/api-usuarios/src/index.ts",
+        "tsConfig": "libs/backend/api-usuarios/tsconfig.build.json",
+        "assets": ["libs/backend/api-usuarios/*.md"]
+      }
+    }
+  }
+}

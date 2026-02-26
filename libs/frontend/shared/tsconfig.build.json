@@ -1,0 +1,22 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2021",
+    "declaration": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "lib": ["dom", "ES2022"],
+    "moduleResolution": "node",
+    "baseUrl": "../../../",
+    "paths": {
+      "@biosstel/ui": ["dist/libs/frontend/ui/src/index.d.ts"],
+      "@biosstel/ui-layout": ["dist/libs/frontend/ui-layout/src/index.d.ts"],
+      "@biosstel/platform": ["dist/libs/platform/src/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}
