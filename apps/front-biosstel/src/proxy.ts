@@ -9,5 +9,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [String.raw`/((?!api|_next|_vercel|.*\..*).*)`],
+  // Literal string required by Next.js (no TaggedTemplateExpression)
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
 };
