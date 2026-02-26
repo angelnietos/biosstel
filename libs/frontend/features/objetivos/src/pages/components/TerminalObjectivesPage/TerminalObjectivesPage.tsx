@@ -42,6 +42,12 @@ const getMonthRange = (y: number, m: number) => {
   return `${monthNames[m - 1]} ${y}`;
 };
 
+function getCardColor(title: string): 'maroon' | 'purple' | 'teal' {
+  if (title === 'Comercial') return 'maroon';
+  if (title === 'Tienda') return 'purple';
+  return 'teal';
+}
+
 export const TerminalObjectivesPage = () => {
   const searchParams = useSearchParams();
   const detailView = searchParams.get('detail');
@@ -179,6 +185,119 @@ export const TerminalObjectivesPage = () => {
   const allDepartmentCards = departmentCards;
   const hasAssignments = allDepartmentCards.length > 0 || peopleCards.length > 0;
 
+  const renderDepartmentContent = () => {
+    if (decodedDetail) {
+      const card = allDepartmentCards.find(c => c.title === decodedDetail);
+      if (!card) return null;
+      return (
+        <Grid cols={2} gap={4} className="max-w-[800px]">
+          <AssignmentCard
+            title={card.title}
+            color={getCardColor(card.title)}
+            rows={card.rows?.length ? mapToAssignmentRows(card as TerminalAssignmentCard) : []}
+            totalAchieved={card.totalValue}
+            totalTarget={card.totalObjective}
+            isEditing={isEditing}
+          />
+        </Grid>
+      );
+    }
+    if (allDepartmentCards.length > 0) {
+      return (
+        <Grid cols={3} gap={4}>
+          {allDepartmentCards.map((card) => (
+            <AssignmentCard
+              key={card.title}
+              title={card.title}
+              color={getCardColor(card.title)}
+              rows={card.rows?.length ? mapToAssignmentRows(card as TerminalAssignmentCard) : []}
+              totalAchieved={card.totalValue}
+              totalTarget={card.totalObjective}
+              isEditing={isEditing}
+              assignmentId={getCardAssignmentId(card as TerminalAssignmentCard)}
+              onRemove={handleRemoveAssignment}
+              footerLabel="Plantilla Objetivos"
+              onFooterClick={() => router.push(`?detail=${encodeURIComponent(card.title)}`)}
+            />
+          ))}
+          {availableDepartments.length > 0 && (
+            <Card className="flex flex-col items-center justify-center gap-4 py-8 px-6 border-dashed border-gray-200 min-h-[140px]">
+              <DropdownAction label="Añadir departamentos +" options={availableDepartments} onSelect={handleAddDepartment} disabled={addAssignmentLoading} />
+            </Card>
+          )}
+        </Grid>
+      );
+    }
+    return (
+      <Card className="flex flex-col items-center gap-4 py-12 px-6 border-dashed">
+        <Text variant="body" className="text-gray-500 font-medium">Sin asignaciones de departamento</Text>
+        <DropdownAction label="Añadir departamentos +" options={availableDepartments} onSelect={handleAddDepartment} disabled={addAssignmentLoading} />
+      </Card>
+    );
+  };
+
+  const renderPeopleContent = () => {
+    if (decodedDetail) {
+      const card = peopleCards.find(c => c.title === decodedDetail);
+      if (!card) return null;
+      return (
+        <Grid cols={2} gap={4} className="max-w-[800px]">
+          <AssignmentCard title={card.title} color={getCardColor(card.title)} rows={mapToAssignmentRows(card)} totalAchieved={card.totalValue} totalTarget={card.totalObjective} isEditing={isEditing} />
+        </Grid>
+      );
+    }
+    if (peopleCards.length > 0) {
+      return (
+        <Grid cols={3} gap={4}>
+          {peopleCards.map((card) => (
+            <AssignmentCard
+              key={card.title}
+              title={card.title}
+              color={getCardColor(card.title)}
+              rows={mapToAssignmentRows(card)}
+              totalAchieved={card.totalValue}
+              totalTarget={card.totalObjective}
+              isEditing={isEditing}
+              footerLabel="Ver detalle"
+              onFooterClick={() => router.push(`?detail=${encodeURIComponent(card.title)}`)}
+            />
+          ))}
+        </Grid>
+      );
+    }
+    return <Card className="py-10 text-center text-gray-400 border-dashed">No hay asignaciones de personas.</Card>;
+  };
+
+  const renderHistoricMonthContent = () => {
+    if (historicLoading) return <Card className="p-6"><Skeleton height="md" className="w-full" /></Card>;
+    const data = historicData;
+    const hasHistoric = data?.header && (data.departmentCards.length > 0 || data.peopleCards.length > 0);
+    if (!hasHistoric || !data?.header) {
+      return (
+        <Card className="p-6 text-center">
+          <Text variant="body" className="text-gray-500">No hay datos históricos para este mes.</Text>
+        </Card>
+      );
+    }
+    const mapHistoricRows = (card: { title: string; rows: { label: string; value: number; total: number }[] }) =>
+      card.rows.map((r, i) => ({ id: `${card.title}-${i}`, name: r.label, achieved: r.value, target: r.total, assigned: true as const }));
+    return (
+      <>
+        <Card className="px-6 py-5">
+          <ObjectiveProgress achieved={data.header.achieved} target={data.header.objective} color="blue" centered isEditing={false} />
+        </Card>
+        <Grid cols={3} gap={4}>
+          {data.departmentCards.map((card) => (
+            <AssignmentCard key={card.title} title={card.title} color={getCardColor(card.title)} rows={mapHistoricRows(card)} totalAchieved={card.totalValue} totalTarget={card.totalObjective} isEditing={false} />
+          ))}
+          {data.peopleCards.map((card) => (
+            <AssignmentCard key={card.title} title={card.title} color={getCardColor(card.title)} rows={mapHistoricRows(card)} totalAchieved={card.totalValue} totalTarget={card.totalObjective} isEditing={false} />
+          ))}
+        </Grid>
+      </>
+    );
+  };
+
   const availableDepartments = useMemo(() => {
     const all = [
       { label: 'Administración', value: 'Administración' },
@@ -314,137 +433,28 @@ export const TerminalObjectivesPage = () => {
                 </Card>
               )}
 
-              {decodedDetail && (
-                (() => {
-                  const card = [...departmentCards, ...peopleCards].find(c => c.title === decodedDetail);
-                  if (!card) return <Text variant="body" className="py-10 text-center text-gray-400">Objetivo no encontrado.</Text>;
-                  return (
-                    <Card className="px-6 py-5">
-                      <ObjectiveProgress 
-                        achieved={card.totalValue} 
-                        target={card.totalObjective} 
-                        color="blue" 
-                        centered 
-                        isEditing={isEditing}
-                      />
-                    </Card>
-                  );
-                })()
-              )}
+              {decodedDetail && (() => {
+                const card = [...departmentCards, ...peopleCards].find(c => c.title === decodedDetail);
+                if (!card) return <Text variant="body" className="py-10 text-center text-gray-400">Objetivo no encontrado.</Text>;
+                return (
+                  <Card className="px-6 py-5">
+                    <ObjectiveProgress achieved={card.totalValue} target={card.totalObjective} color="blue" centered isEditing={isEditing} />
+                  </Card>
+                );
+              })()}
 
               {/* ASSIGNMENTS SECTION - DEPARTMENTS */}
               <AssignmentSection
                 title="Asignaciones departamento"
                 headerRight={hasAssignments && isEditing && (
-                  <DropdownAction
-                    label="Añadir departamentos"
-                    options={availableDepartments}
-                    onSelect={handleAddDepartment}
-                  />
+                  <DropdownAction label="Añadir departamentos" options={availableDepartments} onSelect={handleAddDepartment} />
                 )}
               >
-                {!decodedDetail ? (
-                  allDepartmentCards.length > 0 ? (
-                    <Grid cols={3} gap={4}>
-                      {allDepartmentCards.map((card) => (
-                        <AssignmentCard 
-                          key={card.title} 
-                          title={card.title}
-                          color={card.title === 'Comercial' ? 'maroon' : card.title === 'Tienda' ? 'purple' : 'teal'}
-                          rows={card.rows?.length ? mapToAssignmentRows(card as TerminalAssignmentCard) : []}
-                          totalAchieved={card.totalValue}
-                          totalTarget={card.totalObjective}
-                          isEditing={isEditing}
-                          assignmentId={getCardAssignmentId(card as TerminalAssignmentCard)}
-                          onRemove={handleRemoveAssignment}
-                          footerLabel="Plantilla Objetivos"
-                          onFooterClick={() => router.push(`?detail=${encodeURIComponent(card.title)}`)}
-                        />
-                      ))}
-                      {availableDepartments.length > 0 && (
-                        <Card className="flex flex-col items-center justify-center gap-4 py-8 px-6 border-dashed border-gray-200 min-h-[140px]">
-                          <DropdownAction
-                            label="Añadir departamentos +"
-                            options={availableDepartments}
-                            onSelect={handleAddDepartment}
-                            disabled={addAssignmentLoading}
-                          />
-                        </Card>
-                      )}
-                    </Grid>
-                  ) : (
-                    <Card className="flex flex-col items-center gap-4 py-12 px-6 border-dashed">
-                      <Text variant="body" className="text-gray-500 font-medium">Sin asignaciones de departamento</Text>
-                      <DropdownAction
-                        label="Añadir departamentos +"
-                        options={availableDepartments}
-                        onSelect={handleAddDepartment}
-                        disabled={addAssignmentLoading}
-                      />
-                    </Card>
-                  )
-                ) : (
-                  (() => {
-                    const card = allDepartmentCards.find(c => c.title === decodedDetail);
-                    if (!card) return null;
-                    return (
-                      <Grid cols={2} gap={4} className="max-w-[800px]">
-                        <AssignmentCard 
-                          title={card.title}
-                          color={card.title === 'Comercial' ? 'maroon' : card.title === 'Tienda' ? 'purple' : 'teal'}
-                          rows={card.rows?.length ? mapToAssignmentRows(card as TerminalAssignmentCard) : []}
-                          totalAchieved={card.totalValue}
-                          totalTarget={card.totalObjective}
-                          isEditing={isEditing}
-                        />
-                      </Grid>
-                    );
-                  })()
-                )}
+                {renderDepartmentContent()}
               </AssignmentSection>
 
-              {/* ASSIGNMENTS SECTION - PEOPLE */}
               <AssignmentSection title="Asignaciones personas">
-                {!decodedDetail ? (
-                  peopleCards.length > 0 ? (
-                    <Grid cols={3} gap={4}>
-                      {peopleCards.map((card) => (
-                        <AssignmentCard 
-                          key={card.title} 
-                          title={card.title}
-                          color={card.title === 'Comercial' ? 'maroon' : card.title === 'Tienda' ? 'purple' : 'teal'}
-                          rows={mapToAssignmentRows(card)}
-                          totalAchieved={card.totalValue}
-                          totalTarget={card.totalObjective}
-                          isEditing={isEditing}
-                          footerLabel="Ver detalle"
-                          onFooterClick={() => router.push(`?detail=${encodeURIComponent(card.title)}`)}
-                        />
-                      ))}
-                    </Grid>
-                  ) : (
-                    <Card className="py-10 text-center text-gray-400 border-dashed">
-                      No hay asignaciones de personas.
-                    </Card>
-                  )
-                ) : (
-                  (() => {
-                    const card = peopleCards.find(c => c.title === decodedDetail);
-                    if (!card) return null;
-                    return (
-                      <Grid cols={2} gap={4} className="max-w-[800px]">
-                        <AssignmentCard 
-                          title={card.title}
-                          color={card.title === 'Comercial' ? 'maroon' : card.title === 'Tienda' ? 'purple' : 'teal'}
-                          rows={mapToAssignmentRows(card)}
-                          totalAchieved={card.totalValue}
-                          totalTarget={card.totalObjective}
-                          isEditing={isEditing}
-                        />
-                      </Grid>
-                    );
-                  })()
-                )}
+                {renderPeopleContent()}
               </AssignmentSection>
 
               {/* HISTORIC SECTION */}
@@ -471,63 +481,7 @@ export const TerminalObjectivesPage = () => {
                     <Text variant="small" className="font-bold text-gray-400 uppercase tracking-widest">
                       Mes: {formatMonthName(Number(selectedHistoricMonth.split('-')[1]) - 1, Number(selectedHistoricMonth.split('-')[0]))}
                     </Text>
-                    {historicLoading ? (
-                      <Card className="p-6"><Skeleton height="md" className="w-full" /></Card>
-                    ) : historicData?.header && (historicData.departmentCards.length > 0 || historicData.peopleCards.length > 0) ? (
-                      <>
-                        <Card className="px-6 py-5">
-                          <ObjectiveProgress
-                            achieved={historicData.header.achieved}
-                            target={historicData.header.objective}
-                            color="blue"
-                            centered
-                            isEditing={false}
-                          />
-                        </Card>
-                        <Grid cols={3} gap={4}>
-                          {historicData.departmentCards.map((card) => (
-                            <AssignmentCard
-                              key={card.title}
-                              title={card.title}
-                              color={card.title === 'Comercial' ? 'maroon' : card.title === 'Tienda' ? 'purple' : 'teal'}
-                              rows={card.rows.map((r, i) => ({
-                                id: `${card.title}-${i}`,
-                                name: r.label,
-                                achieved: r.value,
-                                target: r.total,
-                                assigned: true,
-                              }))}
-                              totalAchieved={card.totalValue}
-                              totalTarget={card.totalObjective}
-                              isEditing={false}
-                            />
-                          ))}
-                          {historicData.peopleCards.map((card) => (
-                            <AssignmentCard
-                              key={card.title}
-                              title={card.title}
-                              color={card.title === 'Comercial' ? 'maroon' : card.title === 'Tienda' ? 'purple' : 'teal'}
-                              rows={card.rows.map((r, i) => ({
-                                id: `${card.title}-${i}`,
-                                name: r.label,
-                                achieved: r.value,
-                                target: r.total,
-                                assigned: true,
-                              }))}
-                              totalAchieved={card.totalValue}
-                              totalTarget={card.totalObjective}
-                              isEditing={false}
-                            />
-                          ))}
-                        </Grid>
-                      </>
-                    ) : (
-                      <Card className="p-6 text-center">
-                        <Text variant="body" className="text-gray-500">
-                          No hay datos históricos para este mes.
-                        </Text>
-                      </Card>
-                    )}
+                    {renderHistoricMonthContent()}
                   </div>
                 )}
               </AssignmentSection>

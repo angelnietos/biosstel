@@ -14,6 +14,23 @@ function isDev(): boolean {
   return typeof process !== 'undefined' && process.env.NODE_ENV === 'development';
 }
 
+function parseErrorPayload(text: string, statusText: string): string {
+  try {
+    const msg = JSON.parse(text)?.message ?? text?.slice(0, 200) ?? statusText;
+    return msg;
+  } catch {
+    return statusText || text?.slice(0, 200);
+  }
+}
+
+function logFailedResponse(method: string, url: string, response: Response): void {
+  response
+    .clone()
+    .text()
+    .then((text) => logApiError(method, url, response.status, parseErrorPayload(text, response.statusText)))
+    .catch(() => logApiError(method, url, response.status, response.statusText || ''));
+}
+
 /**
  * Inicializa el log de flujo en dev: parchea fetch, registra navegación y expone __flowLog en window.
  * Incluir una sola vez en el layout raíz (client).
@@ -44,16 +61,7 @@ export function DevFlowLoggerInit() {
       return originalFetch.apply(this, args).then(
         (response) => {
           logApiResponse(method, url, response.status, response.ok);
-          if (!response.ok) {
-            response.clone().text().then((text) => {
-              try {
-                const msg = JSON.parse(text)?.message ?? text?.slice(0, 200) ?? response.statusText;
-                logApiError(method, url, response.status, msg);
-              } catch {
-                logApiError(method, url, response.status, response.statusText || text?.slice(0, 200));
-              }
-            }).catch(() => logApiError(method, url, response.status, response.statusText || ''));
-          }
+          if (!response.ok) logFailedResponse(method, url, response);
           return response;
         },
         (err) => {

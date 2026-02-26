@@ -40,13 +40,13 @@ export const UsersDashboard = () => {
       role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
     const departments = Array.from(
       new Set(list.map((u: User) => (u as any).departamento ?? (u as any).department ?? '').filter(Boolean))
-    ).sort().map((v) => ({ value: v, label: v }));
+    ).sort((a, b) => a.localeCompare(b, 'es')).map((v) => ({ value: v, label: v }));
     const workCenters = Array.from(
       new Set(list.map((u: User) => (u as any).centroTrabajo ?? (u as any).workCenter ?? '').filter(Boolean))
-    ).sort().map((v) => ({ value: v, label: v }));
+    ).sort((a, b) => a.localeCompare(b, 'es')).map((v) => ({ value: v, label: v }));
     const roles = Array.from(
       new Set(list.map((u: User) => u.role ?? '').filter(Boolean))
-    ).sort().map((v) => ({ value: v, label: formatRoleLabel(v) }));
+    ).sort((a, b) => a.localeCompare(b, 'es')).map((v) => ({ value: v, label: formatRoleLabel(v) }));
     return { departments, workCenters, roles };
   }, [users]);
 

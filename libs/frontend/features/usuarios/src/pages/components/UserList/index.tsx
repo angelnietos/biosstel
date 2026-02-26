@@ -7,6 +7,23 @@ import type { User } from '../../../api/types';
 
 export type UserListSortKey = 'name' | 'departamento' | 'centroTrabajo' | 'role' | 'status';
 
+function getSortValue(user: User, key: UserListSortKey): string {
+  switch (key) {
+    case 'name':
+      return [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email ?? '';
+    case 'departamento':
+      return (user as { departamento?: string }).departamento ?? '';
+    case 'centroTrabajo':
+      return (user as { centroTrabajo?: string }).centroTrabajo ?? '';
+    case 'role':
+      return user.role ?? '';
+    case 'status':
+      return user.isActive ? 'activo' : 'inactivo';
+    default:
+      return '';
+  }
+}
+
 export interface UserListProps {
   users: User[];
   onEdit?: (user: User) => void;
@@ -46,13 +63,10 @@ export const UserList = ({
 
   const sortedUsers = useMemo(() => {
     if (!effectiveSort) return users;
-    const key = effectiveSort.key;
     const dir = effectiveSort.dir === 'asc' ? 1 : -1;
-    return [...users].sort((a, b) => {
-      const av = key === 'name' ? [a.firstName, a.lastName].filter(Boolean).join(' ') || a.email : key === 'departamento' ? (a as any).departamento : key === 'centroTrabajo' ? (a as any).centroTrabajo : key === 'role' ? a.role : a.isActive ? 'activo' : 'inactivo';
-      const bv = key === 'name' ? [b.firstName, b.lastName].filter(Boolean).join(' ') || b.email : key === 'departamento' ? (b as any).departamento : key === 'centroTrabajo' ? (b as any).centroTrabajo : key === 'role' ? b.role : b.isActive ? 'activo' : 'inactivo';
-      return String(av ?? '').localeCompare(String(bv ?? '')) * dir;
-    });
+    return [...users].sort((a, b) =>
+      getSortValue(a, effectiveSort!.key).localeCompare(getSortValue(b, effectiveSort!.key), undefined, { sensitivity: 'base' }) * dir
+    );
   }, [users, effectiveSort]);
 
   const getRoleBadgeColor = (role?: string) => {

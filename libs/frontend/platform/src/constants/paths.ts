@@ -3,7 +3,8 @@
  */
 const PATHS = {
   LOGIN: '/',
-  FORGOT_PASSWORD: '/forgot-password',
+  /** Route path for "forgot password" page (not a credential). */
+  FORGOT_PASSWORD: '/forgot-password', // NOSONAR S2068 - route path, not a hard-coded password
   EMAIL_SEND: '/email-send',
   VERIFY_ACCOUNT: '/verify-account',
   REGISTRO_SALIDA: '/registro-salida',

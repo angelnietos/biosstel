@@ -259,6 +259,158 @@ export const FichajeDashboard = () => {
     if (activeTab === 'permisos') loadPermissionTypes();
   }, [activeTab, loadPermissionTypes]);
 
+  const renderFichajesTable = () => {
+    if (isLoading) {
+      return Array.from({ length: 6 }).map((_, i) => (
+        <TableRow key={i}>
+          {Array.from({ length: 8 }).map((_, j) => (
+            <TableCell key={j}><Skeleton /></TableCell>
+          ))}
+        </TableRow>
+      ));
+    }
+    if (filteredRows.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={8}>
+            <Stack gap={3} align="center" className="py-12">
+              <Text variant="muted">{rows.length === 0 ? 'No hay fichajes para la fecha seleccionada.' : 'Ningún resultado con los filtros aplicados.'}</Text>
+              <Link href="/fichajes/control-jornada" className="text-sm font-medium text-gray-600 hover:text-black underline">Ir a control de jornada →</Link>
+            </Stack>
+          </TableCell>
+        </TableRow>
+      );
+    }
+    return filteredRows.map((row, index) => {
+      const horasMes = Math.round(row.minutosHoy * 4.3);
+      const horasAno = Math.round(row.minutosHoy * 52);
+      const pctSem = pct(row.minutosHoy);
+      const pctMes = pct(horasMes, HOURS_OBJETIVO * 4);
+      const pctAno = pct(horasAno, HOURS_OBJETIVO * 52);
+      return (
+        <TableRow key={`${row.userId}-${index}`}>
+          <TableCell>
+            <Stack direction="row" gap={2} align="center">
+              {getStatusBadge(row.status)}
+              <Text variant="body" as="span">{row.firstName} {row.lastName}</Text>
+            </Stack>
+          </TableCell>
+          <TableCell><Text variant="small">{formatMinutes(row.minutosHoy)}</Text></TableCell>
+          <TableCell><Text variant="muted">Xhrs por semana</Text></TableCell>
+          <TableCell>
+            <Chip variant={getRoleVariant(row.role)}>{row.role?.charAt(0) + row.role?.slice(1).toLowerCase()}</Chip>
+          </TableCell>
+          <TableCell>
+            <Text variant="small">
+              {row.location ? `${row.location.lat.toFixed(4)}, ${row.location.lng.toFixed(4)} ${formatTime(row.startTime)}` : '-'}
+            </Text>
+          </TableCell>
+          <TableCell><ProgressBar value={pctSem} max={110} showLabel variant={getProgressVariant(pctSem)} /></TableCell>
+          <TableCell><ProgressBar value={pctMes} max={110} showLabel variant={getProgressVariant(pctMes)} /></TableCell>
+          <TableCell><ProgressBar value={pctAno} max={110} showLabel variant={getProgressVariant(pctAno)} /></TableCell>
+        </TableRow>
+      );
+    });
+  };
+
+  const renderCalendariosTable = () => {
+    if (loadingCalendars) {
+      return Array.from({ length: 3 }).map((_, i) => (
+        <TableRow key={i}>
+          <TableCell><Skeleton /></TableCell>
+          <TableCell><Skeleton /></TableCell>
+          <TableCell><Skeleton /></TableCell>
+        </TableRow>
+      ));
+    }
+    if (calendars.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={3}>
+            <Stack gap={3} align="center" className="py-12">
+              <Text variant="muted">No hay calendarios. Crea uno con el botón superior.</Text>
+            </Stack>
+          </TableCell>
+        </TableRow>
+      );
+    }
+    return calendars.map((cal) => (
+      <TableRow key={cal.id}>
+        <TableCell><Text variant="body">{cal.name}</Text></TableCell>
+        <TableCell><Text variant="muted">—</Text></TableCell>
+        <TableCell>
+          <Button variant="secondary" type="button" className="!py-1 !text-sm" onClick={() => addToast('Repetir calendario para el siguiente año. Contacte con el administrador si necesita esta acción.', 'info')}>
+            Repetir para siguiente año
+          </Button>
+        </TableCell>
+      </TableRow>
+    ));
+  };
+
+  const renderHorariosTable = () => {
+    if (loadingSchedules) {
+      return Array.from({ length: 3 }).map((_, i) => (
+        <TableRow key={i}>
+          {Array.from({ length: 7 }).map((_, j) => (
+            <TableCell key={j}><Skeleton /></TableCell>
+          ))}
+        </TableRow>
+      ));
+    }
+    if (schedules.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={7}>
+            <Stack gap={3} align="center" className="py-12">
+              <Text variant="muted">No hay horarios. Crea uno con el botón «Crear horario +».</Text>
+            </Stack>
+          </TableCell>
+        </TableRow>
+      );
+    }
+    return schedules.map((s) => (
+      <TableRow key={s.id}>
+        <TableCell><Text variant="body">{s.name}</Text></TableCell>
+        <TableCell><Text variant="muted">{s.hoursPerYear ?? '—'}</Text></TableCell>
+        <TableCell><Text variant="muted">{s.vacationDays ?? '—'}</Text></TableCell>
+        <TableCell><Text variant="muted">{s.freeDisposalDays ?? '—'}</Text></TableCell>
+        <TableCell><Text variant="muted">{s.hoursPerDayWeekdays ?? '—'}</Text></TableCell>
+        <TableCell><Text variant="muted">{s.hoursPerDaySaturday ?? '—'}</Text></TableCell>
+        <TableCell><Text variant="muted">{s.hoursPerWeek ?? '—'}</Text></TableCell>
+      </TableRow>
+    ));
+  };
+
+  const renderPermisosTable = () => {
+    if (loadingPermissions) {
+      return Array.from({ length: 3 }).map((_, i) => (
+        <TableRow key={i}>
+          <TableCell><Skeleton /></TableCell>
+          <TableCell><Skeleton /></TableCell>
+        </TableRow>
+      ));
+    }
+    if (permissionTypes.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={2}>
+            <Stack gap={3} align="center" className="py-12">
+              <Text variant="muted">No hay tipos de permiso. Crea uno con el botón «Crear Permiso +».</Text>
+            </Stack>
+          </TableCell>
+        </TableRow>
+      );
+    }
+    return permissionTypes.map((p) => (
+      <TableRow key={p.id}>
+        <TableCell><Text variant="body">{p.name}</Text></TableCell>
+        <TableCell>
+          <Chip variant={p.isPaid ? 'info' : 'default'}>{p.isPaid ? 'Retribuido' : 'No retribuido'}</Chip>
+        </TableCell>
+      </TableRow>
+    ));
+  };
+
   // Loading solo cuando aún no sabemos el usuario (restore en curso). Si ya hay user (login) mostramos la vista.
   const authPending = !authRestored && !authUser;
   if (authPending) {
@@ -433,61 +585,7 @@ export const FichajeDashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {isLoading ? (
-                  Array.from({ length: 6 }).map((_, i) => (
-                    <TableRow key={i}>
-                      {Array.from({ length: 8 }).map((_, j) => (
-                        <TableCell key={j}><Skeleton /></TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : filteredRows.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={8}>
-                      <Stack gap={3} align="center" className="py-12">
-                        <Text variant="muted">{rows.length === 0 ? 'No hay fichajes para la fecha seleccionada.' : 'Ningún resultado con los filtros aplicados.'}</Text>
-                        <Link href="/fichajes/control-jornada" className="text-sm font-medium text-gray-600 hover:text-black underline">
-                          Ir a control de jornada →
-                        </Link>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredRows.map((row, index) => {
-                    const horasMes = Math.round(row.minutosHoy * 4.3);
-                    const horasAno = Math.round(row.minutosHoy * 52);
-                    const pctSem = pct(row.minutosHoy);
-                    const pctMes = pct(horasMes, HOURS_OBJETIVO * 4);
-                    const pctAno = pct(horasAno, HOURS_OBJETIVO * 52);
-                    return (
-                      <TableRow key={`${row.userId}-${index}`}>
-                        <TableCell>
-                          <Stack direction="row" gap={2} align="center">
-                            {getStatusBadge(row.status)}
-                            <Text variant="body" as="span">{row.firstName} {row.lastName}</Text>
-                          </Stack>
-                        </TableCell>
-                        <TableCell><Text variant="small">{formatMinutes(row.minutosHoy)}</Text></TableCell>
-                        <TableCell><Text variant="muted">Xhrs por semana</Text></TableCell>
-                        <TableCell>
-                          <Chip variant={getRoleVariant(row.role)}>
-                            {row.role?.charAt(0) + row.role?.slice(1).toLowerCase()}
-                          </Chip>
-                        </TableCell>
-                        <TableCell>
-                          <Text variant="small">
-                            {row.location
-                              ? `${row.location.lat.toFixed(4)}, ${row.location.lng.toFixed(4)} ${formatTime(row.startTime)}`
-                              : '-'}
-                          </Text>
-                        </TableCell>
-                        <TableCell><ProgressBar value={pctSem} max={110} showLabel variant={getProgressVariant(pctSem)} /></TableCell>
-                        <TableCell><ProgressBar value={pctMes} max={110} showLabel variant={getProgressVariant(pctMes)} /></TableCell>
-                        <TableCell><ProgressBar value={pctAno} max={110} showLabel variant={getProgressVariant(pctAno)} /></TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
+                {renderFichajesTable()}
               </TableBody>
             </Table>
             <Pagination
@@ -509,35 +607,7 @@ export const FichajeDashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {loadingCalendars ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell><Skeleton /></TableCell>
-                      <TableCell><Skeleton /></TableCell>
-                      <TableCell><Skeleton /></TableCell>
-                    </TableRow>
-                  ))
-                ) : calendars.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={3}>
-                      <Stack gap={3} align="center" className="py-12">
-                        <Text variant="muted">No hay calendarios. Crea uno con el botón superior.</Text>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  calendars.map((cal) => (
-                    <TableRow key={cal.id}>
-                      <TableCell><Text variant="body">{cal.name}</Text></TableCell>
-                      <TableCell><Text variant="muted">—</Text></TableCell>
-                      <TableCell>
-                        <Button variant="secondary" type="button" className="!py-1 !text-sm" onClick={() => addToast('Repetir calendario para el siguiente año. Contacte con el administrador si necesita esta acción.', 'info')}>
-                        Repetir para siguiente año
-                      </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                {renderCalendariosTable()}
               </TableBody>
             </Table>
           </Card>
@@ -562,35 +632,7 @@ export const FichajeDashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {loadingSchedules ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <TableRow key={i}>
-                      {Array.from({ length: 7 }).map((_, j) => (
-                        <TableCell key={j}><Skeleton /></TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : schedules.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7}>
-                      <Stack gap={3} align="center" className="py-12">
-                        <Text variant="muted">No hay horarios. Crea uno con el botón «Crear horario +».</Text>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  schedules.map((s) => (
-                    <TableRow key={s.id}>
-                      <TableCell><Text variant="body">{s.name}</Text></TableCell>
-                      <TableCell><Text variant="muted">{s.hoursPerYear ?? '—'}</Text></TableCell>
-                      <TableCell><Text variant="muted">{s.vacationDays ?? '—'}</Text></TableCell>
-                      <TableCell><Text variant="muted">{s.freeDisposalDays ?? '—'}</Text></TableCell>
-                      <TableCell><Text variant="muted">{s.hoursPerDayWeekdays ?? '—'}</Text></TableCell>
-                      <TableCell><Text variant="muted">{s.hoursPerDaySaturday ?? '—'}</Text></TableCell>
-                      <TableCell><Text variant="muted">{s.hoursPerWeek ?? '—'}</Text></TableCell>
-                    </TableRow>
-                  ))
-                )}
+                {renderHorariosTable()}
               </TableBody>
             </Table>
           </Card>
@@ -606,31 +648,7 @@ export const FichajeDashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {loadingPermissions ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell><Skeleton /></TableCell>
-                      <TableCell><Skeleton /></TableCell>
-                    </TableRow>
-                  ))
-                ) : permissionTypes.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={2}>
-                      <Stack gap={3} align="center" className="py-12">
-                        <Text variant="muted">No hay tipos de permiso. Crea uno con el botón «Crear Permiso +».</Text>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  permissionTypes.map((p) => (
-                    <TableRow key={p.id}>
-                      <TableCell><Text variant="body">{p.name}</Text></TableCell>
-                      <TableCell>
-                        <Chip variant={p.isPaid ? 'info' : 'default'}>{p.isPaid ? 'Retribuido' : 'No retribuido'}</Chip>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                {renderPermisosTable()}
               </TableBody>
             </Table>
           </Card>

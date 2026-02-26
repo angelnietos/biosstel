@@ -29,6 +29,27 @@ import { Stack } from '@biosstel/ui-layout';
 import { useLocale, logUserAction } from '@biosstel/platform';
 import { useCanFichar } from '@biosstel/shared';
 
+type FichajeStatus = 'idle' | 'working' | 'paused' | 'finished';
+
+function getArcVariant(status: FichajeStatus, fueraHorario: boolean): 'red' | 'green' | 'gray' {
+  if (status === 'working') return fueraHorario ? 'red' : 'green';
+  if (status === 'paused') return 'red';
+  return 'gray';
+}
+
+function getArcProgress(status: FichajeStatus): number {
+  if (status === 'working') return 50;
+  if (status === 'paused') return 25;
+  return 0;
+}
+
+function getStatusMessage(status: FichajeStatus, fueraHorario: boolean): string | null {
+  if (status === 'working') return fueraHorario ? "Ficho 'mal' fuera de su horario" : 'Ficho bien dentro de su horario';
+  if (status === 'paused') return 'Jornada pausada';
+  if (status === 'finished') return 'Jornada finalizada';
+  return null;
+}
+
 export const ControlJornada = () => {
   const dispatch = useDispatch<any>(); // Typed dispatch for thunks
   const locale = useLocale();
@@ -115,23 +136,12 @@ export const ControlJornada = () => {
     }
   };
 
-  const fichajeStatus = currentFichaje?.status || 'idle';
+  const fichajeStatus = (currentFichaje?.status || 'idle') as FichajeStatus;
   const isLoading = status === 'loading';
-
-  // Figma Base-15: "Ficho mal fuera de horario" cuando la API indique fueraHorario
   const fueraHorario = (currentFichaje as { fueraHorario?: boolean } | undefined)?.fueraHorario === true;
-  let arcVariant: 'red' | 'green' | 'gray' = 'gray';
-  if (fichajeStatus === 'working') arcVariant = fueraHorario ? 'red' : 'green';
-  else if (fichajeStatus === 'paused') arcVariant = 'red';
-
-  let arcProgress = 0;
-  if (fichajeStatus === 'working') arcProgress = 50;
-  else if (fichajeStatus === 'paused') arcProgress = 25;
-
-  let statusMessage: string | null = null;
-  if (fichajeStatus === 'working') statusMessage = fueraHorario ? "Ficho 'mal' fuera de su horario" : 'Ficho bien dentro de su horario';
-  else if (fichajeStatus === 'paused') statusMessage = 'Jornada pausada';
-  else if (fichajeStatus === 'finished') statusMessage = 'Jornada finalizada';
+  const arcVariant = getArcVariant(fichajeStatus, fueraHorario);
+  const arcProgress = getArcProgress(fichajeStatus);
+  const statusMessage = getStatusMessage(fichajeStatus, fueraHorario);
 
   // No mostrar nada de esta ruta hasta saber si redirigir o mostrar el formulario.
   // Así no se pinta "Gestión de jornada" ni ningún mensaje mientras carga/auth.
@@ -173,11 +183,7 @@ export const ControlJornada = () => {
                 
                 {statusMessage && (
                   <div
-                    className={`absolute top-4 right-[-40px] px-4 py-1.5 rounded-full text-[12px] font-semibold whitespace-nowrap shadow-sm border ${
-                      fueraHorario && fichajeStatus === 'working'
-                        ? 'bg-red-50 text-red-700 border-red-200'
-                        : 'bg-[#FAE8FF] text-[#D946EF] border-[#F5D0FE]'
-                    }`}
+                    className={`absolute top-4 right-[-40px] px-4 py-1.5 rounded-full text-[12px] font-semibold whitespace-nowrap shadow-sm border ${arcVariant === 'red' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-[#FAE8FF] text-[#D946EF] border-[#F5D0FE]'}`}
                   >
                     {statusMessage}
                   </div>
