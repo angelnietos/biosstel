@@ -10,6 +10,9 @@ import { AlertasManagementUseCase } from './application/use-cases';
 import { FichajeEndedAlertHandler } from './application/cqrs/handlers/alertas/events/FichajeEndedAlert.handler';
 import { AlertasMediatorRegistration } from './application/cqrs/AlertasMediatorRegistration';
 import { ListAlertasHandler } from './application/cqrs/handlers/alertas/queries/ListAlertas.handler';
+import { CreateAlertaHandler } from './application/cqrs/handlers/alertas/commands/CreateAlerta.handler';
+import { UpdateAlertaHandler } from './application/cqrs/handlers/alertas/commands/UpdateAlerta.handler';
+import { DeleteAlertaHandler } from './application/cqrs/handlers/alertas/commands/DeleteAlerta.handler';
 import { ALERTAS_POSTGRES_ENTITIES, PostgresAlertasRepository } from './infrastructure/persistence';
 import { I_ALERTAS_REPOSITORY } from './domain/repositories';
 
@@ -21,6 +24,9 @@ import { I_ALERTAS_REPOSITORY } from './domain/repositories';
     FichajeEndedAlertHandler,
     AlertasMediatorRegistration,
     ListAlertasHandler,
+    CreateAlertaHandler,
+    UpdateAlertaHandler,
+    DeleteAlertaHandler,
     {
       provide: I_ALERTAS_REPOSITORY,
       useClass: PostgresAlertasRepository,

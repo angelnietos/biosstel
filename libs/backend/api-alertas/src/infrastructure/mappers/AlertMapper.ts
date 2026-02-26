@@ -1,4 +1,5 @@
 import { Alert } from '../../domain/entities/Alert';
+import type { CreateAlertData, UpdateAlertData } from '../../domain/repositories/IAlertasRepository';
 import type { DashboardAlertEntity } from '@biosstel/api-objetivos';
 
 type AlertStatusType = 'tienda' | 'telemarketing' | 'comercial' | 'no-fichado' | 'fuera-horario';
@@ -31,6 +32,20 @@ export class AlertMapper {
       marca: domain.marca,
       statusType: domain.statusType,
       sortOrder: domain.sortOrder,
+    };
+  }
+
+  public static toCreateEntity(data: CreateAlertData): Omit<DashboardAlertEntity, 'id' | 'createdAt' | 'updatedAt'> {
+    return {
+      usuario: data.usuario ?? '',
+      departamento: data.departamento ?? '',
+      centroTrabajo: data.centroTrabajo ?? '',
+      estado: data.estado ?? '',
+      rol: data.rol,
+      marca: data.marca,
+      statusType: data.statusType,
+      sortOrder: data.sortOrder ?? 0,
+      isActive: data.isActive ?? true,
     };
   }
 }
