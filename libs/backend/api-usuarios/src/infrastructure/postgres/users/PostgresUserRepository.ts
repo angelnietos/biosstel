@@ -15,9 +15,9 @@ import type {
   CreateUserData,
   UpdateUserData,
   PaginatedResult,
-} from '../../../../domain/repositories';
-import { UserEntity } from '../../entities';
-import { UserMapper } from '../../../mappers';
+} from '../../../domain/repositories';
+import { UserEntity } from '../entities';
+import { UserMapper } from '../mappers';
 
 @Injectable()
 export class PostgresUserRepository implements IUserRepository {

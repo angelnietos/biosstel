@@ -1,5 +1,11 @@
-import type { User } from '../../domain/repositories';
-import { UserEntity } from '../postgres/entities/users/UserEntity';
+/**
+ * @biosstel/api-users - Infrastructure Layer: User Persistence Mapper
+ *
+ * Transforms domain entities to/from Postgres TypeORM entities.
+ */
+
+import type { User } from '@biosstel/shared-types';
+import { UserEntity } from '../entities/users/UserEntity';
 
 export class UserMapper {
   public static toDomain(entity: UserEntity): User {

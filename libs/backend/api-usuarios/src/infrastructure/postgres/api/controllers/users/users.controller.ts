@@ -1,5 +1,5 @@
 /**
- * @biosstel/api-users - Infrastructure Layer: Users Controller (Input Adapter)
+ * @biosstel/api-users - Infrastructure Layer: Users Controller (REST + Postgres)
  *
  * REST controller that exposes user endpoints.
  * Uses CQRS: commands and queries dispatched via IMediator.

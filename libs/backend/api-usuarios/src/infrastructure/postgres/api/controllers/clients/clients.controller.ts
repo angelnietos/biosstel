@@ -1,5 +1,5 @@
 /**
- * @biosstel/api-users - Clients controller (GET/POST /clients).
+ * @biosstel/api-users - Clients controller (REST + Postgres)
  * Front expects: GET list, POST { name, email, phone }.
  */
 
@@ -8,7 +8,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiProperty, ApiProp
 import { IsString, IsEmail, IsOptional } from 'class-validator';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
-import { ClientEntity } from '../../../postgres';
+import { ClientEntity } from '../../entities/clients/ClientEntity';
 
 class CreateClientDto {
   @IsString()

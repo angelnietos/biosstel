@@ -1,5 +1,5 @@
 /**
- * @biosstel/api-usuarios - Documentación de usuario (listar, subir, descargar, eliminar)
+ * @biosstel/api-usuarios - Documentación de usuario (REST + Postgres)
  */
 
 import {
@@ -20,7 +20,7 @@ import { IsString, IsOptional } from 'class-validator';
 import type { Response } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
-import { UserDocumentEntity } from '../../../postgres';
+import { UserDocumentEntity } from '../../../entities/documents/UserDocumentEntity';
 
 class UploadDocumentDto {
   @IsString()

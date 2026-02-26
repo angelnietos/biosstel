@@ -12,7 +12,7 @@ import { USUARIOS_POSTGRES_ENTITIES, PostgresUserRepository } from './infrastruc
 import { MongoUserRepositoryAdapter, HttpUserRepositoryAdapter } from './infrastructure/adapters';
 import { USER_REPOSITORY } from './domain/repositories';
 import { UserManagementUseCase } from './application/use-cases';
-import { UsersController, UserDocumentsController, ClientsController } from './infrastructure/api';
+import { UsersController, UserDocumentsController, ClientsController } from './infrastructure/postgres';
 import { UsersService } from './users.service';
 import { CreateUserHandler, UpdateUserHandler, DeleteUserHandler, GetUserByIdHandler, ListUsersHandler } from './application/cqrs/handlers/users';
 import { UsersMediatorRegistration } from './application/cqrs/UsersMediatorRegistration';

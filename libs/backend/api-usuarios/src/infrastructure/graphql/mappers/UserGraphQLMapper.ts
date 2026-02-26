@@ -7,7 +7,8 @@
 
 import { Injectable } from '@nestjs/common';
 import type { User } from '@biosstel/shared-types';
-import type { UserType, UserRoleEnum, UsersPaginatedType } from './user.graphql-types';
+import type { UserType, UsersPaginatedType } from '../user.graphql-types';
+import { UserRoleEnum } from '../user.graphql-types';
 
 /**
  * Maps domain entities to GraphQL types.
