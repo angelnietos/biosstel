@@ -1,6 +1,6 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import type { JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { I_AUTH_REPOSITORY } from '../../../../domain/repositories';
 import type { IAuthRepository } from '../../../../domain/repositories';
 import { LogoutCommand, type LogoutResult } from '../../commands/Logout.command';

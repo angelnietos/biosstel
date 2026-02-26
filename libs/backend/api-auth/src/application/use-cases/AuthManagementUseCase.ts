@@ -4,8 +4,8 @@
  */
 
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
-import type { JwtService } from '@nestjs/jwt';
-import type { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { USER_REPOSITORY } from '@biosstel/api-usuarios';
 import type { IUserRepository } from '@biosstel/api-usuarios';
 import type { User } from '@biosstel/shared-types';

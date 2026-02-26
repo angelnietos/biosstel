@@ -15,7 +15,7 @@ import {
   ParseUUIDPipe,
   BadRequestException,
 } from '@nestjs/common';
-import type { JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import type { IMediatorPort } from '@biosstel/api-shared';

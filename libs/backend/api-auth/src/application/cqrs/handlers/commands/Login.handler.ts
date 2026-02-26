@@ -1,7 +1,7 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import type { JwtService } from '@nestjs/jwt';
-import type { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import type { UserLoggedInEvent } from '@biosstel/api-shared';
 import { IEventBus, DomainEvents } from '@biosstel/api-shared';
 import { type LoginResult, LoginCommand } from '../../commands/Login.command';
