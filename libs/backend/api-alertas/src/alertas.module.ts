@@ -8,7 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlertasController } from './infrastructure/api';
 import { AlertasManagementUseCase } from './application/use-cases';
 import { FichajeEndedAlertHandler } from './application/cqrs/handlers/alertas/events/FichajeEndedAlert.handler';
-import { AlertasMediatorRegistration } from './application/cqrs/AlertasMediatorRegistration';
 import { ListAlertasHandler } from './application/cqrs/handlers/alertas/queries/ListAlertas.handler';
 import { CreateAlertaHandler } from './application/cqrs/handlers/alertas/commands/CreateAlerta.handler';
 import { UpdateAlertaHandler } from './application/cqrs/handlers/alertas/commands/UpdateAlerta.handler';

@@ -21,6 +21,6 @@ export class Mediator implements IMediatorPort {
   }
 
   async execute<TResult>(query: IQuery): Promise<TResult> {
-    return this.queryBus.query(query) as Promise<TResult>;
+    return this.queryBus.execute(query) as Promise<TResult>;
   }
 }
