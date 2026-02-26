@@ -1,0 +1,28 @@
+{
+  "name": "alertas",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/features/alertas/src",
+  "projectType": "library",
+  "tags": ["type:feature", "scope:alertas"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/frontend/features/alertas",
+        "main": "libs/frontend/features/alertas/src/index.ts",
+        "tsConfig": "libs/frontend/features/alertas/tsconfig.build.json",
+        "assets": []
+      }
+    },
+    "lint": { "executor": "@nx/eslint:lint", "outputs": ["{options.outputFile}"] },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "config": "libs/frontend/features/alertas/vitest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

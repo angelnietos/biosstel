@@ -1,0 +1,22 @@
+{
+  "name": "api-objetivos",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/api-objetivos/src",
+  "projectType": "library",
+  "tags": ["type:feature", "scope:api", "scope:api-objetivos"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/api-objetivos",
+        "main": "libs/backend/api-objetivos/src/index.ts",
+        "tsConfig": "libs/backend/api-objetivos/tsconfig.build.json",
+        "assets": ["libs/backend/api-objetivos/*.md"]
+      }
+    }
+  }
+}

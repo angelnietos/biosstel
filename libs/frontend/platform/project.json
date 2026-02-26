@@ -1,0 +1,31 @@
+{
+  "name": "platform",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/platform/src",
+  "projectType": "library",
+  "tags": ["type:platform", "scope:platform"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/platform",
+        "main": "libs/frontend/platform/src/index.ts",
+        "tsConfig": "libs/frontend/platform/tsconfig.json",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "config": "libs/frontend/platform/vitest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

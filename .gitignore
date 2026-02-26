@@ -1,0 +1,53 @@
+# Dependencies
+node_modules
+**/node_modules
+.pnpm-store
+
+# Build outputs
+build
+dist
+.next
+out
+storybook-static
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Nx
+.nx/cache
+.nx/workspace-data
+
+# Test coverage
+coverage
+
+# Temp files
+tmp
+temp
+*.tmp
+*.temp
+.dev-ports.json
+
+# TypeScript / build cache
+*.tsbuildinfo
+.turbo
+
+# Docker volumes (local)
+docker/volumes

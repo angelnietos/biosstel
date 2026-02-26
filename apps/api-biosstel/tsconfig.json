@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@lib/*": ["../../dist/libs/*"],
+      "@lib/backend/*": ["../../dist/libs/backend/*"],
+      "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"],
+      "@biosstel/api-usuarios": ["../../libs/backend/api-usuarios/src/index.ts"],
+      "@biosstel/api-shared": ["../../libs/backend/api-shared/src/index.ts"],
+      "@biosstel/api-objetivos": ["../../libs/backend/api-objetivos/src/index.ts"],
+      "@biosstel/api-fichajes": ["../../libs/backend/api-fichajes/src/index.ts"],
+      "@biosstel/api-auth": ["../../libs/backend/api-auth/src/index.ts"],
+      "@biosstel/api-alertas": ["../../libs/backend/api-alertas/src/index.ts"],
+      "@biosstel/api-operaciones": ["../../libs/backend/api-operaciones/src/index.ts"],
+      "@biosstel/api-empresa": ["../../libs/backend/api-empresa/src/index.ts"],"@biosstel/api-productos":["../../libs/backend/api-productos/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,1 @@
+export { AlertasManagementUseCase } from './AlertasManagementUseCase';

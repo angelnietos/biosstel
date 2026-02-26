@@ -1,0 +1,56 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2021",
+    "lib": ["ES2021"],
+    "moduleResolution": "node",
+    "declaration": false,
+    "removeComments": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@lib/*": ["../../libs/*/src/index.ts"],
+      "@lib/backend/*": ["../../libs/backend/*/src/index.ts"],
+      "@biosstel/shared-types": ["../../libs/shared-types/src/index.ts"],
+      "@biosstel/api-usuarios": ["../../libs/backend/api-usuarios/src/index.ts"],
+      "@biosstel/api-shared": ["../../libs/backend/api-shared/src/index.ts"],
+      "@biosstel/api-objetivos": ["../../libs/backend/api-objetivos/src/index.ts"],
+      "@biosstel/api-fichajes": ["../../libs/backend/api-fichajes/src/index.ts"],
+      "@biosstel/api-auth": ["../../libs/backend/api-auth/src/index.ts"],
+      "@biosstel/api-alertas": ["../../libs/backend/api-alertas/src/index.ts"],
+      "@biosstel/api-operaciones": ["../../libs/backend/api-operaciones/src/index.ts"],
+      "@biosstel/api-empresa": ["../../libs/backend/api-empresa/src/index.ts"],
+      "@biosstel/api-productos": ["../../libs/backend/api-productos/src/index.ts"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "dev.ts",
+    "seed.ts",
+    "../../libs/backend/**/*.ts",
+    "../../libs/shared-types/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"],
+  "tsx": {
+    "esbuild": {
+      "tsconfigRaw": {
+        "compilerOptions": {
+          "experimentalDecorators": true,
+          "emitDecoratorMetadata": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+# Prometheus config for Biosstel API metrics
+# Scrapes /api/metrics (version-neutral endpoint) every 15s
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'api-biosstel'
+    metrics_path: /api/metrics
+    static_configs:
+      - targets: ['api:4000']
+    scrape_interval: 15s
+    scrape_timeout: 10s

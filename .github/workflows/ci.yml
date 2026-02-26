@@ -1,0 +1,116 @@
+# CI multietapa: permite elegir tipo de build, flujos (stages) y tareas.
+# En push/PR usa valores por defecto; con "Run workflow" puedes elegir build_type, stages y tasks.
+
+name: CI Pipeline
+
+run-name: ${{ github.ref_name }} | Build #${{ github.run_number }} | SHA ${{ substr(github.sha, 0, 7) }}
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Tipo de build'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - frontend
+          - backend
+          - storybook
+          - lint-only
+          - test-only
+      stages:
+        description: 'Stages (comma-separated: lint, test-unit, test-e2e, security, build)'
+        required: false
+        default: 'lint,test-unit,security,build'
+        type: string
+      tasks_lint:
+        description: 'Tareas lint (all o lint,typecheck,format)'
+        required: false
+        default: 'all'
+        type: string
+      tasks_test:
+        description: 'Tareas test (all o unit,e2e)'
+        required: false
+        default: 'all'
+        type: string
+      tasks_security:
+        description: 'Tareas security (all o snyk,sonar)'
+        required: false
+        default: 'all'
+        type: string
+      include_e2e:
+        description: 'Incluir stage test-e2e (solo tiene efecto si stages incluye test-e2e)'
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Calcula inputs para el pipeline: en push/PR usa defaults; en manual usa inputs del usuario
+  set-inputs:
+    name: 📋 Set pipeline inputs
+    runs-on: ubuntu-latest
+    outputs:
+      build_type: ${{ steps.out.outputs.build_type }}
+      stages: ${{ steps.out.outputs.stages }}
+      tasks_lint: ${{ steps.out.outputs.tasks_lint }}
+      tasks_test: ${{ steps.out.outputs.tasks_test }}
+      tasks_security: ${{ steps.out.outputs.tasks_security }}
+    steps:
+      - id: out
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            BUILD_TYPE="${{ github.event.inputs.build_type }}"
+            STAGES="${{ github.event.inputs.stages }}"
+            TASKS_LINT="${{ github.event.inputs.tasks_lint }}"
+            TASKS_TEST="${{ github.event.inputs.tasks_test }}"
+            TASKS_SECURITY="${{ github.event.inputs.tasks_security }}"
+            if [ "${{ github.event.inputs.include_e2e }}" = "true" ]; then
+              echo "$STAGES" | tr ',' '\n' | grep -qx "test-e2e" || STAGES="${STAGES},test-e2e"
+            fi
+          else
+            BUILD_TYPE="full"
+            STAGES="lint,test-unit,security,build"
+            TASKS_LINT="all"
+            TASKS_TEST="all"
+            TASKS_SECURITY="all"
+            if [ "${{ github.ref }}" = "refs/heads/main" ] || [ "${{ github.ref }}" = "refs/heads/develop" ] || [[ "${{ github.ref }}" == refs/heads/release/* ]]; then
+              STAGES="${STAGES},test-e2e"
+            fi
+          fi
+          echo "build_type=${BUILD_TYPE}" >> $GITHUB_OUTPUT
+          echo "stages=${STAGES}" >> $GITHUB_OUTPUT
+          echo "tasks_lint=${TASKS_LINT}" >> $GITHUB_OUTPUT
+          echo "tasks_test=${TASKS_TEST}" >> $GITHUB_OUTPUT
+          echo "tasks_security=${TASKS_SECURITY}" >> $GITHUB_OUTPUT
+
+  pipeline:
+    name: 🚀 Run pipeline
+    uses: ./.github/workflows/pipeline.yml
+    needs: [set-inputs]
+    with:
+      build_type: ${{ needs.set-inputs.outputs.build_type }}
+      stages: ${{ needs.set-inputs.outputs.stages }}
+      tasks_lint: ${{ needs.set-inputs.outputs.tasks_lint }}
+      tasks_test: ${{ needs.set-inputs.outputs.tasks_test }}
+      tasks_security: ${{ needs.set-inputs.outputs.tasks_security }}
+      node_version: '20'
+      pnpm_version: '10'
+    secrets:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

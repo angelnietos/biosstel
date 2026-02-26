@@ -1,0 +1,164 @@
+# =============================================================
+# Biosstel — Production (Docker Compose)
+# =============================================================
+# Builds optimized production images and runs them.
+#
+# Usage:
+#   docker compose up --build
+#   docker compose down
+# =============================================================
+
+services:
+  # ─── Database ───────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: biosstel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: biosstel
+      POSTGRES_PASSWORD: biosstel123
+      POSTGRES_DB: biosstel
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U biosstel -d biosstel']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - biosstel
+
+  # ─── API Backend ────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    container_name: biosstel-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: biosstel
+      DB_PASSWORD: biosstel123
+      DB_NAME: biosstel
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - '4000:4000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - biosstel
+
+  # ─── Frontend ───────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: biosstel-frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://api:4000
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+    networks:
+      - biosstel
+
+  # ─── DB Admin (optional) ───────────────────────────────────
+  adminer:
+    image: adminer:latest
+    container_name: biosstel-adminer
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    profiles:
+      - tools
+    networks:
+      - biosstel
+
+  # ─── Monitoring (opt-in: docker compose --profile monitoring up) ─
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: biosstel-prometheus
+    restart: unless-stopped
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./docker/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+    networks:
+      - biosstel
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: biosstel-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_SERVER_HTTP_PORT: 3001
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./docker/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    profiles:
+      - monitoring
+    networks:
+      - biosstel
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: biosstel-loki
+    restart: unless-stopped
+    ports:
+      - '3100:3100'
+    volumes:
+      - ./docker/monitoring/loki.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    profiles:
+      - monitoring
+    networks:
+      - biosstel
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: biosstel-promtail
+    restart: unless-stopped
+    volumes:
+      - ./docker/monitoring/promtail.yml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    profiles:
+      - monitoring
+    networks:
+      - biosstel
+
+volumes:
+  postgres_data:
+  loki_data:
+
+networks:
+  biosstel:
+    driver: bridge

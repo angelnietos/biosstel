@@ -1,0 +1,31 @@
+{
+  "name": "users",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/features/usuarios/src",
+  "projectType": "library",
+  "tags": ["type:feature", "scope:users"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/frontend/features/usuarios",
+        "main": "libs/frontend/features/usuarios/src/index.ts",
+        "tsConfig": "libs/frontend/features/usuarios/tsconfig.build.json",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "config": "libs/frontend/features/usuarios/vitest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

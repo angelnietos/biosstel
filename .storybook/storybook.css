@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+
+@source "../libs/frontend/ui/src/**/*.{ts,tsx}";
+@source "../libs/frontend/ui-layout/src/**/*.{ts,tsx}";
+@source "../libs/frontend/shared/src/**/*.{ts,tsx}";
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: system-ui, sans-serif;
+  }
+  #storybook-root {
+    min-height: 100vh;
+    padding: 1rem;
+  }
+}

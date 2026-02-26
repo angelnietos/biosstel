@@ -1,0 +1,2524 @@
+{
+  "graph": {
+    "nodes": {
+      "operaciones": {
+        "name": "operaciones",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/operaciones",
+          "name": "operaciones",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/operaciones/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:operaciones"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/features/operaciones",
+                "main": "libs/frontend/features/operaciones/src/index.ts",
+                "tsConfig": "libs/frontend/features/operaciones/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/operaciones/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "inventory": {
+        "name": "inventory",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/inventory",
+          "name": "inventory",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/inventory/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:frontend"
+          ],
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/inventory/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "objetivos": {
+        "name": "objetivos",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/objetivos",
+          "name": "objetivos",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/objetivos/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:frontend"
+          ],
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/objetivos/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "productos": {
+        "name": "productos",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/productos",
+          "name": "productos",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/productos/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:frontend"
+          ],
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/productos/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "fichajes": {
+        "name": "fichajes",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/fichajes",
+          "name": "fichajes",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/fichajes/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:fichajes"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/features/fichajes",
+                "main": "libs/frontend/features/fichajes/src/index.ts",
+                "tsConfig": "libs/frontend/features/fichajes/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/fichajes/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "users": {
+        "name": "users",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/usuarios",
+          "name": "users",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/usuarios/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:users"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/features/usuarios",
+                "main": "libs/frontend/features/usuarios/src/index.ts",
+                "tsConfig": "libs/frontend/features/usuarios/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/usuarios/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "alertas": {
+        "name": "alertas",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/alertas",
+          "name": "alertas",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/alertas/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:alertas"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/features/alertas",
+                "main": "libs/frontend/features/alertas/src/index.ts",
+                "tsConfig": "libs/frontend/features/alertas/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/alertas/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "empresa": {
+        "name": "empresa",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/empresa",
+          "name": "empresa",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/empresa/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:empresa"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/features/empresa",
+                "main": "libs/frontend/features/empresa/src/index.ts",
+                "tsConfig": "libs/frontend/features/empresa/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/empresa/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "reports": {
+        "name": "reports",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/reports",
+          "name": "reports",
+          "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/reports/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:frontend"
+          ],
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/reports/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "api-operaciones": {
+        "name": "api-operaciones",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-operaciones",
+          "name": "api-operaciones",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "type:feature",
+            "scope:api",
+            "scope:api-operaciones"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-operaciones",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-operaciones",
+                "main": "libs/backend/api-operaciones/src/index.ts",
+                "tsConfig": "libs/backend/api-operaciones/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-operaciones/src",
+          "implicitDependencies": []
+        }
+      },
+      "auth": {
+        "name": "auth",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/features/auth",
+          "name": "auth",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/features/auth/src",
+          "projectType": "library",
+          "tags": [
+            "type:feature",
+            "scope:auth"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/features/auth",
+                "main": "libs/frontend/features/auth/src/index.ts",
+                "tsConfig": "libs/frontend/features/auth/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/features/auth/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "api-objetivos": {
+        "name": "api-objetivos",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-objetivos",
+          "name": "api-objetivos",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "type:feature",
+            "scope:api",
+            "scope:api-objetivos"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-objetivos",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js",
+                "./dashboard.module": "./src/dashboard.module.js",
+                "./dashboard.service": "./src/dashboard.service.js",
+                "./dashboard.controller": "./src/dashboard.controller.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-objetivos",
+                "main": "libs/backend/api-objetivos/src/index.ts",
+                "tsConfig": "libs/backend/api-objetivos/tsconfig.build.json",
+                "assets": [
+                  "libs/backend/api-objetivos/*.md"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-objetivos/src",
+          "implicitDependencies": []
+        }
+      },
+      "api-productos": {
+        "name": "api-productos",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-productos",
+          "name": "api-productos",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "type:feature",
+            "scope:api",
+            "scope:api-productos"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-productos",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-productos",
+                "main": "libs/backend/api-productos/src/index.ts",
+                "tsConfig": "libs/backend/api-productos/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-productos/src",
+          "implicitDependencies": []
+        }
+      },
+      "api-fichajes": {
+        "name": "api-fichajes",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-fichajes",
+          "name": "api-fichajes",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "type:feature",
+            "scope:api",
+            "scope:api-fichajes"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-fichajes",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-fichajes",
+                "main": "libs/backend/api-fichajes/src/index.ts",
+                "tsConfig": "libs/backend/api-fichajes/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-fichajes/src",
+          "implicitDependencies": []
+        }
+      },
+      "api-usuarios": {
+        "name": "api-usuarios",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-usuarios",
+          "name": "api-usuarios",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "type:feature",
+            "scope:api",
+            "scope:api-usuarios"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-usuarios",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js",
+                "./users.module": "./src/users.module.js",
+                "./users.service": "./src/users.service.js",
+                "./users.controller": "./src/users.controller.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/jest:jest",
+              "outputs": [
+                "{workspaceRoot}/coverage/{projectRoot}"
+              ],
+              "options": {
+                "jestConfig": "libs/backend/api-usuarios/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-usuarios",
+                "main": "libs/backend/api-usuarios/src/index.ts",
+                "tsConfig": "libs/backend/api-usuarios/tsconfig.build.json",
+                "assets": [
+                  "libs/backend/api-usuarios/*.md"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-usuarios/src",
+          "implicitDependencies": []
+        }
+      },
+      "api-alertas": {
+        "name": "api-alertas",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-alertas",
+          "name": "api-alertas",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "type:feature",
+            "scope:api",
+            "scope:api-alertas"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-alertas",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-alertas",
+                "main": "libs/backend/api-alertas/src/index.ts",
+                "tsConfig": "libs/backend/api-alertas/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-alertas/src",
+          "implicitDependencies": []
+        }
+      },
+      "api-empresa": {
+        "name": "api-empresa",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-empresa",
+          "name": "api-empresa",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "type:feature",
+            "scope:api",
+            "scope:api-empresa"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-empresa",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-empresa",
+                "main": "libs/backend/api-empresa/src/index.ts",
+                "tsConfig": "libs/backend/api-empresa/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-empresa/src",
+          "implicitDependencies": []
+        }
+      },
+      "api-shared": {
+        "name": "api-shared",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-shared",
+          "name": "api-shared",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "scope:api",
+            "type:shared-types"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-shared",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-shared",
+                "main": "libs/backend/api-shared/src/index.ts",
+                "tsConfig": "libs/backend/api-shared/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-shared/src",
+          "implicitDependencies": []
+        }
+      },
+      "ui-layout": {
+        "name": "ui-layout",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/ui-layout",
+          "name": "ui-layout",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/ui-layout/src",
+          "projectType": "library",
+          "tags": [
+            "type:layout",
+            "scope:layout"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/ui-layout",
+                "main": "libs/frontend/ui-layout/src/index.ts",
+                "tsConfig": "libs/frontend/ui-layout/tsconfig.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/ui-layout/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "platform": {
+        "name": "platform",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/platform",
+          "name": "platform",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/platform/src",
+          "projectType": "library",
+          "tags": [
+            "type:platform",
+            "scope:platform"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/platform",
+                "main": "libs/frontend/platform/src/index.ts",
+                "tsConfig": "libs/frontend/platform/tsconfig.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/platform/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "api-auth": {
+        "name": "api-auth",
+        "type": "lib",
+        "data": {
+          "root": "libs/backend/api-auth",
+          "name": "api-auth",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "type:feature",
+            "scope:api",
+            "scope:api-auth"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/api-auth",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": "./src/index.js"
+              },
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/backend/api-auth",
+                "main": "libs/backend/api-auth/src/index.ts",
+                "tsConfig": "libs/backend/api-auth/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/backend/api-auth/src",
+          "implicitDependencies": []
+        }
+      },
+      "@biosstel/shared": {
+        "name": "@biosstel/shared",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/shared",
+          "name": "@biosstel/shared",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "scope:shared"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/shared",
+              "packageVersion": "0.0.1",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/shared",
+                "main": "libs/frontend/shared/src/index.ts",
+                "tsConfig": "libs/frontend/shared/tsconfig.build.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/shared/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/shared/src",
+          "implicitDependencies": [
+            "platform"
+          ]
+        }
+      },
+      "front-biosstel": {
+        "name": "front-biosstel",
+        "type": "app",
+        "data": {
+          "root": "apps/front-biosstel",
+          "name": "front-biosstel",
+          "projectType": "application",
+          "tags": [
+            "npm:private",
+            "type:app",
+            "framework:nextjs",
+            "scope:frontend"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "front-biosstel",
+              "packageVersion": "0.1.0",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "dev": {
+              "executor": "@nx/next:server",
+              "defaultConfiguration": "development",
+              "options": {
+                "buildTarget": "front-biosstel:build-app",
+                "dev": true,
+                "port": 3001
+              },
+              "configurations": {
+                "development": {
+                  "buildTarget": "front-biosstel:build-app:development"
+                },
+                "production": {
+                  "buildTarget": "front-biosstel:build-app:production"
+                }
+              },
+              "parallelism": true,
+              "continuous": true,
+              "cache": false
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "defaultConfiguration": "production",
+              "options": {
+                "outputPath": "dist/apps/front-biosstel",
+                "command": "nx run front-biosstel:build-app",
+                "env": {
+                  "NODE_ENV": "production"
+                },
+                "cwd": "."
+              },
+              "configurations": {
+                "development": {
+                  "command": "nx run front-biosstel:build-app:development",
+                  "env": {
+                    "NODE_ENV": "development"
+                  },
+                  "outputPath": "apps/front-biosstel/.next"
+                },
+                "production": {
+                  "command": "nx run front-biosstel:build-app:production",
+                  "env": {
+                    "NODE_ENV": "production"
+                  }
+                }
+              },
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "build-app": {
+              "executor": "@nx/next:build",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "defaultConfiguration": "production",
+              "options": {
+                "outputPath": "dist/apps/front-biosstel",
+                "buildMode": "compile",
+                "useTurbopack": false,
+                "swc": true
+              },
+              "configurations": {
+                "development": {
+                  "outputPath": "apps/front-biosstel/.next"
+                },
+                "production": {}
+              },
+              "parallelism": true
+            },
+            "start": {
+              "executor": "@nx/next:server",
+              "options": {
+                "buildTarget": "front-biosstel:build-app",
+                "dev": false
+              },
+              "configurations": {},
+              "parallelism": true,
+              "continuous": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm exec tsc --noEmit --project tsconfig.json",
+                "cwd": "apps/front-biosstel"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "apps/front-biosstel/src",
+          "implicitDependencies": []
+        }
+      },
+      "shell": {
+        "name": "shell",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/shell",
+          "name": "shell",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/shell/src",
+          "projectType": "library",
+          "tags": [
+            "type:shell",
+            "scope:frontend"
+          ],
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "@biosstel/shared-types": {
+        "name": "@biosstel/shared-types",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared-types",
+          "name": "@biosstel/shared-types",
+          "projectType": "library",
+          "tags": [
+            "npm:private",
+            "type:shared-types"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@biosstel/shared-types",
+              "packageVersion": "1.0.0",
+              "packageExports": {
+                ".": {
+                  "types": "./dist/index.d.ts",
+                  "default": "./dist/index.js"
+                }
+              },
+              "packageMain": "./dist/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "libs/shared-types/dist",
+                "rootDir": "libs/shared-types/src",
+                "main": "libs/shared-types/src/index.ts",
+                "tsConfig": "libs/shared-types/tsconfig.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            }
+          },
+          "sourceRoot": "libs/shared-types/src",
+          "implicitDependencies": []
+        }
+      },
+      "api-biosstel": {
+        "name": "api-biosstel",
+        "type": "app",
+        "data": {
+          "root": "apps/api-biosstel",
+          "name": "api-biosstel",
+          "projectType": "application",
+          "tags": [
+            "npm:public",
+            "type:api",
+            "framework:nestjs",
+            "scope:api"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "start:prod",
+                "test"
+              ]
+            },
+            "description": "Biosstel API - NestJS REST API",
+            "js": {
+              "packageName": "api-biosstel",
+              "packageVersion": "1.0.0",
+              "packageMain": "dist/main.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "start:prod": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:prod"
+              },
+              "metadata": {
+                "scriptContent": "node dist/main.js",
+                "runCommand": "pnpm run start:prod"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test"
+              },
+              "metadata": {
+                "scriptContent": "jest",
+                "runCommand": "pnpm run test"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "dev": {
+              "executor": "nx:run-commands",
+              "defaultConfiguration": "development",
+              "options": {
+                "command": "nodemon --watch src --watch ../../libs/backend --ext ts --exec \"ts-node -r tsconfig-paths/register --project tsconfig.dev.json dev.ts\"",
+                "cwd": "apps/api-biosstel"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false,
+              "continuous": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "outputs": [
+                "{workspaceRoot}/dist/apps/api-biosstel"
+              ],
+              "defaultConfiguration": "production",
+              "options": {
+                "commands": [
+                  "pnpm exec tsc -p tsconfig.build.json"
+                ],
+                "cwd": "apps/api-biosstel",
+                "parallel": false
+              },
+              "configurations": {
+                "production": {}
+              },
+              "dependsOn": [
+                {
+                  "target": "build",
+                  "projects": "dependencies"
+                }
+              ],
+              "parallelism": true,
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "start": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node dist/apps/api-biosstel/main.js"
+              },
+              "dependsOn": [
+                "build"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm exec tsc --noEmit --project tsconfig.json",
+                "cwd": "apps/api-biosstel"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "apps/api-biosstel/src",
+          "implicitDependencies": []
+        }
+      },
+      "ui": {
+        "name": "ui",
+        "type": "lib",
+        "data": {
+          "root": "libs/frontend/ui",
+          "name": "ui",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/frontend/ui/src",
+          "projectType": "library",
+          "tags": [
+            "type:ui",
+            "scope:ui"
+          ],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/libs/frontend/ui",
+                "main": "libs/frontend/ui/src/index.ts",
+                "tsConfig": "libs/frontend/ui/tsconfig.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "{workspaceRoot}/eslint.config.mjs"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{options.reportsDirectory}"
+              ],
+              "options": {
+                "config": "libs/frontend/ui/vitest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      }
+    },
+    "dependencies": {
+      "operaciones": [
+        {
+          "source": "operaciones",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "operaciones",
+          "target": "platform",
+          "type": "static"
+        },
+        {
+          "source": "operaciones",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "operaciones",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "inventory": [
+        {
+          "source": "inventory",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        },
+        {
+          "source": "inventory",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "inventory",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "inventory",
+          "target": "platform",
+          "type": "static"
+        }
+      ],
+      "objetivos": [
+        {
+          "source": "objetivos",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "objetivos",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "objetivos",
+          "target": "alertas",
+          "type": "static"
+        },
+        {
+          "source": "objetivos",
+          "target": "platform",
+          "type": "static"
+        },
+        {
+          "source": "objetivos",
+          "target": "@biosstel/shared",
+          "type": "static"
+        },
+        {
+          "source": "objetivos",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "productos": [
+        {
+          "source": "productos",
+          "target": "platform",
+          "type": "static"
+        },
+        {
+          "source": "productos",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "productos",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "productos",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "fichajes": [
+        {
+          "source": "fichajes",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "fichajes",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "fichajes",
+          "target": "platform",
+          "type": "static"
+        }
+      ],
+      "users": [
+        {
+          "source": "users",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "users",
+          "target": "platform",
+          "type": "static"
+        },
+        {
+          "source": "users",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "users",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "alertas": [
+        {
+          "source": "alertas",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "alertas",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "alertas",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        },
+        {
+          "source": "alertas",
+          "target": "platform",
+          "type": "static"
+        }
+      ],
+      "empresa": [
+        {
+          "source": "empresa",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "empresa",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "empresa",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        },
+        {
+          "source": "empresa",
+          "target": "platform",
+          "type": "static"
+        }
+      ],
+      "reports": [
+        {
+          "source": "reports",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        },
+        {
+          "source": "reports",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "reports",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "reports",
+          "target": "platform",
+          "type": "static"
+        }
+      ],
+      "api-operaciones": [
+        {
+          "source": "api-operaciones",
+          "target": "api-shared",
+          "type": "static"
+        },
+        {
+          "source": "api-operaciones",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "auth": [
+        {
+          "source": "auth",
+          "target": "platform",
+          "type": "static"
+        },
+        {
+          "source": "auth",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "auth",
+          "target": "ui-layout",
+          "type": "static"
+        },
+        {
+          "source": "auth",
+          "target": "@biosstel/shared",
+          "type": "static"
+        },
+        {
+          "source": "auth",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "api-objetivos": [
+        {
+          "source": "api-objetivos",
+          "target": "api-shared",
+          "type": "static"
+        },
+        {
+          "source": "api-objetivos",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "api-productos": [
+        {
+          "source": "api-productos",
+          "target": "api-shared",
+          "type": "static"
+        },
+        {
+          "source": "api-productos",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "api-fichajes": [
+        {
+          "source": "api-fichajes",
+          "target": "api-shared",
+          "type": "static"
+        },
+        {
+          "source": "api-fichajes",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        },
+        {
+          "source": "api-fichajes",
+          "target": "api-usuarios",
+          "type": "static"
+        }
+      ],
+      "api-usuarios": [
+        {
+          "source": "api-usuarios",
+          "target": "api-shared",
+          "type": "static"
+        },
+        {
+          "source": "api-usuarios",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "api-alertas": [
+        {
+          "source": "api-alertas",
+          "target": "api-shared",
+          "type": "static"
+        },
+        {
+          "source": "api-alertas",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        },
+        {
+          "source": "api-alertas",
+          "target": "api-objetivos",
+          "type": "static"
+        }
+      ],
+      "api-empresa": [
+        {
+          "source": "api-empresa",
+          "target": "api-shared",
+          "type": "static"
+        },
+        {
+          "source": "api-empresa",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "api-shared": [],
+      "ui-layout": [],
+      "platform": [],
+      "api-auth": [
+        {
+          "source": "api-auth",
+          "target": "api-shared",
+          "type": "static"
+        },
+        {
+          "source": "api-auth",
+          "target": "api-usuarios",
+          "type": "static"
+        },
+        {
+          "source": "api-auth",
+          "target": "@biosstel/shared-types",
+          "type": "static"
+        }
+      ],
+      "@biosstel/shared": [
+        {
+          "source": "@biosstel/shared",
+          "target": "platform",
+          "type": "implicit"
+        },
+        {
+          "source": "@biosstel/shared",
+          "target": "platform",
+          "type": "static"
+        },
+        {
+          "source": "@biosstel/shared",
+          "target": "auth",
+          "type": "static"
+        },
+        {
+          "source": "@biosstel/shared",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "@biosstel/shared",
+          "target": "ui-layout",
+          "type": "static"
+        }
+      ],
+      "front-biosstel": [
+        {
+          "source": "front-biosstel",
+          "target": "shell",
+          "type": "static"
+        },
+        {
+          "source": "front-biosstel",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "front-biosstel",
+          "target": "@biosstel/shared",
+          "type": "static"
+        }
+      ],
+      "shell": [
+        {
+          "source": "shell",
+          "target": "platform",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "@biosstel/shared",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "objetivos",
+          "type": "dynamic"
+        },
+        {
+          "source": "shell",
+          "target": "objetivos",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "fichajes",
+          "type": "dynamic"
+        },
+        {
+          "source": "shell",
+          "target": "fichajes",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "operaciones",
+          "type": "dynamic"
+        },
+        {
+          "source": "shell",
+          "target": "operaciones",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "empresa",
+          "type": "dynamic"
+        },
+        {
+          "source": "shell",
+          "target": "empresa",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "alertas",
+          "type": "dynamic"
+        },
+        {
+          "source": "shell",
+          "target": "alertas",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "users",
+          "type": "dynamic"
+        },
+        {
+          "source": "shell",
+          "target": "users",
+          "type": "static"
+        },
+        {
+          "source": "shell",
+          "target": "auth",
+          "type": "dynamic"
+        },
+        {
+          "source": "shell",
+          "target": "auth",
+          "type": "static"
+        }
+      ],
+      "@biosstel/shared-types": [],
+      "api-biosstel": [
+        {
+          "source": "api-biosstel",
+          "target": "api-usuarios",
+          "type": "static"
+        },
+        {
+          "source": "api-biosstel",
+          "target": "api-objetivos",
+          "type": "static"
+        },
+        {
+          "source": "api-biosstel",
+          "target": "api-fichajes",
+          "type": "static"
+        },
+        {
+          "source": "api-biosstel",
+          "target": "api-auth",
+          "type": "static"
+        },
+        {
+          "source": "api-biosstel",
+          "target": "api-alertas",
+          "type": "static"
+        },
+        {
+          "source": "api-biosstel",
+          "target": "api-operaciones",
+          "type": "static"
+        },
+        {
+          "source": "api-biosstel",
+          "target": "api-empresa",
+          "type": "static"
+        },
+        {
+          "source": "api-biosstel",
+          "target": "api-productos",
+          "type": "static"
+        },
+        {
+          "source": "api-biosstel",
+          "target": "api-shared",
+          "type": "static"
+        }
+      ],
+      "ui": []
+    }
+  }
+}

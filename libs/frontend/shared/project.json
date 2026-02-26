@@ -1,0 +1,36 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/shared/src",
+  "projectType": "library",
+  "tags": ["scope:shared"],
+  "implicitDependencies": ["platform"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/frontend/shared",
+        "main": "libs/frontend/shared/src/index.ts",
+        "tsConfig": "libs/frontend/shared/tsconfig.build.json",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit"
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "config": "libs/frontend/shared/vitest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

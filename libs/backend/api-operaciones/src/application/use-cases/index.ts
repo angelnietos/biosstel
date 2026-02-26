@@ -1,0 +1,1 @@
+export { OperacionesManagementUseCase } from './operaciones';

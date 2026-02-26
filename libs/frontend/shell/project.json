@@ -1,0 +1,10 @@
+{
+  "name": "shell",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/shell/src",
+  "projectType": "library",
+  "tags": ["type:shell", "scope:frontend"],
+  "targets": {
+    "lint": { "executor": "@nx/eslint:lint" }
+  }
+}
