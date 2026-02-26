@@ -8,8 +8,7 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import type { IUserManagement } from '../../ports/input/IUserManagement';
 import type { User, CreateUserData, UpdateUserData, PaginatedResult } from '@biosstel/shared-types';
-import type { IUserRepository } from '../../../domain/repositories';
-import { USER_REPOSITORY } from '../../../domain/repositories';
+import { USER_REPOSITORY, type IUserRepository } from '../../../domain/repositories';
 
 @Injectable()
 export class UserManagementUseCase implements IUserManagement {

@@ -5,8 +5,8 @@
 
 import { Injectable, Inject } from '@nestjs/common';
 import type { OperacionesListResponse } from '@biosstel/shared-types';
-import type { IOperacionesRepository } from '../../repositories';
-import { I_OPERACIONES_REPOSITORY } from '../../repositories';
+import type { IOperacionesRepository } from '../../../domain/repositories';
+import { I_OPERACIONES_REPOSITORY } from '../../../domain/repositories';
 
 @Injectable()
 export class OperacionesManagementUseCase {

@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FichajesPageLayout } from '../../layouts';
-import { Input, ConfirmModal, ClockArc } from '@biosstel/ui';
+import { Input, ConfirmModal, ClockArc, Heading, Text } from '@biosstel/ui';
 import { 
   clockIn, 
   clockOut, 
@@ -25,7 +25,6 @@ import {
 import type { FichajesState, Tarea } from '../../../data-access';
 import { HistorialFichajes } from '../HistorialFichajes';
 import { isValidUserId } from '../../../data-access';
-import { Heading, Text } from '@biosstel/ui';
 import { Stack } from '@biosstel/ui-layout';
 import { useRouter, useLocale, logUserAction } from '@biosstel/platform';
 import { useCanFichar } from '@biosstel/shared';

@@ -1,6 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
-import { IEventBus, DomainEvents, type UserDeletedEvent } from '@biosstel/api-shared';
+import { IEventBus, DomainEvents, type ICommandHandler, type UserDeletedEvent } from '@biosstel/api-shared';
 import type { DeleteUserCommand } from '../../commands/users/DeleteUser.command';
 import type { IUserRepository } from '../../../../domain/repositories/users/IUserRepository';
 import { USER_REPOSITORY } from '../../../../domain/repositories/users/IUserRepository';

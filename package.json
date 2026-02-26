@@ -107,7 +107,7 @@
     "nx:gen:list": "pnpm exec nx list",
     "nx:gen": "pnpm exec nx g --no-interactive",
     "graph": "pnpm exec nx graph",
-    "sonar:scan": "dotenv -e .env -- sonar",
+    "sonar:scan": "node scripts/sonar-scan.js",
     "snyk:scan": "dotenv -e .env -- snyk test --severity-threshold=high --all-projects && dotenv -e .env -- snyk code test --severity-threshold=high",
     "snyk:test": "dotenv -e .env -- snyk test --severity-threshold=high --all-projects",
     "snyk:code": "dotenv -e .env -- snyk code test --severity-threshold=high",

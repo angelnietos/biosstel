@@ -3,4 +3,4 @@
  * Add *.integration.test.ts(x) files here.
  */
 
-export {};
+export const __integrationModule = true;

@@ -1,44 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository, DeepPartial } from 'typeorm';
+import type { Repository } from 'typeorm';
 import { TaskEntity } from '../../entities/tasks/TaskEntity';
-import type { ITaskRepository } from '../../../../domain/repositories';
-import type { Task } from '../../../../domain/entities/Task';
-import { TaskMapper } from '../../../mappers/TaskMapper';
+import type { ITaskRepository } from '../../../../domain/repositories/tasks/ITaskRepository';
+import type { Task } from '../../../../domain/entities/task/Task';
 
 @Injectable()
 export class PostgresTaskRepository implements ITaskRepository {
   constructor(
     @InjectRepository(TaskEntity)
-    private readonly repository: Repository<TaskEntity>,
+    private readonly repo: Repository<TaskEntity>
   ) {}
 
-  async create(data: Partial<Task>): Promise<Task> {
-    const entity = this.repository.create(data as DeepPartial<TaskEntity>);
-    const saved = await this.repository.save(entity);
-    return TaskMapper.toDomain(saved);
+  async create(task: Partial<Task>): Promise<Task> {
+    const entity = this.repo.create(task as Partial<TaskEntity>);
+    const saved = await this.repo.save(entity);
+    return saved as unknown as Task;
   }
 
   async findById(id: string): Promise<Task | null> {
-    const entity = await this.repository.findOne({ where: { id } });
-    return entity ? TaskMapper.toDomain(entity) : null;
+    const entity = await this.repo.findOne({ where: { id } });
+    return entity as unknown as Task | null;
   }
 
   async findByUserId(userId: string): Promise<Task[]> {
-    const list = await this.repository.find({
+    const entities = await this.repo.find({
       where: { userId },
       order: { createdAt: 'DESC' },
     });
-    return list.map(e => TaskMapper.toDomain(e));
+    return entities as unknown as Task[];
   }
 
   async save(task: Task): Promise<Task> {
-    const entity = TaskMapper.toPersistence(task);
-    const saved = await this.repository.save(entity);
-    return TaskMapper.toDomain(saved);
+    const saved = await this.repo.save(task as unknown as TaskEntity);
+    return saved as unknown as Task;
   }
 
   async delete(id: string): Promise<void> {
-    await this.repository.delete(id);
+    await this.repo.delete(id);
   }
 }

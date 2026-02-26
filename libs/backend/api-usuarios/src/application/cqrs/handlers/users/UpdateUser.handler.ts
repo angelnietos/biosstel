@@ -1,6 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
-import { IEventBus, DomainEvents, type UserUpdatedEvent } from '@biosstel/api-shared';
+import { IEventBus, DomainEvents, type ICommandHandler, type UserUpdatedEvent } from '@biosstel/api-shared';
 import type { UpdateUserCommand } from '../../commands/users/UpdateUser.command';
 import type { User } from '@biosstel/shared-types';
 import type { IUserRepository } from '../../../../domain/repositories/users/IUserRepository';

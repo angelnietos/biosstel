@@ -1,2 +1,2 @@
-export * from './Fichaje';
-export * from './Task';
+export * from './fichajes';
+export * from './task';

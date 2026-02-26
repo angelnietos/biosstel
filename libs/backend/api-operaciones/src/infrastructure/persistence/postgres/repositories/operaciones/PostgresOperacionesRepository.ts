@@ -5,7 +5,8 @@ import type { IOperacionesRepository } from '../../../../../domain/repositories'
 @Injectable()
 export class PostgresOperacionesRepository implements IOperacionesRepository {
   async getOperaciones(): Promise<OperacionesListResponse> {
-    // TODO: implement real DB fetch
+    // Returns seed/fallback data. In a production scenario, replace each section
+    // with a TypeORM repository query (e.g. this.visitaRepo.find(), etc.).
     return {
       visitas: [
         { id: '1', cliente: 'Cliente A', tipo: 'nueva', fecha: '2025-02-15' },

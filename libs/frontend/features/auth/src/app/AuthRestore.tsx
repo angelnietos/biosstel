@@ -10,7 +10,7 @@ function decodeJwtPayload(token: string): { sub?: string; email?: string; name?:
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
-    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const base64 = parts[1].replaceAll('-', '+').replaceAll('_', '/');
     return JSON.parse(atob(base64));
   } catch {
     return null;
@@ -36,11 +36,11 @@ export function AuthRestore() {
   const hasRunRestore = useRef(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || authRestored) return;
+    if (typeof globalThis.window !== 'undefined' && !authRestored) {
     if (hasRunRestore.current) return;
     hasRunRestore.current = true;
 
-    let tokenToUse = token ?? (typeof window !== 'undefined' ? localStorage.getItem('token') : null);
+    let tokenToUse = token ?? (typeof globalThis.window !== 'undefined' ? globalThis.window.localStorage.getItem('token') : null);
     const tryRefresh = async (): Promise<string | null> => {
       const result = await refreshAuth();
       return result?.token ?? null;
@@ -85,6 +85,7 @@ export function AuthRestore() {
       return;
     }
     doRestore(tokenToUse);
+    }
   }, [authRestored, dispatch, token, user]);
 
   return null;

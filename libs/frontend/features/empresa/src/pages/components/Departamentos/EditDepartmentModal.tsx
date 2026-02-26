@@ -23,7 +23,7 @@ export function EditDepartmentModal({
   department,
   onSuccess,
   onSubmit,
-}: EditDepartmentModalProps) {
+}: Readonly<EditDepartmentModalProps>) {
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [color, setColor] = useState('');
@@ -45,7 +45,7 @@ export function EditDepartmentModal({
     }
   }, [open, department]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!department || !name.trim()) return;
     setError(null);
@@ -81,32 +81,32 @@ export function EditDepartmentModal({
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Código</label>
-            <Input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Opcional" className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
+            <label htmlFor="edit-dept-code" className="block text-sm font-medium text-gray-700 mb-1">Código</label>
+            <Input id="edit-dept-code" value={code} onChange={(e) => setCode(e.target.value)} placeholder="Opcional" className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre departamento</label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej. Comercial" required className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
+            <label htmlFor="edit-dept-name" className="block text-sm font-medium text-gray-700 mb-1">Nombre departamento</label>
+            <Input id="edit-dept-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej. Comercial" required className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Color (hex)</label>
+            <label htmlFor="edit-dept-color" className="block text-sm font-medium text-gray-700 mb-1">Color (hex)</label>
             <div className="flex gap-2 items-center">
-              <input type="color" value={color || '#6b7280'} onChange={(e) => setColor(e.target.value)} className="w-10 h-10 rounded border border-border-card cursor-pointer" />
-              <Input value={color} onChange={(e) => setColor(e.target.value)} placeholder="#hex o vacío" className="flex-1 border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
+              <input id="edit-dept-color-picker" type="color" value={color || '#6b7280'} onChange={(e) => setColor(e.target.value)} className="w-10 h-10 rounded border border-border-card cursor-pointer" aria-label="Color" />
+              <Input id="edit-dept-color" value={color} onChange={(e) => setColor(e.target.value)} placeholder="#hex o vacío" className="flex-1 border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Responsable (ID usuario)</label>
-            <Input value={responsible} onChange={(e) => setResponsible(e.target.value)} placeholder="Opcional" className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
+            <label htmlFor="edit-dept-responsible" className="block text-sm font-medium text-gray-700 mb-1">Responsable (ID usuario)</label>
+            <Input id="edit-dept-responsible" value={responsible} onChange={(e) => setResponsible(e.target.value)} placeholder="Opcional" className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Fecha alta</label>
-              <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
+              <label htmlFor="edit-dept-date-from" className="block text-sm font-medium text-gray-700 mb-1">Fecha alta</label>
+              <Input id="edit-dept-date-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Fecha baja</label>
-              <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
+              <label htmlFor="edit-dept-date-to" className="block text-sm font-medium text-gray-700 mb-1">Fecha baja</label>
+              <Input id="edit-dept-date-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full border border-border-card rounded-lg px-3 py-2 min-h-[2.5rem]" />
             </div>
           </div>
           <div className="flex justify-end gap-2 pt-2">

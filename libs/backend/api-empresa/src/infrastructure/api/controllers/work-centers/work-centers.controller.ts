@@ -16,7 +16,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
-import type { TypeOrmWorkCenterRepository } from '../../../persistence';
+import type { PostgresWorkCenterRepository } from '../../../persistence/postgres/work-centers';
 import type { WorkCenter } from '@biosstel/shared-types';
 import type { CreateWorkCenterDto, UpdateWorkCenterDto } from '../../../../application/dto/work-centers';
 
@@ -24,7 +24,7 @@ import type { CreateWorkCenterDto, UpdateWorkCenterDto } from '../../../../appli
 @ApiBearerAuth('access-token')
 @Controller('empresa/work-centers')
 export class WorkCentersController {
-  constructor(private readonly workCenterRepo: TypeOrmWorkCenterRepository) {}
+  constructor(private readonly workCenterRepo: PostgresWorkCenterRepository) {}
 
   @Get()
   @ApiOperation({ summary: 'Listar centros de trabajo' })

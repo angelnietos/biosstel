@@ -22,11 +22,11 @@ import {
   CreateTaskCommand,
   UpdateTaskCommand,
   DeleteTaskCommand,
-} from '../../../../application/cqrs/commands/fichajes';
+} from '../../../../application/cqrs/commands/task';
 import {
   GetTasksByUserQuery,
   GetTaskByIdQuery,
-} from '../../../../application/cqrs/queries/fichajes';
+} from '../../../../application/cqrs/queries/task';
 import type { CreateTaskDto, UpdateTaskDto } from '../../../../application/dto';
 
 @ApiTags('fichajes')

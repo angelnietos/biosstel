@@ -36,7 +36,7 @@ export class DashboardObjectiveEntity implements DashboardObjective {
   href?: string;
 
   @Column({ type: 'varchar', default: 'blue' })
-  accent!: 'maroon' | 'teal' | 'blue' | 'purple' | 'magenta' | string;
+  accent!: string;
 
   get color(): string {
     return this.accent;

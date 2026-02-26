@@ -1,5 +1,4 @@
-import type { OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, type OnModuleInit, type OnModuleDestroy } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import type { DataSource } from 'typeorm';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
@@ -22,7 +21,7 @@ export class DbMetricsService implements OnModuleInit, OnModuleDestroy {
           `SELECT count(*)::text as count FROM pg_stat_activity WHERE datname = current_database()`
         );
         const raw = rows[0]?.count ?? 0;
-        const count = typeof raw === 'number' ? raw : parseInt(String(raw), 10) || 0;
+        const count = typeof raw === 'number' ? raw : Number.parseInt(String(raw), 10) || 0;
         this.connectionsGauge.set(count);
       } catch {
         this.connectionsGauge.set(0);

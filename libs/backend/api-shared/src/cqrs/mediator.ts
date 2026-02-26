@@ -3,8 +3,7 @@
  * Handlers are registered by each feature module (OnModuleInit).
  */
 
-import type { Type } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, type Type } from '@nestjs/common';
 import type { ModuleRef } from '@nestjs/core';
 import type { ICommand, IQuery, ICommandHandler, IQueryHandler } from './markers';
 import type { IMediatorPort } from './mediator.port';
@@ -34,11 +33,8 @@ export class Mediator implements IMediatorPort {
     if (!Handler) {
       throw new Error(`No handler registered for command: ${command.constructor.name}`);
     }
-    const handler = this.moduleRef.get(Handler, { strict: false }) as ICommandHandler<
-      ICommand,
-      TResult
-    >;
-    return handler.handle(command) as Promise<TResult>;
+    const handler = this.moduleRef.get<ICommandHandler<ICommand, TResult>>(Handler, { strict: false });
+    return handler.handle(command);
   }
 
   async execute<TResult>(query: IQuery): Promise<TResult> {
@@ -46,10 +42,7 @@ export class Mediator implements IMediatorPort {
     if (!Handler) {
       throw new Error(`No handler registered for query: ${query.constructor.name}`);
     }
-    const handler = this.moduleRef.get(Handler, { strict: false }) as IQueryHandler<
-      IQuery,
-      TResult
-    >;
-    return handler.handle(query) as Promise<TResult>;
+    const handler = this.moduleRef.get<IQueryHandler<IQuery, TResult>>(Handler, { strict: false });
+    return handler.handle(query);
   }
 }

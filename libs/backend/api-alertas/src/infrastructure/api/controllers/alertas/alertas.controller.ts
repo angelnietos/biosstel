@@ -9,6 +9,12 @@ import type { IMediatorPort } from '@biosstel/api-shared';
 import { IMediator } from '@biosstel/api-shared';
 import { ListAlertasQuery } from '../../../../application/cqrs/queries/alertas/ListAlertas.query';
 
+function toStringArray(value: string | string[] | undefined): string[] | undefined {
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') return value.split(',').map((s) => s.trim()).filter(Boolean);
+  return undefined;
+}
+
 @ApiTags('alertas')
 @ApiBearerAuth('access-token')
 @Controller('alertas')
@@ -35,21 +41,9 @@ export class AlertasController {
     @Query('page') page?: number,
     @Query('pageSize') pageSize?: number,
   ) {
-    const dep = Array.isArray(departamento)
-      ? departamento
-      : typeof departamento === 'string'
-        ? departamento.split(',').map((s) => s.trim()).filter(Boolean)
-        : undefined;
-    const center = Array.isArray(centroTrabajo)
-      ? centroTrabajo
-      : typeof centroTrabajo === 'string'
-        ? centroTrabajo.split(',').map((s) => s.trim()).filter(Boolean)
-        : undefined;
-    const marcaArr = Array.isArray(marca)
-      ? marca
-      : typeof marca === 'string'
-        ? marca.split(',').map((s) => s.trim()).filter(Boolean)
-        : undefined;
+    const dep = toStringArray(departamento);
+    const center = toStringArray(centroTrabajo);
+    const marcaArr = toStringArray(marca);
     const pageNum = page != null && Number.isFinite(Number(page)) ? Number(page) : 1;
     const pageSizeNum = pageSize != null && Number.isFinite(Number(pageSize)) ? Math.min(100, Math.max(1, Number(pageSize))) : 10;
     return this.mediator.execute(

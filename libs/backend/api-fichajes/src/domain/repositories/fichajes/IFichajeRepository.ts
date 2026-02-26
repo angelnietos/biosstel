@@ -1,4 +1,4 @@
-import type { Fichaje } from '../../entities/Fichaje';
+import type { Fichaje } from '../../entities/fichajes/Fichaje';
 
 export interface FichajeDashboardRow {
   userId: string;

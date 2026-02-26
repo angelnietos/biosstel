@@ -1,5 +1,4 @@
-import type { DynamicModule, Provider } from '@nestjs/common';
-import { Module } from '@nestjs/common';
+import { Module, type DynamicModule, type Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,7 +14,7 @@ import {
   FICHAJES_POSTGRES_ENTITIES,
   getFichajesPostgresProviders,
 } from './infrastructure/persistence/postgres';
-import { IFichajeRepository, ITaskRepository } from './domain/repositories';
+import { I_FICHAJE_REPOSITORY, I_TASK_REPOSITORY } from './domain/repositories';
 import {
   ClockInHandler,
   ClockOutHandler,
@@ -29,7 +28,7 @@ import {
   GetTasksByUserHandler,
   GetTaskByIdHandler,
   GetFichajeDashboardHandler,
-} from './application/cqrs/handlers/fichajes';
+} from './application/cqrs/handlers';
 import { FichajesMediatorRegistration } from './application/cqrs/FichajesMediatorRegistration';
 import { getFeatureAdapter } from '@biosstel/api-shared';
 import { UsersModule } from '@biosstel/api-usuarios';
@@ -71,8 +70,8 @@ export class FichajesModule {
     ];
     const exports = [
       FichajesManagementUseCase,
-      IFichajeRepository,
-      ITaskRepository,
+      I_FICHAJE_REPOSITORY,
+      I_TASK_REPOSITORY,
     ];
 
     if (adapter === 'postgres') {

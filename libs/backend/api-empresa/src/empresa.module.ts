@@ -15,7 +15,6 @@ import { DEPARTMENT_REPOSITORY } from './domain/repositories';
 import { WORK_CENTER_REPOSITORY } from './domain/repositories/work-centers';
 import { EmpresaController, DepartmentsController, WorkCentersController } from './infrastructure/api';
 import { EmpresaManagementUseCase } from './application/use-cases';
-import { UserCreatedEmpresaHandler } from './application/handlers/UserCreatedEmpresa.handler';
 import { EmpresaMediatorRegistration } from './application/cqrs/EmpresaMediatorRegistration';
 import {
   CreateDepartmentHandler,
@@ -23,6 +22,7 @@ import {
   DeleteDepartmentHandler,
   ListDepartmentsHandler,
   GetDepartmentByIdHandler,
+  UserCreatedEmpresaHandler,
 } from './application/cqrs/handlers';
 
 @Module({

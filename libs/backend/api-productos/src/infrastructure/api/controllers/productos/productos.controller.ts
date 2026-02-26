@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, UseInterceptors, UploadedFile, BadRequestException, Inject } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth, ApiResponse, ApiParam } from '@nestjs/swagger';
-import type { IMediatorPort } from '@biosstel/api-shared';
-import { IMediator } from '@biosstel/api-shared';
+import { IMediator, type IMediatorPort } from '@biosstel/api-shared';
 import { type PlantillaUploadFile } from '../../../../application/use-cases';
 import type { CreateProductDto, UpdateProductDto } from '../../../../application/dto';
 import {

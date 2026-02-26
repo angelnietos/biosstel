@@ -1,5 +1,4 @@
-import type { OnModuleInit } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, type OnModuleInit } from '@nestjs/common';
 import type { Mediator } from '@biosstel/api-shared';
 import { CreateDepartmentCommand, UpdateDepartmentCommand, DeleteDepartmentCommand } from './commands/departments';
 import { ListDepartmentsQuery, GetDepartmentByIdQuery } from './queries/departments';

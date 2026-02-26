@@ -1,14 +1,12 @@
-import type { OnModuleInit } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, type OnModuleInit } from '@nestjs/common';
 import type { Mediator } from '@biosstel/api-shared';
 import { LoginCommand } from './cqrs/commands/Login.command';
 import { RefreshTokenCommand } from './cqrs/commands/RefreshToken.command';
 import { ForgotPasswordCommand } from './cqrs/commands/ForgotPassword.command';
-import { LoginHandler } from './cqrs/handlers/Login.handler';
-import { RefreshTokenHandler } from './cqrs/handlers/RefreshToken.handler';
-import { ForgotPasswordHandler } from './cqrs/handlers/ForgotPassword.handler';
-import { GetMeQuery } from './cqrs/queries/GetMe.query';
-import { GetMeHandler } from './cqrs/handlers/GetMe.handler';
+import { LogoutCommand } from './cqrs/commands/Logout.command';
+import { LoginHandler, RefreshTokenHandler, ForgotPasswordHandler, LogoutHandler } from './cqrs/handlers/commands';
+import { GetMeQuery, GetMeHandler } from './cqrs';
+
 
 @Injectable()
 export class AuthMediatorRegistration implements OnModuleInit {
@@ -18,6 +16,7 @@ export class AuthMediatorRegistration implements OnModuleInit {
     this.mediator.registerCommandHandler(LoginCommand, LoginHandler);
     this.mediator.registerCommandHandler(RefreshTokenCommand, RefreshTokenHandler);
     this.mediator.registerCommandHandler(ForgotPasswordCommand, ForgotPasswordHandler);
+    this.mediator.registerCommandHandler(LogoutCommand, LogoutHandler);
     this.mediator.registerQueryHandler(GetMeQuery, GetMeHandler);
   }
 }

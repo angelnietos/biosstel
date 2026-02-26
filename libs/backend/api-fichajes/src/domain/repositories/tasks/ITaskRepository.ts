@@ -1,4 +1,4 @@
-import type { Task } from '../../entities/Task';
+import type { Task } from '../../entities';
 
 export interface ITaskRepository {
   create(task: Partial<Task>): Promise<Task>;

@@ -24,9 +24,9 @@ export function ApiErrorHandler() {
       }
       clearRefreshToken();
       dispatch(logout());
-      if (typeof window !== 'undefined') {
-        const locale = (window.location.pathname.split('/').filter(Boolean)[0]) || 'es';
-        window.location.href = `/${locale}/login`;
+      if (typeof globalThis.window !== 'undefined') {
+        const locale = globalThis.window.location.pathname.split('/').find(Boolean) || 'es';
+        globalThis.window.location.href = `/${locale}/login`;
       }
     });
 

@@ -1,6 +1,5 @@
 import { Injectable, Inject, BadRequestException, ConflictException } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
-import { IEventBus, DomainEvents, type UserCreatedEvent } from '@biosstel/api-shared';
+import { IEventBus, DomainEvents, type ICommandHandler, type UserCreatedEvent } from '@biosstel/api-shared';
 import type { CreateUserCommand } from '../../commands/users/CreateUser.command';
 import type { User } from '@biosstel/shared-types';
 import type { IUserRepository } from '../../../../domain/repositories/users/IUserRepository';

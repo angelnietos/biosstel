@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import type { InventoryItem, CreateInventoryInput, UpdateInventoryInput } from '../../../domain/entities';
-import type { IInventoryRepository } from '../../../domain/repositories';
-import { INVENTORY_REPOSITORY } from '../../../domain/repositories';
+import { INVENTORY_REPOSITORY, type IInventoryRepository } from '../../../domain/repositories';
 
 @Injectable()
 export class InventoryManagementUseCase {

@@ -1,9 +1,11 @@
-import { Task } from '../../domain/entities/Task';
-import { TaskEntity } from '../persistence/entities/fichajes/TaskEntity';
+import type { Task } from '../../domain/entities/task/Task';
+import type { TaskEntity } from '../persistence/entities/tasks/TaskEntity';
 
+/** Maps between TaskEntity (TypeORM) and Task domain entity. */
 export class TaskMapper {
-  public static toDomain(entity: TaskEntity): Task {
-    return new Task(
+  static toDomain(entity: TaskEntity): Task {
+    const { Task: TaskClass } = require('../../domain/entities/task/Task');
+    return new TaskClass(
       entity.id,
       entity.userId,
       entity.title,
@@ -16,15 +18,14 @@ export class TaskMapper {
     );
   }
 
-  public static toPersistence(domain: Task): TaskEntity {
-    const entity = new TaskEntity();
-    if (domain.id) entity.id = domain.id;
-    entity.userId = domain.userId;
-    entity.title = domain.title;
-    entity.startTime = domain.startTime;
-    entity.completed = domain.completed;
-    entity.description = domain.description;
-    entity.endTime = domain.endTime;
-    return entity;
+  static toEntity(domain: Task): Partial<TaskEntity> {
+    return {
+      userId: domain.userId,
+      title: domain.title,
+      startTime: domain.startTime,
+      completed: domain.completed,
+      description: domain.description,
+      endTime: domain.endTime,
+    };
   }
 }

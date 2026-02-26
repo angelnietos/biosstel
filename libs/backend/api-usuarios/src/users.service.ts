@@ -6,14 +6,14 @@
  */
 
 import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
-import type {
-  IUserRepository,
-  User,
-  CreateUserData,
-  UpdateUserData,
-  PaginatedResult,
+import {
+  USER_REPOSITORY,
+  type IUserRepository,
+  type User,
+  type CreateUserData,
+  type UpdateUserData,
+  type PaginatedResult,
 } from './domain/repositories';
-import { USER_REPOSITORY } from './domain/repositories';
 
 @Injectable()
 export class UsersService {

@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
 import type { Product } from '../../../domain/entities/Product';
-import type { IProductRepository } from '../../../domain/repositories';
-import { PRODUCT_REPOSITORY } from '../../../domain/repositories';
+import { PRODUCT_REPOSITORY, type IProductRepository } from '../../../domain/repositories';
 
 /** File from multipart upload (NestJS FileInterceptor / multer). */
 export interface PlantillaUploadFile {

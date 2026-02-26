@@ -47,7 +47,7 @@ export class AlertasManagementUseCase {
 
     const total = result.length;
     const start = (page - 1) * pageSize;
-    const items = result.slice(start, start + pageSize).map(a => a.toPlain());
+    const items = result.slice(start, start + pageSize);
     const totalPages = Math.ceil(total / pageSize);
 
     return { items, data: items, total, totalPages, page, pageSize };

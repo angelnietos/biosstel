@@ -46,6 +46,9 @@ export class FichajeEntity implements Fichaje {
   @Column({ type: 'int', nullable: true })
   totalTime?: number; // Calculated in code, stored for reporting
 
+  @Column({ type: 'boolean', default: false })
+  fueraHorario!: boolean;
+
   @CreateDateColumn()
   createdAt!: Date;
 

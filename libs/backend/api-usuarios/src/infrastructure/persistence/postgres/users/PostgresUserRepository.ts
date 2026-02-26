@@ -7,7 +7,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository, DeepPartial } from 'typeorm';
+import type { Repository, DeepPartial, QueryDeepPartialEntity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import type {
   IUserRepository,
@@ -57,7 +57,7 @@ export class PostgresUserRepository implements IUserRepository {
   /** Validates credentials and returns full user (including role) for JWT/login. Used by auth. */
   async validateCredentials(email: string, password: string): Promise<User | null> {
     const entity = await this.repository.findOne({ where: { email } });
-    if (!entity || !entity.password) return null;
+    if (!entity?.password) return null;
     const ok = await bcrypt.compare(password, String(entity.password));
     return ok ? UserMapper.toDomain(entity) : null;
   }
@@ -68,12 +68,12 @@ export class PostgresUserRepository implements IUserRepository {
     const hashedPassword = await bcrypt.hash(password, 10);
     const partial: DeepPartial<UserEntity> = {
       email,
-      firstName: data.firstName as string | undefined,
-      lastName: data.lastName as string | undefined,
-      phone: data.phone as string | undefined,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phone: data.phone,
       password: hashedPassword,
       isActive: true,
-      role: data.role as string | undefined,
+      role: data.role,
       departmentId: data.departmentId,
       workCenterId: data.workCenterId,
     };
@@ -87,7 +87,7 @@ export class PostgresUserRepository implements IUserRepository {
     if (!existing) {
       throw new Error(`User with ID ${id} not found`);
     }
-    const updatePayload: DeepPartial<UserEntity> = {
+    const updatePayload: QueryDeepPartialEntity<UserEntity> = {
       email: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
@@ -100,10 +100,12 @@ export class PostgresUserRepository implements IUserRepository {
     if (typeof data['password'] === 'string' && data['password']) {
       (updatePayload as unknown as Record<string, unknown>)['password'] = await bcrypt.hash(data['password'], 10);
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await this.repository.update(id, updatePayload as any);
+    await this.repository.update(id, updatePayload);
     const updated = await this.repository.findOne({ where: { id } });
-    return updated ? UserMapper.toDomain(updated) : ((await this.findById(id)) as User);
+    if (updated) return UserMapper.toDomain(updated);
+    const fallback = await this.findById(id);
+    if (!fallback) throw new Error(`User with ID ${id} not found after update`);
+    return fallback;
   }
 
   async delete(id: string): Promise<void> {

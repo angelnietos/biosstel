@@ -18,3 +18,5 @@ export interface IDashboardRepository {
    */
   getTerminalObjectives(filters?: Record<string, string[]>): Promise<TerminalObjectivesResponse>;
 }
+
+export const I_DASHBOARD_REPOSITORY = Symbol('IDashboardRepository');

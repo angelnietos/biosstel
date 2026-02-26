@@ -37,26 +37,34 @@ export class EnrichUsersListInterceptor implements NestInterceptor {
     );
   }
 
-  private async enrich(value: unknown, context: ExecutionContext): Promise<unknown> {
-    const request = context.switchToHttp().getRequest<{ method: string; url: string; path?: string }>();
-    if (request.method !== 'GET') return value;
-    // Aceptar lista de usuarios: /api/v1/users, /api/users, /v1/users, /users (según prefijo/versión)
+  private isListUsersPath(request: { method: string; url?: string; path?: string }): boolean {
+    if (request.method !== 'GET') return false;
     const path = (request.path ?? request.url ?? '').split('?')[0].replace(/\/$/, '');
-    const isListUsers =
+    return (
       path === '/api/users' ||
       path === '/api/v1/users' ||
       /^\/api\/v\d+\/users$/.test(path) ||
       path === '/v1/users' ||
-      path === '/users';
-    if (!isListUsers) return value;
+      path === '/users'
+    );
+  }
 
-    const body = value as PaginatedResult<User> | undefined;
-    if (!isPaginatedUsers(body)) return value;
+  private async enrich(value: unknown, context: ExecutionContext): Promise<unknown> {
+    const request = context.switchToHttp().getRequest<{ method: string; url: string; path?: string }>();
+    if (!this.isListUsersPath(request)) return value;
+    if (!isPaginatedUsers(value)) return value;
 
-    const items = (body.items ?? body.data) as User[];
-    const userIds = items.map((u) => u.id).filter(Boolean) as string[];
+    const body = value as PaginatedResult<User>;
+    const items = body.items ?? body.data;
+    const userIds = items.map((u) => u.id).filter(Boolean);
     if (userIds.length === 0) return value;
 
+    await this.enrichLastFichaje(items, userIds);
+    await this.enrichDepartamentoAndCentro(items);
+    return value;
+  }
+
+  private async enrichLastFichaje(items: User[], userIds: string[]): Promise<void> {
     try {
       const repo = this.dataSource.getRepository(FichajeEntity);
       const rows = await repo
@@ -69,12 +77,12 @@ export class EnrichUsersListInterceptor implements NestInterceptor {
 
       const lastByUser = new Map<string, string>();
       for (const row of rows) {
-        const iso =
-          row.lastStart instanceof Date
-            ? row.lastStart.toISOString()
-            : typeof row.lastStart === 'string'
-              ? row.lastStart
-              : null;
+        let iso: string | null = null;
+        if (row.lastStart instanceof Date) {
+          iso = row.lastStart.toISOString();
+        } else if (typeof row.lastStart === 'string') {
+          iso = row.lastStart;
+        }
         if (iso) lastByUser.set(row.userId, iso);
       }
 
@@ -85,8 +93,9 @@ export class EnrichUsersListInterceptor implements NestInterceptor {
     } catch {
       // Si falla la query (ej. tabla fichajes no existe), no romper la respuesta
     }
+  }
 
-    // Enriquecer departamento y centro de trabajo (nombres desde empresa)
+  private async enrichDepartamentoAndCentro(items: User[]): Promise<void> {
     try {
       const getDeptId = (u: User): string | undefined => {
         const r = u as Record<string, unknown>;
@@ -98,8 +107,8 @@ export class EnrichUsersListInterceptor implements NestInterceptor {
         const id = r.workCenterId ?? r.work_center_id;
         return typeof id === 'string' ? id : undefined;
       };
-      const deptIds = [...new Set(items.map((u) => getDeptId(u)).filter(Boolean))] as string[];
-      const wcIds = [...new Set(items.map((u) => getWcId(u)).filter(Boolean))] as string[];
+      const deptIds = [...new Set(items.map((u) => getDeptId(u)).filter(Boolean))];
+      const wcIds = [...new Set(items.map((u) => getWcId(u)).filter(Boolean))];
       const deptRepo = this.dataSource.getRepository(DepartmentEntity);
       const wcRepo = this.dataSource.getRepository(WorkCenterEntity);
       const [departments, workCenters] = await Promise.all([
@@ -121,7 +130,5 @@ export class EnrichUsersListInterceptor implements NestInterceptor {
     } catch {
       // Si empresa no está disponible o tablas no existen, no romper la respuesta
     }
-
-    return value;
   }
 }

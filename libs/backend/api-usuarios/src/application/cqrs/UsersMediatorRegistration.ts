@@ -1,5 +1,4 @@
-import type { OnModuleInit } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, type OnModuleInit } from '@nestjs/common';
 import type { Mediator } from '@biosstel/api-shared';
 import { CreateUserCommand, UpdateUserCommand, DeleteUserCommand } from './commands/users';
 import { GetUserByIdQuery, ListUsersQuery } from './queries/users';

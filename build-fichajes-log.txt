@@ -1,0 +1,98 @@
+﻿
+[7m[1m[36m NX [39m[22m[27m  [36mRunning target [1mbuild[22m for project api-fichajes and [1m3[22m tasks it depends on:[39m
+
+[2m[36m[39m[22m
+
+[2m> [22m[2mnx run[22m @biosstel/shared-types:build
+
+Compiling TypeScript files for project "@biosstel/shared-types"...
+Done compiling TypeScript files for project "@biosstel/shared-types".
+
+[2m> [22m[2mnx run[22m api-shared:build
+
+Compiling TypeScript files for project "api-shared"...
+Done compiling TypeScript files for project "api-shared".
+
+[2m> [22m[2mnx run[22m api-usuarios:build
+
+Compiling TypeScript files for project "api-usuarios"...
+Done compiling TypeScript files for project "api-usuarios".
+
+[2m> [22m[2mnx run[22m api-fichajes:build
+
+Compiling TypeScript files for project "api-fichajes"...
+node.exe : [1m[31m[96m/Users/amuni/Desktop/babooni/l
+ibs/backend/api-fichajes/src/domain/repositories/fichaj
+es/IFichajeRepository.ts[0m:[93m1[0m:[93m30[0m - 
+[91merror[0m[90m TS2307: [0mCannot find module 
+'../../entities/Fichaje' or its corresponding type 
+declarations.
+En línea: 1 Carácter: 1
++ & "C:\stack\node/node.exe" 
+"C:\stack\node/node_modules/npm/bin/npx-cl ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([1m[31m 
+   [96m/...e declarations.:String) [], RemoteExcepti  
+  on
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[7m1[0m import type { Fichaje } from 
+'../../entities/Fichaje';
+[7m [0m [91m                             
+~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96m/Users/amuni/Desktop/babooni/libs/backend/api-fich
+ajes/src/infrastructure/mappers/index.ts[0m:[93m2[0m
+:[93m15[0m - [91merror[0m[90m TS2306: [0mFile '/U
+sers/amuni/Desktop/babooni/libs/backend/api-fichajes/sr
+c/infrastructure/mappers/TaskMapper.ts' is not a 
+module.
+[7m2[0m export * from './TaskMapper';
+[7m [0m [91m              ~~~~~~~~~~~~~~[0m
+[96m/Users/amuni/Desktop/babooni/libs/backend/api-fich
+ajes/src/infrastructure/persistence/postgres/fichajes-p
+ostgres.config.ts[0m:[93m18[0m:[93m10[0m - 
+[91merror[0m[90m TS2305: [0mModule '"./fichajes"' 
+has no exported member 'PostgresFichajeRepository'.
+[7m18[0m import { PostgresFichajeRepository } from 
+'./fichajes';
+[7m  [0m [91m         ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96m/Users/amuni/Desktop/babooni/libs/backend/api-fich
+ajes/src/infrastructure/persistence/postgres/fichajes-p
+ostgres.config.ts[0m:[93m19[0m:[93m10[0m - 
+[91merror[0m[90m TS2305: [0mModule '"./tasks"' has 
+no exported member 'PostgresTaskRepository'.
+[7m19[0m import { PostgresTaskRepository } from 
+'./tasks';
+[7m  [0m [91m         ~~~~~~~~~~~~~~~~~~~~~~[0m
+[96m/Users/amuni/Desktop/babooni/libs/backend/api-fich
+ajes/src/infrastructure/persistence/postgres/fichajes/i
+ndex.ts[0m:[93m1[0m:[93m15[0m - 
+[91merror[0m[90m TS2306: [0mFile '/Users/amuni/Desk
+top/babooni/libs/backend/api-fichajes/src/infrastructur
+e/persistence/postgres/fichajes/PostgresFichajeReposito
+ry.ts' is not a module.
+[7m1[0m export * from './PostgresFichajeRepository';
+[7m [0m [91m              
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96m/Users/amuni/Desktop/babooni/libs/backend/api-fich
+ajes/src/infrastructure/persistence/postgres/tasks/inde
+x.ts[0m:[93m1[0m:[93m15[0m - [91merror[0m[90m 
+TS2306: [0mFile '/Users/amuni/Desktop/babooni/libs/bac
+kend/api-fichajes/src/infrastructure/persistence/postgr
+es/tasks/PostgresTaskRepository.ts' is not a module.
+[7m1[0m export * from './PostgresTaskRepository';
+[7m [0m [91m              
+~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[39m[22m
+
+[2m[31m[39m[22m
+
+[7m[1m[31m NX [39m[22m[27m  [31mRunning target [1mbuild[22m for project api-fichajes and [1m3[22m tasks it depends on failed[39m
+
+[2mFailed tasks:[22m
+
+[2m-[22m api-fichajes:build
+
+[2mHint: run the command with[22m --verbose [2mfor more details.[22m
+

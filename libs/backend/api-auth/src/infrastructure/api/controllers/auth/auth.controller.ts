@@ -8,9 +8,9 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagg
 import type { IMediatorPort } from '@biosstel/api-shared';
 import { IMediator } from '@biosstel/api-shared';
 import type { User } from '@biosstel/shared-types';
-import { LoginCommand, RefreshTokenCommand, ForgotPasswordCommand } from '../../../../application/cqrs/commands';
+import { LoginCommand, RefreshTokenCommand, ForgotPasswordCommand, LogoutCommand } from '../../../../application/cqrs/commands';
 import { GetMeQuery } from '../../../../application/cqrs/queries';
-import type { LoginDto, ForgotPasswordDto, RefreshTokenDto } from '../../../../application/dto/auth';
+import type { LoginDto, ForgotPasswordDto, RefreshTokenDto, LogoutDto } from '../../../../application/dto/auth';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -67,6 +67,21 @@ export class AuthController {
   async forgotPassword(@Body() body: ForgotPasswordDto) {
     return this.mediator.send(
       new ForgotPasswordCommand(body.email ?? '')
+    );
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Cerrar sesión',
+    description: 'Revoca el refresh token, invalidándolo para futuros usos.',
+  })
+  @ApiResponse({ status: 200, description: 'Sesión cerrada correctamente.' })
+  @ApiResponse({ status: 401, description: 'Token inválido.' })
+  async logout(@Body() body: LogoutDto) {
+    return this.mediator.send(
+      new LogoutCommand(body.refresh_token ?? '')
     );
   }
 }

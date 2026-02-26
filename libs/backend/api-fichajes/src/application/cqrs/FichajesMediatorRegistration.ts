@@ -1,5 +1,4 @@
-import type { OnModuleInit } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, type OnModuleInit } from '@nestjs/common';
 import type { Mediator } from '@biosstel/api-shared';
 import {
   ClockInCommand,
@@ -9,14 +8,14 @@ import {
   CreateTaskCommand,
   UpdateTaskCommand,
   DeleteTaskCommand,
-} from './commands/fichajes';
+} from './commands';
 import {
   GetFichajesByUserQuery,
   GetCurrentFichajeQuery,
   GetTasksByUserQuery,
   GetTaskByIdQuery,
   GetFichajeDashboardQuery,
-} from './queries/fichajes';
+} from './queries';
 import {
   ClockInHandler,
   ClockOutHandler,
@@ -30,7 +29,7 @@ import {
   GetTasksByUserHandler,
   GetTaskByIdHandler,
   GetFichajeDashboardHandler,
-} from './handlers/fichajes';
+} from './handlers';
 
 @Injectable()
 export class FichajesMediatorRegistration implements OnModuleInit {

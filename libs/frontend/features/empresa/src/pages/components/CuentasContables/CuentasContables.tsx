@@ -7,7 +7,7 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Text, Card } from '@biosstel/ui';
+import { Button, Text } from '@biosstel/ui';
 import { Stack } from '@biosstel/ui-layout';
 import { EmpresaPageLayout } from '../../layouts';
 import { fetchEmpresa, type EmpresaState } from '../../../data-access';

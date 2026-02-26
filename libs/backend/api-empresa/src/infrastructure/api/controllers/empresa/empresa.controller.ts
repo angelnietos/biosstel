@@ -4,7 +4,7 @@
 
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import type { EmpresaManagementUseCase } from '../../../application/use-cases';
+import type { EmpresaManagementUseCase } from '../../../../application/use-cases/empresa/EmpresaManagementUseCase';
 
 @ApiTags('empresa')
 @Controller('empresa')

@@ -1,7 +1,6 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import type { IMediatorPort } from '@biosstel/api-shared';
-import { IMediator } from '@biosstel/api-shared';
+import { IMediator, type IMediatorPort } from '@biosstel/api-shared';
 import { GetReportsSummaryQuery } from '../../../../application/cqrs/queries/reports';
 
 @ApiTags('reports')

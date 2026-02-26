@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -42,9 +42,9 @@ import { AppGraphQLModule } from './graphql/graphql.module';
             config.get('NODE_ENV') === 'production' ? 'info' : 'debug'
           ),
           transport:
-            config.get('NODE_ENV') !== 'production'
-              ? { target: 'pino-pretty', options: { translateTime: 'SYS:standard' } }
-              : undefined,
+            config.get('NODE_ENV') === 'production'
+              ? undefined
+              : { target: 'pino-pretty', options: { translateTime: 'SYS:standard' } },
           customProps: () => ({ requestId: randomUUID() }),
           serializers: {
             req: (req: { method?: string; url?: string }) => ({

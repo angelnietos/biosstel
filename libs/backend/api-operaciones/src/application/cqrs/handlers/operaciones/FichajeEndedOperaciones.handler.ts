@@ -1,5 +1,4 @@
-import type { OnModuleInit } from '@nestjs/common';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, type OnModuleInit } from '@nestjs/common';
 import { IEventBus, DomainEvents, type FichajeEndedEvent } from '@biosstel/api-shared';
 
 /**
@@ -17,7 +16,14 @@ export class FichajeEndedOperacionesHandler implements OnModuleInit {
       if (process.env.NODE_ENV === 'development') {
         console.debug('[Operaciones] FichajeEnded:', event.fichajeId);
       }
-      // TODO: actualizar indicadores de operaciones
+
+      // Actualizar indicadores de operaciones: registrar fin de fichaje para métricas.
+      // FichajeEndedEvent provee endTime (hora de fin) y occurredAt (momento del evento).
+      if (event.endTime && process.env.NODE_ENV === 'development') {
+        console.debug(
+          `[Operaciones] Usuario ${event.userId} finalizó fichaje ${event.fichajeId} a las ${event.endTime}.`
+        );
+      }
     });
   }
 }

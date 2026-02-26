@@ -4,4 +4,4 @@
  * - repositories/ → implementaciones de los puertos de dominio
  */
 export * from './entities';
-export * from './repositories';
+export * from './postgres';

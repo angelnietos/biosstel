@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import type { ReportsSummaryResponse } from '@biosstel/shared-types';
-import type { TypeOrmProductRepository } from '../../../infrastructure/persistence';
-import type { TypeOrmInventoryRepository } from '../../../infrastructure/persistence';
+import type { IProductRepository, IInventoryRepository } from '../../../domain/repositories';
+import { PRODUCT_REPOSITORY, INVENTORY_REPOSITORY } from '../../../domain/repositories';
+import type { Product } from '../../../domain/entities/Product';
 
 @Injectable()
 export class ReportsManagementUseCase {
   constructor(
-    private readonly productRepository: TypeOrmProductRepository,
-    private readonly inventoryRepository: TypeOrmInventoryRepository,
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: IProductRepository,
+    @Inject(INVENTORY_REPOSITORY)
+    private readonly inventoryRepository: IInventoryRepository,
   ) {}
 
   async getSummary(): Promise<ReportsSummaryResponse> {
@@ -15,7 +18,7 @@ export class ReportsManagementUseCase {
       this.productRepository.findAll(),
       this.inventoryRepository.findAll(),
     ]);
-    const activos = products.filter((p) => (p.estado || '').toLowerCase() === 'activo').length;
+    const activos = products.filter((p: Product) => (p.estado || '').toLowerCase() === 'activo').length;
     return {
       summary: [
         { id: '1', label: 'Productos activos', value: activos, unit: 'unidades' },

@@ -43,7 +43,12 @@ export async function getAlertas(
     cache: 'no-store',
   });
   const body = await handleResponse<AlertasListResponse>(res);
-  const items = Array.isArray(body?.items) ? body.items : Array.isArray((body as { data?: DashboardAlert[] })?.data) ? (body as { data: DashboardAlert[] }).data : [];
+  let items: DashboardAlert[] = [];
+  if (Array.isArray(body?.items)) {
+    items = body.items;
+  } else if (Array.isArray((body as { data?: DashboardAlert[] })?.data)) {
+    items = (body as { data: DashboardAlert[] }).data;
+  }
   const total = typeof body?.total === 'number' ? body.total : items.length;
   return { items, data: items, total, page: body?.page ?? page, pageSize: body?.pageSize ?? pageSize };
 }

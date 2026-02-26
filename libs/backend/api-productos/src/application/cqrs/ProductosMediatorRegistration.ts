@@ -1,5 +1,4 @@
-import type { OnModuleInit } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, type OnModuleInit } from '@nestjs/common';
 import type { Mediator } from '@biosstel/api-shared';
 import { CreateProductCommand, UpdateProductCommand, DeleteProductCommand, UploadPlantillaProductCommand } from './commands/productos';
 import { CreateInventoryCommand, UpdateInventoryCommand, DeleteInventoryCommand } from './commands/inventario';

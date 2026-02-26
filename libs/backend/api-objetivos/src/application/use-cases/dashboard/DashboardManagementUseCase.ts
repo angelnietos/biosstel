@@ -5,14 +5,17 @@
  * It uses the output port (IDashboardRepository) to access data.
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import type { IDashboardManagement } from '../../ports/input/IDashboardManagement';
 import type { DashboardHomeResponse, TerminalObjectivesResponse } from '@biosstel/shared-types';
-import type { TypeOrmDashboardRepository } from '../../../infrastructure/persistence';
+import { I_DASHBOARD_REPOSITORY, type IDashboardRepository } from '../../../domain/repositories';
 
 @Injectable()
 export class DashboardManagementUseCase implements IDashboardManagement {
-  constructor(private readonly dashboardRepository: TypeOrmDashboardRepository) {}
+  constructor(
+    @Inject(I_DASHBOARD_REPOSITORY)
+    private readonly dashboardRepository: IDashboardRepository
+  ) {}
 
   async getDashboardHome(filters?: Record<string, string[]>): Promise<DashboardHomeResponse> {
     // Business logic: Apply filters, calculate metrics, etc.

@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import type { AuthUser } from '../../api/services/models';
-import type { LoginCredentials } from '../../api/services/models';
+import type { AuthUser, LoginCredentials } from '../../api/services/models';
 import { login as loginApi, forgotPassword as forgotPasswordApi, clearRefreshToken } from '../../api/services';
 
 export interface AuthState {
@@ -30,7 +29,7 @@ export const forgotPasswordThunk = createAsyncThunk(
 
 const initialState: AuthState = {
   user: null,
-  token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
+  token: typeof globalThis.window !== 'undefined' ? globalThis.window.localStorage.getItem('token') : null,
   isLoading: false,
   error: null,
   authRestored: false,
@@ -90,8 +89,8 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.authRestored = true;
-        if (token && typeof window !== 'undefined') {
-          localStorage.setItem('token', token);
+        if (token && typeof globalThis.window !== 'undefined') {
+          globalThis.window.localStorage.setItem('token', token);
         }
       })
       .addCase(loginThunk.rejected, (state, action) => {

@@ -3,8 +3,8 @@
  * Fuente: settings.json (database) o env FEATURE_<NAME>_ADAPTER / FEATURE_<NAME>_SERVICE_URL.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import type {
   FeatureKey,
   AdapterKind,
@@ -69,10 +69,8 @@ function loadGraphQLConfig(): GraphQLConfig {
 let cached: FeatureAdapterConfig | null = null;
 
 export function getConfig(): FeatureAdapterConfig {
-  if (cached === null) {
-    cached = loadSettings();
-  }
-  return cached;
+  cached ??= loadSettings();
+  return cached!;
 }
 
 /**
@@ -86,7 +84,7 @@ export function getFeatureAdapter(feature: FeatureKey): AdapterKind {
   const envKey = `FEATURE_${feature.toUpperCase()}_ADAPTER`;
   const envAdapter = process.env[envKey] as AdapterKind | undefined;
   if (envAdapter === 'postgres' || envAdapter === 'mongo' || envAdapter === 'http') return envAdapter;
-  return (config.defaultAdapter ?? DEFAULT_ADAPTER) as AdapterKind;
+  return config.defaultAdapter ?? DEFAULT_ADAPTER;
 }
 
 /**

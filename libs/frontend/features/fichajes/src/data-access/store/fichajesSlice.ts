@@ -20,10 +20,10 @@ export const clockIn = createAsyncThunk(
     'fichajes/clockIn',
     async (data: { userId: string; location?: { lat: number; lng: number } }, thunkAPI) => {
         const userId = data?.userId != null ? String(data.userId).trim() : '';
-        if (!isValidUserId(userId)) {
-            return thunkAPI.rejectWithValue('userId es obligatorio para fichar entrada');
+        if (isValidUserId(userId)) {
+            return await fichajesService.clockIn({ userId, location: data?.location });
         }
-        return await fichajesService.clockIn({ userId, location: data?.location });
+        return thunkAPI.rejectWithValue('userId es obligatorio para fichar entrada');
     }
 );
 

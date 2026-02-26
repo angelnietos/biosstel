@@ -13,8 +13,12 @@ import {
   getGraphQLConfig,
   isGraphQLEnabledForFeature,
   resetFeatureAdapterCache,
+  type FeatureKey,
+  type AdapterKind,
+  type RuntimeConfig,
+  type FeatureConfigEntry,
+  type GraphQLConfig,
 } from '../adapters';
-import type { FeatureKey, AdapterKind, RuntimeConfig, FeatureConfigEntry, GraphQLConfig } from '../adapters';
 
 @Injectable()
 export class FeatureConfigService {

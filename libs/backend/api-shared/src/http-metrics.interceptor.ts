@@ -1,13 +1,7 @@
 /**
  * Records http_requests_total and http_request_duration_seconds for Grafana.
  */
-import type {
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler} from '@nestjs/common';
-import {
-  Injectable
-} from '@nestjs/common';
+import { Injectable, type NestInterceptor, type ExecutionContext, type CallHandler } from '@nestjs/common';
 import type { Observable } from 'rxjs';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import type { Counter, Histogram } from 'prom-client';

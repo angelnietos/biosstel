@@ -17,7 +17,7 @@ import {
 } from '../entities';
 import { PostgresFichajeRepository } from './fichajes';
 import { PostgresTaskRepository } from './tasks';
-import { IFichajeRepository, ITaskRepository } from '../../../domain/repositories';
+import { I_FICHAJE_REPOSITORY, I_TASK_REPOSITORY } from '../../../domain/repositories';
 
 /** Entidades TypeORM para TypeOrmModule.forFeature() (entidades en persistence/entities, compartidas) */
 export const FICHAJES_POSTGRES_ENTITIES = [
@@ -47,7 +47,7 @@ export function getFichajesPostgresProviders(): Provider[] {
       useFactory: (ds: DataSource) => ds.getRepository(LeavePermissionTypeEntity),
       inject: [DataSource],
     },
-    { provide: IFichajeRepository, useClass: PostgresFichajeRepository },
-    { provide: ITaskRepository, useClass: PostgresTaskRepository },
+    { provide: I_FICHAJE_REPOSITORY, useClass: PostgresFichajeRepository },
+    { provide: I_TASK_REPOSITORY, useClass: PostgresTaskRepository },
   ];
 }

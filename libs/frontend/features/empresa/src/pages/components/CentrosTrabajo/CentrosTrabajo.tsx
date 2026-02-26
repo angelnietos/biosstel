@@ -32,8 +32,6 @@ export const CentrosTrabajo = () => {
     (dispatch as (thunk: ReturnType<typeof fetchEmpresa>) => void)(fetchEmpresa());
   }, [dispatch]);
 
-  const loadData = () => (dispatch as (thunk: ReturnType<typeof fetchEmpresa>) => void)(fetchEmpresa());
-
   const openAddModal = () => {
     setNewName('');
     setNewAddress('');

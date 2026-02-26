@@ -1,0 +1,75 @@
+﻿
+[7m[1m[36m NX [39m[22m[27m  [36mRunning target [1mbuild[22m for project api-operaciones and [1m2[22m tasks it depends on:[39m
+
+[2m[36m[39m[22m
+
+[2m> [22m[2mnx run[22m @biosstel/shared-types:build
+
+Compiling TypeScript files for project "@biosstel/shared-types"...
+Done compiling TypeScript files for project "@biosstel/shared-types".
+
+[2m> [22m[2mnx run[22m api-shared:build
+
+Compiling TypeScript files for project "api-shared"...
+Done compiling TypeScript files for project "api-shared".
+
+[2m> [22m[2mnx run[22m api-operaciones:build
+
+Compiling TypeScript files for project "api-operaciones"...
+node.exe : [1m[31m[96m/Users/amuni/Desktop/babooni/l
+ibs/backend/api-operaciones/src/application/cqrs/handle
+rs/operaciones/FichajeEndedOperaciones.handler.ts[0m:
+[93m24[0m:[93m15[0m - [91merror[0m[90m TS2339: 
+[0mProperty 'endedAt' does not exist on type 
+'FichajeEndedEvent'.
+En línea: 1 Carácter: 1
++ & "C:\stack\node/node.exe" 
+"C:\stack\node/node_modules/npm/bin/npx-cl ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([1m[31m 
+   [96m/...ajeEndedEvent'.:String) [], RemoteExcepti  
+  on
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[7m24[0m         event.endedAt && event.startedAt
+[7m  [0m [91m              ~~~~~~~[0m
+[96m/Users/amuni/Desktop/babooni/libs/backend/api-oper
+aciones/src/application/cqrs/handlers/operaciones/Ficha
+jeEndedOperaciones.handler.ts[0m:[93m24[0m:[93m32[
+0m - [91merror[0m[90m TS2339: [0mProperty 
+'startedAt' does not exist on type 'FichajeEndedEvent'.
+[7m24[0m         event.endedAt && event.startedAt
+[7m  [0m [91m                               
+~~~~~~~~~[0m
+[96m/Users/amuni/Desktop/babooni/libs/backend/api-oper
+aciones/src/application/cqrs/handlers/operaciones/Ficha
+jeEndedOperaciones.handler.ts[0m:[93m25[0m:[93m28[
+0m - [91merror[0m[90m TS2339: [0mProperty 
+'endedAt' does not exist on type 'FichajeEndedEvent'.
+[7m25[0m           ? new 
+Date(event.endedAt).getTime() - new 
+Date(event.startedAt).getTime()
+[7m  [0m [91m                           ~~~~~~~[0m
+[96m/Users/amuni/Desktop/babooni/libs/backend/api-oper
+aciones/src/application/cqrs/handlers/operaciones/Ficha
+jeEndedOperaciones.handler.ts[0m:[93m25[0m:[93m64[
+0m - [91merror[0m[90m TS2339: [0mProperty 
+'startedAt' does not exist on type 'FichajeEndedEvent'.
+[7m25[0m           ? new 
+Date(event.endedAt).getTime() - new 
+Date(event.startedAt).getTime()
+[7m  [0m [91m                                       
+                        ~~~~~~~~~[0m
+[39m[22m
+
+[2m[31m[39m[22m
+
+[7m[1m[31m NX [39m[22m[27m  [31mRunning target [1mbuild[22m for project api-operaciones and [1m2[22m tasks it depends on failed[39m
+
+[2mFailed tasks:[22m
+
+[2m-[22m api-operaciones:build
+
+[2mHint: run the command with[22m --verbose [2mfor more details.[22m
+

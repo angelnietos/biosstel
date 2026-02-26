@@ -53,15 +53,19 @@ export const alertasSlice = createSlice({
       })
       .addCase(fetchAlertas.fulfilled, (state, action) => {
         const payload = action.payload as { items?: DashboardAlert[]; total?: number; page?: number; pageSize?: number } | DashboardAlert[];
-        const items = Array.isArray(payload)
-          ? payload
-          : Array.isArray((payload as { items?: DashboardAlert[] })?.items)
-            ? (payload as { items: DashboardAlert[] }).items
-            : [];
+        let items: DashboardAlert[] = [];
+        if (Array.isArray(payload)) {
+          items = payload;
+        } else if (Array.isArray((payload as { items?: DashboardAlert[] })?.items)) {
+          items = (payload as { items: DashboardAlert[] }).items;
+        }
         state.alerts = items;
-        state.totalAlerts = Array.isArray(payload) ? payload.length : (typeof (payload as { total?: number })?.total === 'number' ? (payload as { total: number }).total : items.length);
-        state.currentPage = Array.isArray(payload) ? 1 : (typeof (payload as { page?: number })?.page === 'number' ? (payload as { page: number }).page : 1);
-        state.pageSize = Array.isArray(payload) ? 10 : (typeof (payload as { pageSize?: number })?.pageSize === 'number' ? (payload as { pageSize: number }).pageSize : 10);
+        const totalVal = Array.isArray(payload) ? payload.length : (typeof (payload as { total?: number })?.total === 'number' ? (payload as { total: number }).total : items.length);
+        state.totalAlerts = totalVal;
+        const pageVal = Array.isArray(payload) ? 1 : (typeof (payload as { page?: number })?.page === 'number' ? (payload as { page: number }).page : 1);
+        state.currentPage = pageVal;
+        const pageSizeVal = Array.isArray(payload) ? 10 : (typeof (payload as { pageSize?: number })?.pageSize === 'number' ? (payload as { pageSize: number }).pageSize : 10);
+        state.pageSize = pageSizeVal;
         state.isLoading = false;
         state.error = null;
       })

@@ -6,8 +6,7 @@
 
 import { Controller, Get, Patch, Post, Delete, Query, Param, Body, Inject, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiParam } from '@nestjs/swagger';
-import type { IMediatorPort } from '@biosstel/api-shared';
-import { IMediator } from '@biosstel/api-shared';
+import { IMediator, type IMediatorPort } from '@biosstel/api-shared';
 import type { DashboardHomeResponse, TerminalObjectivesResponse } from '@biosstel/shared-types';
 import { GetDashboardHomeQuery } from '../../../../application/cqrs/queries/dashboard/GetDashboardHome.query';
 import { GetTerminalObjectivesQuery } from '../../../../application/cqrs/queries/dashboard/GetTerminalObjectives.query';

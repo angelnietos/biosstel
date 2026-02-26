@@ -21,7 +21,7 @@ const TIPO_OPTIONS: { value: '' | AlertaTipo; label: string }[] = [
 
 export const AlertsDashboard = () => {
   const dispatch = useDispatch();
-  const { alerts, totalAlerts, currentPage, pageSize, isLoading: alertsLoading, error: alertsError } = useSelector((state: { alertas: AlertasState }) => state.alertas);
+  const { alerts, totalAlerts, currentPage, isLoading: alertsLoading, error: alertsError } = useSelector((state: { alertas: AlertasState }) => state.alertas);
   const [tipo, setTipo] = useState<'' | AlertaTipo>('');
   const [fecha, setFecha] = useState('');
   const [marca, setMarca] = useState('');

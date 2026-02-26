@@ -5,19 +5,21 @@
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '@biosstel/api-usuarios';
 import { AuthController } from './infrastructure/api';
 import { AuthManagementUseCase } from './application/use-cases';
-import { LoginHandler, GetMeHandler, RefreshTokenHandler, ForgotPasswordHandler } from './application/cqrs/handlers';
+import { LoginHandler, GetMeHandler, RefreshTokenHandler, ForgotPasswordHandler, LogoutHandler } from './application/cqrs/handlers';
 import { AuthMediatorRegistration } from './application/AuthMediatorRegistration';
 import { I_AUTH_REPOSITORY } from './domain/repositories';
-import { PostgresAuthRepository } from './infrastructure/persistence';
+import { PostgresAuthRepository, AUTH_POSTGRES_ENTITIES } from './infrastructure/persistence';
 
 @Module({
   imports: [
     UsersModule,
     ConfigModule,
+    TypeOrmModule.forFeature([...AUTH_POSTGRES_ENTITIES]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => {
@@ -39,6 +41,7 @@ import { PostgresAuthRepository } from './infrastructure/persistence';
     GetMeHandler,
     RefreshTokenHandler,
     ForgotPasswordHandler,
+    LogoutHandler,
     AuthMediatorRegistration,
   ],
   exports: [AuthManagementUseCase, I_AUTH_REPOSITORY],

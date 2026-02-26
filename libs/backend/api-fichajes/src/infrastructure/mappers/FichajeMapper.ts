@@ -1,4 +1,4 @@
-import { Fichaje } from '../../domain/entities/Fichaje';
+import { Fichaje } from '../../domain/entities';
 import { FichajeEntity } from '../persistence/entities/fichajes/FichajeEntity';
 
 export class FichajeMapper {
@@ -30,8 +30,7 @@ export class FichajeMapper {
     entity.pauses = domain.pauses;
     entity.location = domain.location;
     entity.totalTime = domain.totalTime;
-    // fueraHorario is calculated/queried often, but stored in DB if column exists
-    // FichajeEntity has totalTime, pauses, location.
+    entity.fueraHorario = domain.fueraHorario ?? false;
     return entity;
   }
 }

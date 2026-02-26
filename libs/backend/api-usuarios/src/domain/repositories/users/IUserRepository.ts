@@ -6,8 +6,7 @@
  */
 
 import type { User, CreateUserData, UpdateUserData, PaginatedResult } from '@biosstel/shared-types';
-
-export type { User, CreateUserData, UpdateUserData, PaginatedResult };
+export type { User, CreateUserData, UpdateUserData, PaginatedResult } from '@biosstel/shared-types';
 
 export interface IUserRepository {
   findAll(page?: number, pageSize?: number): Promise<PaginatedResult<User>>;

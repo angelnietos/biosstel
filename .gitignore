@@ -51,3 +51,6 @@ temp
 
 # Docker volumes (local)
 docker/volumes
+
+# Sonar scanner (cache y trabajo del análisis)
+.scannerwork

@@ -5,8 +5,7 @@
 
 import { Resolver, Query, Args } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
-import { USER_REPOSITORY } from '../../domain/repositories';
-import type { IUserRepository } from '../../domain/repositories';
+import { USER_REPOSITORY, type IUserRepository } from '../../domain/repositories';
 import type { UserRoleEnum } from './user.graphql-types';
 import { UserType, UsersPaginatedType } from './user.graphql-types';
 

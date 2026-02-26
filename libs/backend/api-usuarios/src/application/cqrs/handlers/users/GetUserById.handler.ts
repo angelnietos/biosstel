@@ -2,8 +2,7 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import type { IQueryHandler } from '@biosstel/api-shared';
 import type { GetUserByIdQuery } from '../../queries/users/GetUserById.query';
 import type { User } from '@biosstel/shared-types';
-import type { IUserRepository } from '../../../../domain/repositories/users/IUserRepository';
-import { USER_REPOSITORY } from '../../../../domain/repositories/users/IUserRepository';
+import { USER_REPOSITORY, type IUserRepository } from '../../../../domain/repositories/users/IUserRepository';
 
 @Injectable()
 export class GetUserByIdHandler implements IQueryHandler<GetUserByIdQuery, User> {

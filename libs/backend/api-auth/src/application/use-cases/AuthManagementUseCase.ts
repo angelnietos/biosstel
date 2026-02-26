@@ -30,8 +30,8 @@ export class AuthManagementUseCase {
     expires_in: number;
     user: { id: string; email: string; role?: string };
   }> {
-    const email = body?.email as string | undefined;
-    const password = body?.password as string | undefined;
+    const email = body?.email;
+    const password = body?.password;
     if (!email || !password) {
       throw new UnauthorizedException('Email y contraseña son obligatorios');
     }
@@ -107,9 +107,9 @@ export class AuthManagementUseCase {
   }
 
   private parseExpiresToSeconds(expires: string): number {
-    const m = expires.match(/^(\d+)(s|m|h|d)$/);
+    const m = /^(\d+)([smhd])$/.exec(expires);
     if (!m) return 900;
-    const n = parseInt(m[1], 10);
+    const n = Number.parseInt(m[1], 10);
     switch (m[2]) {
       case 's': return n;
       case 'm': return n * 60;

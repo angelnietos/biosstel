@@ -2,7 +2,7 @@
  * @biosstel/empresa - Empresa API (departamentos, centros, cuentas)
  */
 
-import type { EmpresaListResponse, Department, WorkCenter } from './models';
+import type { EmpresaListResponse, WorkCenter } from './models';
 import { API_BASE_URL, getAuthHeaders, handleResponse } from '@biosstel/platform';
 
 export { createDepartment } from '@biosstel/shared';

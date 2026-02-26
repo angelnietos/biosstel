@@ -16,9 +16,9 @@ export function ForgotPasswordPage() {
     logFormSubmit('forgot_password', undefined, { email: values.email });
     await forgotPassword(values.email);
     const locale =
-      typeof window !== 'undefined'
-        ? window.location.pathname.split('/').filter(Boolean)[0] || 'es'
-        : 'es';
+      typeof globalThis.window === 'undefined'
+        ? 'es'
+        : globalThis.window.location.pathname.split('/').find(Boolean) || 'es';
     router.push(`/${locale}/email-send`);
   };
 

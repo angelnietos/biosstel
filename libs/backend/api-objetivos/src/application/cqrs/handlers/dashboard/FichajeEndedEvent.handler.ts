@@ -1,5 +1,4 @@
-import type { OnModuleInit } from '@nestjs/common';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, type OnModuleInit } from '@nestjs/common';
 import { IEventBus, DomainEvents, type FichajeEndedEvent } from '@biosstel/api-shared';
 
 /**

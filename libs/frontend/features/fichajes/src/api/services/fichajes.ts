@@ -20,8 +20,8 @@ export const fichajesService = {
   },
 
   clockIn: async (data: { userId: string; location?: { lat: number; lng: number } }): Promise<Fichaje> => {
-    const userId = data?.userId != null ? String(data.userId).trim() : '';
-    if (!userId) {
+    const userId = data?.userId == null ? '' : String(data.userId).trim();
+    if (userId === '') {
       throw new Error('userId es obligatorio para fichar entrada');
     }
     const body = { userId, location: data?.location };

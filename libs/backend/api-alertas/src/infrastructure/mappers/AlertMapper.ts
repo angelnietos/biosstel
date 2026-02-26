@@ -29,7 +29,7 @@ export class AlertMapper {
       isActive: domain.isActive,
       rol: domain.rol,
       marca: domain.marca,
-      statusType: domain.statusType as DashboardAlertEntity['statusType'],
+      statusType: domain.statusType,
       sortOrder: domain.sortOrder,
     };
   }

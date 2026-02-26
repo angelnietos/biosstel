@@ -7,14 +7,14 @@ import { Injectable, Inject } from '@nestjs/common';
 import type { EmpresaListResponse } from '@biosstel/shared-types';
 import { DEPARTMENT_REPOSITORY } from '../../../domain/repositories';
 import type { IDepartmentRepository } from '../../../domain/repositories';
-import type { TypeOrmWorkCenterRepository } from '../../../infrastructure/persistence';
+import type { PostgresWorkCenterRepository } from '../../../infrastructure/persistence/postgres/work-centers';
 import type { Department } from '../../../domain/entities/Department';
 
 @Injectable()
 export class EmpresaManagementUseCase {
   constructor(
     @Inject(DEPARTMENT_REPOSITORY) private readonly departmentRepo: IDepartmentRepository,
-    private readonly workCenterRepo: TypeOrmWorkCenterRepository,
+    private readonly workCenterRepo: PostgresWorkCenterRepository,
   ) {}
 
   async list(): Promise<EmpresaListResponse> {

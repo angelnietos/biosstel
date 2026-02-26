@@ -30,19 +30,23 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
-      exception instanceof HttpException
-        ? this.getExceptionMessage(exception)
-        : exception instanceof Error
-          ? exception.message
-          : 'Internal server error';
+    let message: string | string[];
+    if (exception instanceof HttpException) {
+      message = this.getExceptionMessage(exception);
+    } else if (exception instanceof Error) {
+      message = exception.message;
+    } else {
+      message = 'Internal server error';
+    }
 
-    const errorName =
-      exception instanceof HttpException
-        ? exception.name
-        : exception instanceof Error
-          ? exception.constructor.name
-          : 'Error';
+    let errorName: string;
+    if (exception instanceof HttpException) {
+      errorName = exception.name;
+    } else if (exception instanceof Error) {
+      errorName = exception.constructor.name;
+    } else {
+      errorName = 'Error';
+    }
 
     if (status >= 500) {
       this.logger.error(

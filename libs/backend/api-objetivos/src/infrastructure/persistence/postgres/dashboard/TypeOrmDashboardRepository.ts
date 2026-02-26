@@ -7,14 +7,19 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository} from 'typeorm';
-import { IsNull } from 'typeorm';
+import { IsNull, type Repository } from 'typeorm';
 import type { DashboardHomeResponse, TerminalObjectivesResponse } from '@biosstel/shared-types';
 import type { IDashboardRepository } from '../../../../domain/repositories';
 import { DashboardAlertEntity } from '../../entities/DashboardAlertEntity';
 import { DashboardObjectiveEntity } from '../../entities/DashboardObjectiveEntity';
 import { TerminalAssignmentEntity } from '../../entities/TerminalAssignmentEntity';
 import { TerminalObjectiveEntity } from '../../entities/TerminalObjectiveEntity';
+
+function filterToArray(v: string | string[] | undefined): string[] {
+  if (v == null) return [];
+  if (Array.isArray(v)) return v;
+  return [v];
+}
 
 @Injectable()
 export class TypeOrmDashboardRepository implements IDashboardRepository {
@@ -50,15 +55,12 @@ export class TypeOrmDashboardRepository implements IDashboardRepository {
       statusType: alert.statusType,
     }));
 
-    const toArray = (v: string | string[] | undefined): string[] =>
-      v == null ? [] : Array.isArray(v) ? v : [v];
-
-    const deptValues = toArray(filters?.departamento ?? filters?.departamentos);
+    const deptValues = filterToArray(filters?.departamento ?? filters?.departamentos);
     if (deptValues.length) {
       const deptSet = new Set(deptValues.map((d) => d.toLowerCase()));
       alerts = alerts.filter((a) => a.departamento && deptSet.has(a.departamento.toLowerCase()));
     }
-    const centerValues = toArray(filters?.centroTrabajo ?? filters?.centrosTrabajo);
+    const centerValues = filterToArray(filters?.centroTrabajo ?? filters?.centrosTrabajo);
     if (centerValues.length) {
       const centerSet = new Set(centerValues.map((c) => c.toLowerCase()));
       alerts = alerts.filter((a) => a.centroTrabajo && centerSet.has(a.centroTrabajo.toLowerCase()));
@@ -81,10 +83,8 @@ export class TypeOrmDashboardRepository implements IDashboardRepository {
   async getTerminalObjectives(
     filters?: Record<string, string[]>
   ): Promise<TerminalObjectivesResponse> {
-    const toArray = (v: string | string[] | undefined): string[] =>
-      v == null ? [] : Array.isArray(v) ? v : [v];
-    const typeValues = toArray(filters?.type);
-    const periodValues = toArray(filters?.period);
+    const typeValues = filterToArray(filters?.type);
+    const periodValues = filterToArray(filters?.period);
     const objectiveType = (typeValues[0] === 'puntos' ? 'puntos' : 'contratos') as string;
     const period = periodValues[0] ?? null;
 
@@ -149,16 +149,18 @@ export class TypeOrmDashboardRepository implements IDashboardRepository {
       const map = assignment.groupType === 'department' ? departmentMap : peopleMap;
       const key = assignment.groupTitle;
 
-      if (!map.has(key)) {
-        map.set(key, {
+      let group = map.get(key);
+      if (!group) {
+        group = {
           title: assignment.groupTitle,
           totalValue: terminalObjective.achieved,
           totalObjective: terminalObjective.objective,
           rows: [],
-        });
+        };
+        map.set(key, group);
       }
 
-      map.get(key).rows.push({
+      group.rows.push({
         id: assignment.id,
         label: assignment.label,
         value: assignment.value,
