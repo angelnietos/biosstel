@@ -197,7 +197,7 @@ WHERE NOT EXISTS (SELECT 1 FROM work_centers LIMIT 1) AND EXISTS (SELECT 1 FROM 
 DO $$
 BEGIN
   IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'products') THEN
-    INSERT INTO products (id, codigo, nombre, familia, estado, "createdAt", "updatedAt")
+    INSERT INTO products (id, codigo, name, familia, estado, "createdAt", "updatedAt")
     SELECT gen_random_uuid(), 'PRD-001', 'Producto A', 'Familia 1', 'Activo', NOW(), NOW()
     WHERE NOT EXISTS (SELECT 1 FROM products LIMIT 1)
     UNION ALL

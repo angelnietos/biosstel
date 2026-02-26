@@ -14,7 +14,7 @@ export class DepartmentEntity {
   @Column({ type: 'varchar', length: 100, nullable: true })
   code?: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true, default: '' })
+  @Column({ type: 'varchar', length: 100, default: '' })
   name!: string;
 
   @Column({ type: 'varchar', length: 20, default: 'blue' })
