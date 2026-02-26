@@ -15,7 +15,6 @@ import { UserManagementUseCase } from './application/use-cases';
 import { UsersController, UserDocumentsController, ClientsController } from './infrastructure/postgres';
 import { UsersService } from './users.service';
 import { CreateUserHandler, UpdateUserHandler, DeleteUserHandler, GetUserByIdHandler, ListUsersHandler } from './application/cqrs/handlers/users';
-import { UsersMediatorRegistration } from './application/cqrs/UsersMediatorRegistration';
 
 function getUsersRepositoryProvider() {
   const adapter = getFeatureAdapter('users');
@@ -42,7 +41,6 @@ function getUsersRepositoryProvider() {
     DeleteUserHandler,
     GetUserByIdHandler,
     ListUsersHandler,
-    UsersMediatorRegistration,
   ],
   exports: [
     UserManagementUseCase,

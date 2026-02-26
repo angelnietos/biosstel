@@ -1,13 +1,14 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
-import type { CreateInventoryCommand } from '../../commands/inventario/CreateInventory.command';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CreateInventoryCommand } from '../../commands/inventario/CreateInventory.command';
 import type { InventoryManagementUseCase } from '../../../use-cases';
 
+@CommandHandler(CreateInventoryCommand)
 @Injectable()
-export class CreateInventoryHandler implements ICommandHandler<CreateInventoryCommand, Awaited<ReturnType<InventoryManagementUseCase['create']>>> {
+export class CreateInventoryHandler implements ICommandHandler<CreateInventoryCommand> {
   constructor(private readonly inventoryManagement: InventoryManagementUseCase) {}
 
-  async handle(command: CreateInventoryCommand): Promise<Awaited<ReturnType<InventoryManagementUseCase['create']>>> {
+  async execute(command: CreateInventoryCommand): Promise<Awaited<ReturnType<InventoryManagementUseCase['create']>>> {
     try {
       return this.inventoryManagement.create({
         codigo: command.data.codigo ?? '',

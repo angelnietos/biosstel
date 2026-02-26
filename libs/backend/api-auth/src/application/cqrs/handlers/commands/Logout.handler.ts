@@ -1,18 +1,19 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import type { JwtService } from '@nestjs/jwt';
-import type { ICommandHandler } from '@biosstel/api-shared';
 import { I_AUTH_REPOSITORY } from '../../../../domain/repositories';
 import type { IAuthRepository } from '../../../../domain/repositories';
-import type { LogoutCommand, LogoutResult } from '../../commands/Logout.command';
+import { LogoutCommand, type LogoutResult } from '../../commands/Logout.command';
 
+@CommandHandler(LogoutCommand)
 @Injectable()
-export class LogoutHandler implements ICommandHandler<LogoutCommand, LogoutResult> {
+export class LogoutHandler implements ICommandHandler<LogoutCommand> {
   constructor(
     @Inject(I_AUTH_REPOSITORY) private readonly authRepository: IAuthRepository,
     private readonly jwtService: JwtService
   ) {}
 
-  async handle(command: LogoutCommand): Promise<LogoutResult> {
+  async execute(command: LogoutCommand): Promise<LogoutResult> {
     const { refreshToken } = command;
     if (!refreshToken || typeof refreshToken !== 'string') {
       throw new UnauthorizedException('Refresh token requerido');

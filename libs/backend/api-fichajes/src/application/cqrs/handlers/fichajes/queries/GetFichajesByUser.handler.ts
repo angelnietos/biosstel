@@ -1,16 +1,15 @@
 import { Injectable, Inject } from '@nestjs/common';
-import type { IQueryHandler } from '@biosstel/api-shared';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import type { Fichaje } from '../../../../../domain/entities';
-import type { GetFichajesByUserQuery } from '../../../queries/fichajes/GetFichajesByUser.query';
+import { GetFichajesByUserQuery } from '../../../queries/fichajes/GetFichajesByUser.query';
 import { type IFichajeRepository, I_FICHAJE_REPOSITORY } from '../../../../../domain/repositories';
 
+@QueryHandler(GetFichajesByUserQuery)
 @Injectable()
-export class GetFichajesByUserHandler
-  implements IQueryHandler<GetFichajesByUserQuery, Fichaje[]>
-{
+export class GetFichajesByUserHandler implements IQueryHandler<GetFichajesByUserQuery> {
   constructor(@Inject(I_FICHAJE_REPOSITORY) private readonly fichajeRepo: IFichajeRepository) {}
 
-  async handle(query: GetFichajesByUserQuery): Promise<Fichaje[]> {
+  async execute(query: GetFichajesByUserQuery): Promise<Fichaje[]> {
     if (!query.userId || typeof query.userId !== 'string' || !query.userId.trim()) {
       return [];
     }

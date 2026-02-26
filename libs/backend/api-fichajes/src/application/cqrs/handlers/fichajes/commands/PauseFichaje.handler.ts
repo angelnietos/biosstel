@@ -1,17 +1,19 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { IEventBus, DomainEvents, type ICommandHandler, type FichajePausedEvent } from '@biosstel/api-shared';
-import type { PauseFichajeCommand } from '../../../commands/fichajes/PauseFichaje.command';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IEventBus, DomainEvents, type FichajePausedEvent } from '@biosstel/api-shared';
+import { PauseFichajeCommand } from '../../../commands/fichajes/PauseFichaje.command';
 import type { Fichaje } from '../../../../../domain/entities';
 import { type IFichajeRepository, I_FICHAJE_REPOSITORY } from '../../../../../domain/repositories';
 
+@CommandHandler(PauseFichajeCommand)
 @Injectable()
-export class PauseFichajeHandler implements ICommandHandler<PauseFichajeCommand, Fichaje> {
+export class PauseFichajeHandler implements ICommandHandler<PauseFichajeCommand> {
   constructor(
     @Inject(I_FICHAJE_REPOSITORY) private readonly fichajeRepo: IFichajeRepository,
     @Inject(IEventBus) private readonly eventBus: { publish: (name: string, payload: unknown) => void }
   ) {}
 
-  async handle(command: PauseFichajeCommand): Promise<Fichaje> {
+  async execute(command: PauseFichajeCommand): Promise<Fichaje> {
     const fichaje = await this.fichajeRepo.findById(command.fichajeId);
     if (!fichaje) throw new NotFoundException(`Fichaje ${command.fichajeId} not found`);
 

@@ -1,18 +1,17 @@
 import { Injectable, Inject } from '@nestjs/common';
-import type { IQueryHandler } from '@biosstel/api-shared';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { type IFichajeRepository, I_FICHAJE_REPOSITORY, type FichajeDashboardRow } from '../../../../../domain/repositories';
-import type { GetFichajeDashboardQuery } from '../../../queries/fichajes/GetFichajeDashboard.query';
+import { GetFichajeDashboardQuery } from '../../../queries/fichajes/GetFichajeDashboard.query';
 
+@QueryHandler(GetFichajeDashboardQuery)
 @Injectable()
-export class GetFichajeDashboardHandler
-  implements IQueryHandler<GetFichajeDashboardQuery, FichajeDashboardRow[]>
-{
+export class GetFichajeDashboardHandler implements IQueryHandler<GetFichajeDashboardQuery> {
   constructor(
     @Inject(I_FICHAJE_REPOSITORY)
     private readonly fichajeRepository: IFichajeRepository
   ) {}
 
-  async handle(query: GetFichajeDashboardQuery): Promise<FichajeDashboardRow[]> {
+  async execute(query: GetFichajeDashboardQuery): Promise<FichajeDashboardRow[]> {
     const date = query?.date ?? new Date().toISOString().split('T')[0];
     try {
       return await this.fichajeRepository.findDashboardRows(date);

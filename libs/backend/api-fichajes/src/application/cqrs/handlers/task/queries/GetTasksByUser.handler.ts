@@ -1,16 +1,15 @@
 import { Injectable, Inject } from '@nestjs/common';
-import type { IQueryHandler } from '@biosstel/api-shared';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import type { Task as FichajeTask } from '../../../../../domain/entities';
-import type { GetTasksByUserQuery } from '../../../queries/task/GetTasksByUser.query';
+import { GetTasksByUserQuery } from '../../../queries/task/GetTasksByUser.query';
 import { type ITaskRepository, I_TASK_REPOSITORY } from '../../../../../domain/repositories';
 
+@QueryHandler(GetTasksByUserQuery)
 @Injectable()
-export class GetTasksByUserHandler
-  implements IQueryHandler<GetTasksByUserQuery, FichajeTask[]>
-{
+export class GetTasksByUserHandler implements IQueryHandler<GetTasksByUserQuery> {
   constructor(@Inject(I_TASK_REPOSITORY) private readonly taskRepo: ITaskRepository) {}
 
-  async handle(query: GetTasksByUserQuery): Promise<FichajeTask[]> {
+  async execute(query: GetTasksByUserQuery): Promise<FichajeTask[]> {
     if (!query.userId || typeof query.userId !== 'string' || !query.userId.trim()) {
       return [];
     }

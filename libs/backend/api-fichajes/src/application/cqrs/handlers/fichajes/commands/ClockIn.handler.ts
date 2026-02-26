@@ -1,17 +1,19 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import { type ICommandHandler, IEventBus, DomainEvents, type FichajeStartedEvent } from '@biosstel/api-shared';
-import type { ClockInCommand } from '../../../commands/fichajes/ClockIn.command';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IEventBus, DomainEvents, type FichajeStartedEvent } from '@biosstel/api-shared';
+import { ClockInCommand } from '../../../commands/fichajes/ClockIn.command';
 import type { Fichaje } from '../../../../../domain/entities';
 import { type IFichajeRepository, I_FICHAJE_REPOSITORY } from '../../../../../domain/repositories';
 
+@CommandHandler(ClockInCommand)
 @Injectable()
-export class ClockInHandler implements ICommandHandler<ClockInCommand, Fichaje> {
+export class ClockInHandler implements ICommandHandler<ClockInCommand> {
   constructor(
     @Inject(I_FICHAJE_REPOSITORY) private readonly fichajeRepo: IFichajeRepository,
     @Inject(IEventBus) private readonly eventBus: { publish: (name: string, payload: unknown) => void }
   ) {}
 
-  async handle(command: ClockInCommand): Promise<Fichaje> {
+  async execute(command: ClockInCommand): Promise<Fichaje> {
     if (!command.userId || typeof command.userId !== 'string') {
       throw new BadRequestException('userId es obligatorio para fichar entrada');
     }

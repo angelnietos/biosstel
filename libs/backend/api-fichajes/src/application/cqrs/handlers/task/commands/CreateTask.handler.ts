@@ -1,14 +1,15 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
-import type { CreateTaskCommand } from '../../../commands/task/CreateTask.command';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CreateTaskCommand } from '../../../commands/task/CreateTask.command';
 import type { Task as FichajeTask } from '../../../../../domain/entities';
 import { type ITaskRepository, I_TASK_REPOSITORY } from '../../../../../domain/repositories';
 
+@CommandHandler(CreateTaskCommand)
 @Injectable()
-export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand, FichajeTask> {
+export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
   constructor(@Inject(I_TASK_REPOSITORY) private readonly taskRepo: ITaskRepository) {}
 
-  async handle(command: CreateTaskCommand): Promise<FichajeTask> {
+  async execute(command: CreateTaskCommand): Promise<FichajeTask> {
     if (!command.userId || typeof command.userId !== 'string' || !command.userId.trim()) {
       throw new BadRequestException('userId es obligatorio');
     }

@@ -1,9 +1,10 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import type { JwtService } from '@nestjs/jwt';
 import type { ConfigService } from '@nestjs/config';
-import type { ICommandHandler, UserLoggedInEvent } from '@biosstel/api-shared';
+import type { UserLoggedInEvent } from '@biosstel/api-shared';
 import { IEventBus, DomainEvents } from '@biosstel/api-shared';
-import { type LoginResult, type LoginCommand } from '../../commands/Login.command';
+import { type LoginResult, LoginCommand } from '../../commands/Login.command';
 import { USER_REPOSITORY } from '@biosstel/api-usuarios';
 import type { IUserRepository } from '@biosstel/api-usuarios';
 import { I_AUTH_REPOSITORY } from '../../../../domain/repositories';
@@ -12,8 +13,9 @@ import type { IAuthRepository } from '../../../../domain/repositories';
 const ACCESS_EXPIRES_DEFAULT = '15m';
 const REFRESH_EXPIRES_DEFAULT = '7d';
 
+@CommandHandler(LoginCommand)
 @Injectable()
-export class LoginHandler implements ICommandHandler<LoginCommand, LoginResult> {
+export class LoginHandler implements ICommandHandler<LoginCommand> {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
     @Inject(I_AUTH_REPOSITORY) private readonly authRepository: IAuthRepository,
@@ -22,7 +24,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand, LoginResult> 
     @Inject(IEventBus) private readonly eventBus: { publish: (name: string, payload: unknown) => void }
   ) {}
 
-  async handle(command: LoginCommand): Promise<LoginResult> {
+  async execute(command: LoginCommand): Promise<LoginResult> {
     const { email, password } = command;
     if (!email || !password) {
       throw new UnauthorizedException('Email y contraseña son obligatorios');

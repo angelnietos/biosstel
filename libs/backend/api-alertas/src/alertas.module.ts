@@ -22,7 +22,6 @@ import { I_ALERTAS_REPOSITORY } from './domain/repositories';
   providers: [
     AlertasManagementUseCase,
     FichajeEndedAlertHandler,
-    AlertasMediatorRegistration,
     ListAlertasHandler,
     CreateAlertaHandler,
     UpdateAlertaHandler,

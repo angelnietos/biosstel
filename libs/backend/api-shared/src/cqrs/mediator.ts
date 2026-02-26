@@ -1,48 +1,26 @@
 /**
- * Mediator implementation: dispatches commands/queries to registered handlers.
- * Handlers are registered by each feature module (OnModuleInit).
+ * Mediator facade over @nestjs/cqrs CommandBus and QueryBus.
+ * Keeps IMediatorPort (send/execute) so controllers stay unchanged.
+ * Handlers are registered via @CommandHandler() / @QueryHandler() and discovered by NestJS.
  */
 
-import { Injectable, type Type } from '@nestjs/common';
-import type { ModuleRef } from '@nestjs/core';
-import type { ICommand, IQuery, ICommandHandler, IQueryHandler } from './markers';
+import { Injectable } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import type { ICommand, IQuery } from './markers';
 import type { IMediatorPort } from './mediator.port';
-
-type CommandCtor = Type<ICommand>;
-type QueryCtor = Type<IQuery>;
-type CommandHandlerCtor = Type<ICommandHandler<ICommand, unknown>>;
-type QueryHandlerCtor = Type<IQueryHandler<IQuery, unknown>>;
 
 @Injectable()
 export class Mediator implements IMediatorPort {
-  private readonly commandHandlers = new Map<string, CommandHandlerCtor>();
-  private readonly queryHandlers = new Map<string, QueryHandlerCtor>();
-
-  constructor(private readonly moduleRef: ModuleRef) {}
-
-  registerCommandHandler(command: CommandCtor, handler: CommandHandlerCtor): void {
-    this.commandHandlers.set(command.name, handler);
-  }
-
-  registerQueryHandler(query: QueryCtor, handler: QueryHandlerCtor): void {
-    this.queryHandlers.set(query.name, handler);
-  }
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus
+  ) {}
 
   async send<TResult>(command: ICommand): Promise<TResult> {
-    const Handler = this.commandHandlers.get(command.constructor.name);
-    if (!Handler) {
-      throw new Error(`No handler registered for command: ${command.constructor.name}`);
-    }
-    const handler = this.moduleRef.get<ICommandHandler<ICommand, TResult>>(Handler, { strict: false });
-    return handler.handle(command);
+    return this.commandBus.execute(command) as Promise<TResult>;
   }
 
   async execute<TResult>(query: IQuery): Promise<TResult> {
-    const Handler = this.queryHandlers.get(query.constructor.name);
-    if (!Handler) {
-      throw new Error(`No handler registered for query: ${query.constructor.name}`);
-    }
-    const handler = this.moduleRef.get<IQueryHandler<IQuery, TResult>>(Handler, { strict: false });
-    return handler.handle(query);
+    return this.queryBus.query(query) as Promise<TResult>;
   }
 }

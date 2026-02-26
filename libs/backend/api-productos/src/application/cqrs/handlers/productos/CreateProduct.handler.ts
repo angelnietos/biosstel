@@ -1,14 +1,15 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import type { ProductPlain } from '../../../../domain/entities/Product';
-import type { CreateProductCommand } from '../../commands/productos/CreateProduct.command';
+import { CreateProductCommand } from '../../commands/productos/CreateProduct.command';
 import type { ProductosManagementUseCase } from '../../../use-cases';
 
+@CommandHandler(CreateProductCommand)
 @Injectable()
-export class CreateProductHandler implements ICommandHandler<CreateProductCommand, ProductPlain> {
+export class CreateProductHandler implements ICommandHandler<CreateProductCommand> {
   constructor(private readonly productosManagement: ProductosManagementUseCase) {}
 
-  async handle(command: CreateProductCommand): Promise<ProductPlain> {
+  async execute(command: CreateProductCommand): Promise<ProductPlain> {
     try {
       const product = await this.productosManagement.create({
         codigo: command.data.codigo ?? '',

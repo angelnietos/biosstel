@@ -1,17 +1,18 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import type { JwtService } from '@nestjs/jwt';
 import type { ConfigService } from '@nestjs/config';
-import type { ICommandHandler } from '@biosstel/api-shared';
 import { USER_REPOSITORY } from '@biosstel/api-usuarios';
 import type { IUserRepository } from '@biosstel/api-usuarios';
 import { I_AUTH_REPOSITORY } from '../../../../domain/repositories';
 import type { IAuthRepository } from '../../../../domain/repositories';
-import type { RefreshTokenCommand, RefreshTokenResult } from '../../commands/RefreshToken.command';
+import { RefreshTokenCommand, type RefreshTokenResult } from '../../commands/RefreshToken.command';
 
 const ACCESS_EXPIRES_DEFAULT = '15m';
 
+@CommandHandler(RefreshTokenCommand)
 @Injectable()
-export class RefreshTokenHandler implements ICommandHandler<RefreshTokenCommand, RefreshTokenResult> {
+export class RefreshTokenHandler implements ICommandHandler<RefreshTokenCommand> {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
     @Inject(I_AUTH_REPOSITORY) private readonly authRepository: IAuthRepository,
@@ -19,7 +20,7 @@ export class RefreshTokenHandler implements ICommandHandler<RefreshTokenCommand,
     private readonly config: ConfigService
   ) {}
 
-  async handle(command: RefreshTokenCommand): Promise<RefreshTokenResult> {
+  async execute(command: RefreshTokenCommand): Promise<RefreshTokenResult> {
     const { refreshToken } = command;
     if (!refreshToken || typeof refreshToken !== 'string') {
       throw new UnauthorizedException('Refresh token requerido');

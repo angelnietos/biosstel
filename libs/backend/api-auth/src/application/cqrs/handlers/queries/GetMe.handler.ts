@@ -1,19 +1,20 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import type { JwtService } from '@nestjs/jwt';
-import type { IQueryHandler } from '@biosstel/api-shared';
 import { USER_REPOSITORY } from '@biosstel/api-usuarios';
 import type { IUserRepository } from '@biosstel/api-usuarios';
 import type { User } from '@biosstel/shared-types';
-import type { GetMeQuery } from '../../queries/GetMe.query';
+import { GetMeQuery } from '../../queries/GetMe.query';
 
+@QueryHandler(GetMeQuery)
 @Injectable()
-export class GetMeHandler implements IQueryHandler<GetMeQuery, User> {
+export class GetMeHandler implements IQueryHandler<GetMeQuery> {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
     private readonly jwtService: JwtService
   ) {}
 
-  async handle(query: GetMeQuery): Promise<User> {
+  async execute(query: GetMeQuery): Promise<User> {
     const { accessToken } = query;
     if (!accessToken || typeof accessToken !== 'string') {
       throw new UnauthorizedException('Token requerido');

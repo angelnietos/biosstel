@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import type { IQueryHandler } from '@biosstel/api-shared';
-import type { GetInventoryByIdQuery } from '../../queries/inventario/GetInventoryById.query';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
+import { GetInventoryByIdQuery } from '../../queries/inventario/GetInventoryById.query';
 import type { InventoryManagementUseCase } from '../../../use-cases';
 
+@QueryHandler(GetInventoryByIdQuery)
 @Injectable()
-export class GetInventoryByIdHandler implements IQueryHandler<GetInventoryByIdQuery, Awaited<ReturnType<InventoryManagementUseCase['getById']>>> {
+export class GetInventoryByIdHandler implements IQueryHandler<GetInventoryByIdQuery> {
   constructor(private readonly inventoryManagement: InventoryManagementUseCase) {}
 
-  async handle(query: GetInventoryByIdQuery): Promise<Awaited<ReturnType<InventoryManagementUseCase['getById']>>> {
+  async execute(query: GetInventoryByIdQuery): Promise<Awaited<ReturnType<InventoryManagementUseCase['getById']>>> {
     return this.inventoryManagement.getById(query.id);
   }
 }

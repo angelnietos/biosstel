@@ -1,13 +1,14 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
-import type { UploadPlantillaProductCommand } from '../../commands/productos/UploadPlantillaProduct.command';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UploadPlantillaProductCommand } from '../../commands/productos/UploadPlantillaProduct.command';
 import type { ProductosManagementUseCase } from '../../../use-cases';
 
+@CommandHandler(UploadPlantillaProductCommand)
 @Injectable()
-export class UploadPlantillaProductHandler implements ICommandHandler<UploadPlantillaProductCommand, { ok: boolean; path: string }> {
+export class UploadPlantillaProductHandler implements ICommandHandler<UploadPlantillaProductCommand> {
   constructor(private readonly productosManagement: ProductosManagementUseCase) {}
 
-  async handle(command: UploadPlantillaProductCommand): Promise<{ ok: boolean; path: string }> {
+  async execute(command: UploadPlantillaProductCommand): Promise<{ ok: boolean; path: string }> {
     const fileWithBuffer = command.file as { buffer?: Buffer } | undefined;
     if (!command.file?.buffer && !fileWithBuffer?.buffer) {
       throw new BadRequestException('Falta el archivo');

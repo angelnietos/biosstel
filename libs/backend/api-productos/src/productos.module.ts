@@ -5,7 +5,6 @@ import { ProductosManagementUseCase, InventoryManagementUseCase, ReportsManageme
 
 import { PRODUCT_REPOSITORY, INVENTORY_REPOSITORY } from './domain/repositories';
 import { ProductosService } from './productos.service';
-import { ProductosMediatorRegistration } from './application/cqrs/ProductosMediatorRegistration';
 import {
   CreateProductHandler,
   UpdateProductHandler,
@@ -36,7 +35,6 @@ import { PRODUCTOS_POSTGRES_ENTITIES, PostgresProductRepository, PostgresInvento
     InventoryManagementUseCase,
     ReportsManagementUseCase,
     ProductosService,
-    ProductosMediatorRegistration,
     CreateProductHandler,
     UpdateProductHandler,
     DeleteProductHandler,

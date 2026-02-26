@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
-import type { UpdateInventoryCommand } from '../../commands/inventario/UpdateInventory.command';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UpdateInventoryCommand } from '../../commands/inventario/UpdateInventory.command';
 import type { InventoryManagementUseCase } from '../../../use-cases';
 
+@CommandHandler(UpdateInventoryCommand)
 @Injectable()
-export class UpdateInventoryHandler implements ICommandHandler<UpdateInventoryCommand, Awaited<ReturnType<InventoryManagementUseCase['update']>>> {
+export class UpdateInventoryHandler implements ICommandHandler<UpdateInventoryCommand> {
   constructor(private readonly inventoryManagement: InventoryManagementUseCase) {}
 
-  async handle(command: UpdateInventoryCommand): Promise<Awaited<ReturnType<InventoryManagementUseCase['update']>>> {
+  async execute(command: UpdateInventoryCommand): Promise<Awaited<ReturnType<InventoryManagementUseCase['update']>>> {
     return this.inventoryManagement.update(command.id, {
       codigo: command.data.codigo,
       nombre: command.data.nombre,

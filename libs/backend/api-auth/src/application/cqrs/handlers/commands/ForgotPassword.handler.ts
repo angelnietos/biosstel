@@ -1,16 +1,17 @@
 import { Injectable, Inject } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { USER_REPOSITORY } from '@biosstel/api-usuarios';
 import type { IUserRepository } from '@biosstel/api-usuarios';
-import type { ForgotPasswordCommand } from '../../commands/ForgotPassword.command';
+import { ForgotPasswordCommand } from '../../commands/ForgotPassword.command';
 
+@CommandHandler(ForgotPasswordCommand)
 @Injectable()
-export class ForgotPasswordHandler implements ICommandHandler<ForgotPasswordCommand, { message: string }> {
+export class ForgotPasswordHandler implements ICommandHandler<ForgotPasswordCommand> {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
   ) {}
 
-  async handle(command: ForgotPasswordCommand): Promise<{ message: string }> {
+  async execute(command: ForgotPasswordCommand): Promise<{ message: string }> {
     const email = typeof command.email === 'string' ? command.email.trim() : '';
     if (email) {
       try {

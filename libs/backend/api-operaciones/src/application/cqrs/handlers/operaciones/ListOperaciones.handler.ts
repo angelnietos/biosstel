@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import type { IQueryHandler } from '@biosstel/api-shared';
-import type { ListOperacionesQuery } from '../../queries/operaciones/ListOperaciones.query';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
+import { ListOperacionesQuery } from '../../queries/operaciones/ListOperaciones.query';
 import type { OperacionesManagementUseCase } from '../../../use-cases';
 
+@QueryHandler(ListOperacionesQuery)
 @Injectable()
-export class ListOperacionesHandler implements IQueryHandler<ListOperacionesQuery, Awaited<ReturnType<OperacionesManagementUseCase['list']>>> {
+export class ListOperacionesHandler implements IQueryHandler<ListOperacionesQuery> {
   constructor(private readonly operacionesManagement: OperacionesManagementUseCase) {}
 
-  async handle(_query: ListOperacionesQuery): Promise<Awaited<ReturnType<OperacionesManagementUseCase['list']>>> {
+  async execute(_query: ListOperacionesQuery): Promise<Awaited<ReturnType<OperacionesManagementUseCase['list']>>> {
     return this.operacionesManagement.list();
   }
 }

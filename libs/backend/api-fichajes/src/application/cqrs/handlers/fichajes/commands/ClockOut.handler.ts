@@ -1,17 +1,19 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { IEventBus, DomainEvents, type ICommandHandler, type FichajeEndedEvent } from '@biosstel/api-shared';
-import type { ClockOutCommand } from '../../../commands/fichajes/ClockOut.command';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IEventBus, DomainEvents, type FichajeEndedEvent } from '@biosstel/api-shared';
+import { ClockOutCommand } from '../../../commands/fichajes/ClockOut.command';
 import type { Fichaje } from '../../../../../domain/entities';
 import { type IFichajeRepository, I_FICHAJE_REPOSITORY } from '../../../../../domain/repositories';
 
+@CommandHandler(ClockOutCommand)
 @Injectable()
-export class ClockOutHandler implements ICommandHandler<ClockOutCommand, Fichaje> {
+export class ClockOutHandler implements ICommandHandler<ClockOutCommand> {
   constructor(
     @Inject(I_FICHAJE_REPOSITORY) private readonly fichajeRepo: IFichajeRepository,
     @Inject(IEventBus) private readonly eventBus: { publish: (name: string, payload: unknown) => void }
   ) {}
 
-  async handle(command: ClockOutCommand): Promise<Fichaje> {
+  async execute(command: ClockOutCommand): Promise<Fichaje> {
     const fichaje = await this.fichajeRepo.findById(command.fichajeId);
     if (!fichaje) throw new NotFoundException(`Fichaje ${command.fichajeId} not found`);
 

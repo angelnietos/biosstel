@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import type { IQueryHandler } from '@biosstel/api-shared';
-import type { GetReportsSummaryQuery } from '../../queries/reports/GetReportsSummary.query';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
+import { GetReportsSummaryQuery } from '../../queries/reports/GetReportsSummary.query';
 import type { ReportsManagementUseCase } from '../../../use-cases';
 
+@QueryHandler(GetReportsSummaryQuery)
 @Injectable()
-export class GetReportsSummaryHandler implements IQueryHandler<GetReportsSummaryQuery, Awaited<ReturnType<ReportsManagementUseCase['getSummary']>>> {
+export class GetReportsSummaryHandler implements IQueryHandler<GetReportsSummaryQuery> {
   constructor(private readonly reportsManagement: ReportsManagementUseCase) {}
 
-  async handle(_query: GetReportsSummaryQuery): Promise<Awaited<ReturnType<ReportsManagementUseCase['getSummary']>>> {
+  async execute(_query: GetReportsSummaryQuery): Promise<Awaited<ReturnType<ReportsManagementUseCase['getSummary']>>> {
     return this.reportsManagement.getSummary();
   }
 }

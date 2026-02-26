@@ -1,15 +1,16 @@
 import { Injectable, BadRequestException, Inject } from '@nestjs/common';
-import type { ICommandHandler } from '@biosstel/api-shared';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import type { DepartmentPlain } from '../../../../../domain/entities/Department';
 import { DEPARTMENT_REPOSITORY } from '../../../../../domain/repositories';
 import type { IDepartmentRepository } from '../../../../../domain/repositories';
-import type { CreateDepartmentCommand } from '../../../commands/departments/CreateDepartment.command';
+import { CreateDepartmentCommand } from '../../../commands/departments/CreateDepartment.command';
 
+@CommandHandler(CreateDepartmentCommand)
 @Injectable()
-export class CreateDepartmentHandler implements ICommandHandler<CreateDepartmentCommand, DepartmentPlain> {
+export class CreateDepartmentHandler implements ICommandHandler<CreateDepartmentCommand> {
   constructor(@Inject(DEPARTMENT_REPOSITORY) private readonly departmentRepo: IDepartmentRepository) {}
 
-  async handle(command: CreateDepartmentCommand): Promise<DepartmentPlain> {
+  async execute(command: CreateDepartmentCommand): Promise<DepartmentPlain> {
     try {
       const department = await this.departmentRepo.create({
         name: command.data.name ?? '',

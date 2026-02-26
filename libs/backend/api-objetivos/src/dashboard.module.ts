@@ -14,7 +14,6 @@ import {
   TypeOrmDashboardRepository,
 } from './infrastructure/persistence/postgres';
 import { GetDashboardHomeHandler, GetTerminalObjectivesHandler, FichajeEndedEventHandler } from './application/cqrs/handlers/dashboard';
-import { DashboardMediatorRegistration } from './application/cqrs/DashboardMediatorRegistration';
 import { I_DASHBOARD_REPOSITORY } from './domain/repositories';
 
 @Module({
@@ -30,7 +29,6 @@ import { I_DASHBOARD_REPOSITORY } from './domain/repositories';
     GetDashboardHomeHandler,
     GetTerminalObjectivesHandler,
     FichajeEndedEventHandler,
-    DashboardMediatorRegistration,
   ],
   exports: [
     DashboardManagementUseCase,

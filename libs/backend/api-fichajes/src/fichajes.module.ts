@@ -29,7 +29,6 @@ import {
   GetTaskByIdHandler,
   GetFichajeDashboardHandler,
 } from './application/cqrs/handlers';
-import { FichajesMediatorRegistration } from './application/cqrs/FichajesMediatorRegistration';
 import { getFeatureAdapter } from '@biosstel/api-shared';
 import { UsersModule } from '@biosstel/api-usuarios';
 
@@ -66,7 +65,6 @@ export class FichajesModule {
       GetTasksByUserHandler,
       GetTaskByIdHandler,
       GetFichajeDashboardHandler,
-      FichajesMediatorRegistration,
     ];
     const exports = [
       FichajesManagementUseCase,
