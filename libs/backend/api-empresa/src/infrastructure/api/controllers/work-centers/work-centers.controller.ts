@@ -16,7 +16,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
-import type { PostgresWorkCenterRepository } from '../../../persistence/postgres/work-centers';
+import { PostgresWorkCenterRepository } from '../../../persistence/postgres/work-centers';
 import type { WorkCenter } from '@biosstel/shared-types';
 import type { CreateWorkCenterDto, UpdateWorkCenterDto } from '../../../../application/dto/work-centers';
 

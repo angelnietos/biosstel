@@ -3,7 +3,7 @@
  * Expone los use cases para inyección desde otros módulos si se necesita.
  */
 import { Injectable } from '@nestjs/common';
-import type {
+import {
   ProductosManagementUseCase,
   InventoryManagementUseCase,
   ReportsManagementUseCase,
