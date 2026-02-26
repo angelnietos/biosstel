@@ -6,7 +6,8 @@
  * Uso:
  *   pnpm api:test:curl:graphql   # Prueba GraphQL en 3022
  *   pnpm api:test:curl:rest      # Prueba REST en 3021
- *   pnpm api:test:curl            # Muestra comandos para ambos
+ *   pnpm api:test:curl:all       # Levanta ambas APIs, ejecuta las 2 pruebas en paralelo
+ *   pnpm api:test:curl           # Muestra comandos
  */
 
 const http = require('http');
@@ -14,17 +15,29 @@ const http = require('http');
 const GRAPHQL_PORT = 3022;
 const REST_PORT = 3021;
 
-/** Log JSON de forma legible; si hay muchos items muestra los primeros y un resumen */
-function logJson(label, data, maxItems = 3) {
+/** Crea un logger: si collect, acumula líneas en array; si no, escribe a console */
+function makeLogger(collect) {
+  const out = [];
+  const log = (...args) => {
+    const line = args.map((a) => (typeof a === 'string' ? a : String(a))).join(' ');
+    if (collect) line.split('\n').forEach((l) => out.push(l));
+    else console.log(...args);
+  };
+  return { log, out };
+}
+
+/** Log JSON de forma legible; usa logger.log si se pasa */
+function logJson(logger, label, data, maxItems = 3) {
+  const log = logger ? logger.log : console.log;
   if (data === undefined) return;
   const isArray = Array.isArray(data);
   const items = isArray ? data : [data];
   const show = items.slice(0, maxItems);
   const rest = items.length - show.length;
-  console.log(label);
-  console.log(JSON.stringify(show.length === 1 && !isArray ? show[0] : show, null, 2));
-  if (rest > 0) console.log(`   ... y ${rest} más (${items.length} en total)\n`);
-  else console.log('');
+  log(label);
+  log(JSON.stringify(show.length === 1 && !isArray ? show[0] : show, null, 2));
+  if (rest > 0) log(`   ... y ${rest} más (${items.length} en total)\n`);
+  else log('');
 }
 
 function get(url) {
@@ -71,83 +84,164 @@ function post(url, body) {
   });
 }
 
-async function testRest(port) {
-  console.log(`\n--- REST (puerto ${port}) ---\n`);
+async function testRest(port, opts = {}) {
+  const collect = !!opts.collect;
+  const L = makeLogger(collect);
+  const log = L.log;
+
+  log(`\n--- REST (puerto ${port}) ---\n`);
   try {
     const health = await get(`http://localhost:${port}/api/v1/health/live`);
-    console.log('GET /api/v1/health/live:', health.statusCode, health.body.trim().slice(0, 80) + '...');
+    log('GET /api/v1/health/live:', health.statusCode, health.body.trim().slice(0, 80) + '...');
   } catch (e) {
-    console.log('GET /api/v1/health/live: Error –', e.message, '(¿API en marcha en', port + '?)');
+    log('GET /api/v1/health/live: Error –', e.message, '(¿API en marcha en', port + '?)');
+    if (collect) return L.out;
     return;
   }
-  let totalBytes = 0;
-  let requests = 0;
+
+  const base = `http://localhost:${port}/api/v1`;
+  let allOk = true;
+
+  // 1) Lista (REST siempre devuelve todos los campos)
   try {
-    const users = await get(`http://localhost:${port}/api/v1/users?page=1&pageSize=5`);
-    requests++;
-    totalBytes += Buffer.byteLength(users.body, 'utf8');
-    console.log('GET /api/v1/users (lista): status', users.statusCode, '| bytes:', Buffer.byteLength(users.body, 'utf8'));
-    const parsed = JSON.parse(users.body);
+    const r1 = await get(`${base}/users?page=1&pageSize=5`);
+    const parsed = JSON.parse(r1.body);
     const items = parsed.items ?? parsed.data ?? [];
+    const bytes = Buffer.byteLength(r1.body, 'utf8');
+    log('1) Lista (payload completo):', Array.isArray(items) ? items.length : 0, 'items |', bytes, 'bytes');
     if (Array.isArray(items)) {
-      console.log('✅ REST usuarios: lista válida, total', items.length);
-      logJson('   [REST] Lista usuarios (primeros):', items, 3);
-      if (items.length > 0) {
-        const firstId = items[0].id;
-        const one = await get(`http://localhost:${port}/api/v1/users/${firstId}`);
-        requests++;
-        totalBytes += Buffer.byteLength(one.body, 'utf8');
-        console.log('GET /api/v1/users/:id (detalle): status', one.statusCode, '| bytes:', Buffer.byteLength(one.body, 'utf8'));
-        try {
-          const oneParsed = JSON.parse(one.body);
-          logJson('   [REST] Usuario por ID:', oneParsed);
-        } catch (_) {}
-        console.log('   → REST:', requests, 'peticiones,', totalBytes, 'bytes (payload completo en cada una)\n');
-      } else {
-        console.log('   → REST: 1 petición,', totalBytes, 'bytes\n');
-      }
+      logJson(L, '   [REST] users (siempre todos los campos):', items, 5);
     } else {
-      console.log('⚠️  Respuesta:', users.body.trim().slice(0, 200));
+      log('⚠️  Respuesta inesperada');
+      allOk = false;
     }
   } catch (e) {
-    console.log('⚠️  REST:', e.message);
+    log('1) Lista: ⚠️', e.message);
+    allOk = false;
   }
+
+  // 2) Lista página 1 (total, totalPages si el backend los devuelve)
+  try {
+    const r2 = await get(`${base}/users?page=1&pageSize=5`);
+    const parsed = JSON.parse(r2.body);
+    const items = parsed.items ?? parsed.data ?? [];
+    const total = parsed.total ?? items.length;
+    log('2) Lista page 1: total', total, '| items', items.length);
+    logJson(L, '   [REST] items (primeros 2):', items, 2);
+  } catch (e) {
+    log('2) Lista page 1: ⚠️', e.message);
+    allOk = false;
+  }
+
+  // 3) Lista + detalle = 2 peticiones (GraphQL lo hace en 1)
+  try {
+    const list = await get(`${base}/users?page=1&pageSize=3`);
+    const listData = JSON.parse(list.body);
+    const items = listData.items ?? listData.data ?? [];
+    const firstId = items[0]?.id;
+    if (!firstId) {
+      log('3) Lista + detalle: (no hay usuarios)');
+    } else {
+      const one = await get(`${base}/users/${firstId}`);
+      const oneData = JSON.parse(one.body);
+      const b1 = Buffer.byteLength(list.body, 'utf8');
+      const b2 = Buffer.byteLength(one.body, 'utf8');
+      log('3) Lista + detalle: 2 peticiones |', b1 + b2, 'bytes (GraphQL: 1 petición)');
+      logJson(L, '   [REST] lista:', items);
+      logJson(L, '   [REST] detalle user:', oneData);
+    }
+  } catch (e) {
+    log('3) Lista + detalle: ⚠️', e.message);
+    allOk = false;
+  }
+
+  // 4) Paginación page 2
+  try {
+    const r4 = await get(`${base}/users?page=2&pageSize=2`);
+    const parsed = JSON.parse(r4.body);
+    const items = parsed.items ?? parsed.data ?? [];
+    const total = parsed.total ?? 0;
+    log('4) Paginación page 2: pageSize 2 | total', total);
+    logJson(L, '   [REST] page 2 items:', items);
+  } catch (e) {
+    log('4) Paginación: ⚠️', e.message);
+    allOk = false;
+  }
+
+  // 5) User por ID
+  try {
+    const list = await get(`${base}/users?page=1&pageSize=1`);
+    const firstId = (JSON.parse(list.body).items ?? JSON.parse(list.body).data ?? [])[0]?.id;
+    if (firstId) {
+      const one = await get(`${base}/users/${firstId}`);
+      const oneData = JSON.parse(one.body);
+      log('5) User por ID: GET /users/' + firstId.slice(0, 8) + '...');
+      logJson(L, '   [REST] user:', oneData);
+    } else {
+      log('5) User por ID: (no hay usuarios)');
+    }
+  } catch (e) {
+    log('5) User por ID: ⚠️', e.message);
+    allOk = false;
+  }
+
+  // 6) Lista 10 (para ver id/role; REST devuelve todo)
+  try {
+    const r6 = await get(`${base}/users?page=1&pageSize=10`);
+    const parsed = JSON.parse(r6.body);
+    const items = parsed.items ?? parsed.data ?? [];
+    const bytes = Buffer.byteLength(r6.body, 'utf8');
+    log('6) Lista 10 usuarios: ', items.length, 'items |', bytes, 'bytes (incluye todos los campos)');
+    const idRole = items.map((u) => ({ id: u.id, role: u.role }));
+    logJson(L, '   [REST] id+role (extraídos del payload completo):', idRole, 5);
+  } catch (e) {
+    log('6) Lista 10: ⚠️', e.message);
+    allOk = false;
+  }
+
+  if (allOk) log('✅ REST: mismas pruebas que GraphQL (siempre payload completo, más peticiones)\n');
+  if (collect) return L.out;
 }
 
-async function testGraphQL(port) {
-  console.log(`\n--- GraphQL (puerto ${port}) ---\n`);
+async function testGraphQL(port, opts = {}) {
+  const collect = !!opts.collect;
+  const L = makeLogger(collect);
+  const log = L.log;
+
+  log(`\n--- GraphQL (puerto ${port}) ---\n`);
   try {
     const health = await get(`http://localhost:${port}/api/v1/health/live`);
-    console.log('GET /api/v1/health/live:', health.statusCode, health.body.trim().slice(0, 80) + '...');
+    log('GET /api/v1/health/live:', health.statusCode, health.body.trim().slice(0, 80) + '...');
   } catch (e) {
-    console.log('GET /api/v1/health/live: Error –', e.message, '(¿API en marcha en', port + '?)');
+    log('GET /api/v1/health/live: Error –', e.message, '(¿API en marcha en', port + '?)');
+    if (collect) return L.out;
     return;
   }
 
   const base = `http://localhost:${port}/graphql`;
   let allOk = true;
 
-  // 1) Solo los campos que necesitas (menos bytes que REST)
+  // 1) Solo id+email
   try {
     const minimal = await post(base, {
       query: 'query { users(page: 1, pageSize: 5) { items { id email } total page pageSize } }',
     });
     const parsed = JSON.parse(minimal.body);
     if (parsed.errors) {
-      console.log('⚠️  Query "solo id+email":', parsed.errors[0].message);
+      log('⚠️  Query "solo id+email":', parsed.errors[0].message);
       allOk = false;
     } else {
       const u = parsed.data?.users;
       const bytes = Buffer.byteLength(minimal.body, 'utf8');
-      console.log('1) Solo id+email:     ', u?.items?.length ?? 0, 'items |', bytes, 'bytes');
-      logJson('   [GraphQL] users { id, email }:', u?.items ?? [], 5);
+      log('1) Solo id+email:     ', u?.items?.length ?? 0, 'items |', bytes, 'bytes');
+      logJson(L, '   [GraphQL] users { id, email }:', u?.items ?? [], 5);
     }
   } catch (e) {
-    console.log('⚠️  Query minimal:', e.message);
+    log('⚠️  Query minimal:', e.message);
     allOk = false;
   }
 
-  // 2) Campos completos (como REST pero en una query)
+  // 2) Campos completos
   try {
     const full = await post(base, {
       query: `query {
@@ -159,21 +253,21 @@ async function testGraphQL(port) {
     });
     const parsed = JSON.parse(full.body);
     if (parsed.errors) {
-      console.log('⚠️  Query "campos completos":', parsed.errors[0].message);
+      log('⚠️  Query "campos completos":', parsed.errors[0].message);
       allOk = false;
     } else {
       const u = parsed.data?.users;
       const bytes = Buffer.byteLength(full.body, 'utf8');
-      console.log('2) Campos completos:  ', u?.items?.length ?? 0, 'items |', bytes, 'bytes');
-      logJson('   [GraphQL] users (todos los campos):', u?.items ?? [], 2);
-      console.log('   total:', u?.total, '| totalPages:', u?.totalPages, '| page:', u?.page, '| pageSize:', u?.pageSize, '\n');
+      log('2) Campos completos:  ', u?.items?.length ?? 0, 'items |', bytes, 'bytes');
+      logJson(L, '   [GraphQL] users (todos los campos):', u?.items ?? [], 2);
+      log('   total:', u?.total, '| totalPages:', u?.totalPages, '| page:', u?.page, '| pageSize:', u?.pageSize, '\n');
     }
   } catch (e) {
-    console.log('⚠️  Query full:', e.message);
+    log('⚠️  Query full:', e.message);
     allOk = false;
   }
 
-  // 3) Una sola petición: lista + detalle de un usuario (evita 2 round-trips REST)
+  // 3) Lista + detalle en 1 petición
   try {
     const listRes = await post(base, {
       query: '{ users(page: 1, pageSize: 3) { items { id } total } }',
@@ -181,7 +275,7 @@ async function testGraphQL(port) {
     const listData = JSON.parse(listRes.body);
     const firstId = listData.data?.users?.items?.[0]?.id;
     if (!firstId) {
-      console.log('3) Lista + detalle:   (no hay usuarios para probar)');
+      log('3) Lista + detalle:   (no hay usuarios para probar)');
     } else {
       const batch = await post(base, {
         query: `query ($id: String!) {
@@ -192,21 +286,21 @@ async function testGraphQL(port) {
       });
       const batchData = JSON.parse(batch.body);
       if (batchData.errors) {
-        console.log('3) Lista + detalle:   ⚠️', batchData.errors[0].message);
+        log('3) Lista + detalle:   ⚠️', batchData.errors[0].message);
         allOk = false;
       } else {
         const bytes = Buffer.byteLength(batch.body, 'utf8');
-        console.log('3) Lista + detalle:   1 petición |', bytes, 'bytes (REST haría 2 peticiones)');
-        logJson('   [GraphQL] list (items):', batchData.data?.list?.items ?? []);
-        logJson('   [GraphQL] detail (user):', batchData.data?.detail ?? null);
+        log('3) Lista + detalle:   1 petición |', bytes, 'bytes (REST haría 2 peticiones)');
+        logJson(L, '   [GraphQL] list (items):', batchData.data?.list?.items ?? []);
+        logJson(L, '   [GraphQL] detail (user):', batchData.data?.detail ?? null);
       }
     }
   } catch (e) {
-    console.log('3) Lista + detalle:   ⚠️', e.message);
+    log('3) Lista + detalle:   ⚠️', e.message);
     allOk = false;
   }
 
-  // 4) Paginación y metadatos
+  // 4) Paginación
   try {
     const page2 = await post(base, {
       query: `query {
@@ -218,19 +312,19 @@ async function testGraphQL(port) {
     });
     const parsed = JSON.parse(page2.body);
     if (parsed.errors) {
-      console.log('4) Paginación:        ⚠️', parsed.errors[0].message);
+      log('4) Paginación:        ⚠️', parsed.errors[0].message);
       allOk = false;
     } else {
       const u = parsed.data?.users;
-      console.log('4) Paginación:        page', u?.page, '| pageSize', u?.pageSize, '| total', u?.total, '| totalPages', u?.totalPages);
-      logJson('   [GraphQL] page 2 items:', u?.items ?? []);
+      log('4) Paginación:        page', u?.page, '| pageSize', u?.pageSize, '| total', u?.total, '| totalPages', u?.totalPages);
+      logJson(L, '   [GraphQL] page 2 items:', u?.items ?? []);
     }
   } catch (e) {
-    console.log('4) Paginación:        ⚠️', e.message);
+    log('4) Paginación:        ⚠️', e.message);
     allOk = false;
   }
 
-  // 5) Un solo usuario por ID (todos los campos)
+  // 5) User por ID
   try {
     const listForId = await post(base, { query: '{ users(page: 1, pageSize: 1) { items { id } } }' });
     const firstId = JSON.parse(listForId.body).data?.users?.items?.[0]?.id;
@@ -243,43 +337,42 @@ async function testGraphQL(port) {
       });
       const oneData = JSON.parse(one.body);
       if (oneData.errors) {
-        console.log('5) User por ID:       ⚠️', oneData.errors[0].message);
+        log('5) User por ID:       ⚠️', oneData.errors[0].message);
         allOk = false;
       } else {
-        console.log('5) User por ID:       user(id: "' + firstId.slice(0, 8) + '...")');
-        logJson('   [GraphQL] user:', oneData.data?.user);
+        log('5) User por ID:       user(id: "' + firstId.slice(0, 8) + '...")');
+        logJson(L, '   [GraphQL] user:', oneData.data?.user);
       }
     } else {
-      console.log('5) User por ID:       (no hay usuarios)');
+      log('5) User por ID:       (no hay usuarios)');
     }
   } catch (e) {
-    console.log('5) User por ID:       ⚠️', e.message);
+    log('5) User por ID:       ⚠️', e.message);
     allOk = false;
   }
 
-  // 6) Solo id + role (otra forma de pedir poco)
+  // 6) Solo id+role
   try {
     const roles = await post(base, {
       query: 'query { users(page: 1, pageSize: 10) { items { id role } total } }',
     });
     const parsed = JSON.parse(roles.body);
     if (parsed.errors) {
-      console.log('6) Solo id+role:      ⚠️', parsed.errors[0].message);
+      log('6) Solo id+role:      ⚠️', parsed.errors[0].message);
       allOk = false;
     } else {
       const u = parsed.data?.users;
       const bytes = Buffer.byteLength(roles.body, 'utf8');
-      console.log('6) Solo id+role:     ', u?.items?.length ?? 0, 'items |', bytes, 'bytes');
-      logJson('   [GraphQL] users { id, role }:', u?.items ?? [], 5);
+      log('6) Solo id+role:     ', u?.items?.length ?? 0, 'items |', bytes, 'bytes');
+      logJson(L, '   [GraphQL] users { id, role }:', u?.items ?? [], 5);
     }
   } catch (e) {
-    console.log('6) Solo id+role:      ⚠️', e.message);
+    log('6) Solo id+role:      ⚠️', e.message);
     allOk = false;
   }
 
-  if (allOk) {
-    console.log('✅ GraphQL: queries complejas OK (logs de JSON arriba)');
-  }
+  if (allOk) log('✅ GraphQL: queries complejas OK (logs de JSON arriba)\n');
+  if (collect) return L.out;
 }
 
 function printCommands() {
@@ -302,9 +395,20 @@ async function main() {
     await testRest(REST_PORT);
   } else if (mode === 'graphql') {
     await testGraphQL(GRAPHQL_PORT);
+  } else if (mode === 'all') {
+    console.log('Ejecutando pruebas REST y GraphQL en paralelo...\n');
+    const [restOut, graphqlOut] = await Promise.all([
+      testRest(REST_PORT, { collect: true }),
+      testGraphQL(GRAPHQL_PORT, { collect: true }),
+    ]);
+    const restLines = Array.isArray(restOut) ? restOut : [];
+    const graphqlLines = Array.isArray(graphqlOut) ? graphqlOut : [];
+    console.log(restLines.join('\n'));
+    console.log(graphqlLines.join('\n'));
+    console.log('--- Fin (REST puerto', REST_PORT, '| GraphQL puerto', GRAPHQL_PORT, ') ---');
   } else {
     printCommands();
-    console.log('Ejecutar: pnpm api:test:curl:rest  o  pnpm api:test:curl:graphql');
+    console.log('Ejecutar: pnpm api:test:curl:rest | pnpm api:test:curl:graphql | pnpm api:test:curl:all');
   }
 }
 
