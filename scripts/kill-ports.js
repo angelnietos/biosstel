@@ -140,7 +140,7 @@ function isDockerOrSystemProcess(name, path) {
   );
 }
 
-const DEV_API_PORTS = [3020, 4000];
+const DEV_API_PORTS = [3022, 3020, 4000];
 
 function isSafeToKillWindows(pid, port) {
   const { name, path } = getProcessNameWindows(pid);

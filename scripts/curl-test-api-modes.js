@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 /**
- * Pruebas para API en modo GraphQL (3020) y REST (3021).
+ * Pruebas para API en modo GraphQL (3022 local) y REST (3021).
  * Usa http nativo de Node (funciona en Windows sin curl).
  *
  * Uso:
- *   pnpm api:test:curl:graphql   # Prueba GraphQL en 3020
+ *   pnpm api:test:curl:graphql   # Prueba GraphQL en 3022
  *   pnpm api:test:curl:rest      # Prueba REST en 3021
  *   pnpm api:test:curl            # Muestra comandos para ambos
  */
 
 const http = require('http');
 
-const GRAPHQL_PORT = 3020;
+const GRAPHQL_PORT = 3022;
 const REST_PORT = 3021;
 
 function get(url) {
@@ -116,8 +116,8 @@ REST (puerto 3021):
   Invoke-WebRequest -Uri "http://localhost:3021/api/v1/health/live" -UseBasicParsing
   Invoke-WebRequest -Uri "http://localhost:3021/api/v1/users?page=1&pageSize=5" -UseBasicParsing
 
-GraphQL (puerto 3020):
-  Invoke-WebRequest -Uri "http://localhost:3020/api/v1/health/live" -UseBasicParsing
+GraphQL (puerto 3022):
+  Invoke-WebRequest -Uri "http://localhost:3022/api/v1/health/live" -UseBasicParsing
   # POST /graphql: usar Postman o este script (pnpm api:test:curl:graphql)
 `);
 }

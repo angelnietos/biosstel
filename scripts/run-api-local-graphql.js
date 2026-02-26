@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * API en modo GraphQL en local (sin Docker). Puerto 3020.
+ * API en modo GraphQL en local (sin Docker). Puerto 3022 (evita 3020 usado por Docker).
  * Requiere Postgres en marcha: pnpm db:start
  * Uso: pnpm api:local:graphql
  */
 const path = require('path');
 const { execSync } = require('child_process');
 
-process.env.PORT = process.env.PORT || '3020';
+process.env.PORT = process.env.PORT || '3022';
 process.env.GRAPHQL_ENABLED = 'true';
 process.env.GRAPHQL_FEATURES = process.env.GRAPHQL_FEATURES || 'users';
 process.env.DB_HOST = process.env.DB_HOST || '127.0.0.1';
@@ -16,8 +16,8 @@ process.env.DB_PORT = process.env.DB_PORT || '5434';
 const root = path.resolve(__dirname, '..');
 process.chdir(root);
 
-// Liberar puerto 3020 antes de arrancar para evitar EADDRINUSE al reiniciar nodemon
-process.env.KILL_PORTS = process.env.PORT || '3020';
+// Liberar el puerto antes de arrancar para evitar EADDRINUSE al reiniciar nodemon
+process.env.KILL_PORTS = process.env.PORT || '3022';
 try {
   execSync('node scripts/kill-ports.js', { stdio: 'inherit', env: process.env });
 } catch (_) {

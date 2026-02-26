@@ -12,7 +12,7 @@ const root = path.resolve(__dirname, '..');
 const apiDir = path.join(root, 'apps/api-biosstel');
 
 // Liberar el puerto antes de arrancar (evita EADDRINUSE al reiniciar con nodemon)
-const port = process.env.PORT || '3020';
+const port = process.env.PORT || '3022';
 process.env.KILL_PORTS = port;
 try {
   execSync('node scripts/kill-ports.js', {
