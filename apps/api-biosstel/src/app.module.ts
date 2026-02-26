@@ -47,10 +47,8 @@ import { AppGraphQLModule } from './graphql/graphql.module';
               : { target: 'pino-pretty', options: { translateTime: 'SYS:standard' } },
           customProps: () => ({ requestId: randomUUID() }),
           serializers: {
-            req: (req: { method?: string; url?: string }) => ({
-              method: req.method,
-              url: req.url,
-            }),
+            req: (req: { method?: string; url?: string } | undefined) =>
+              req ? { method: req.method, url: req.url } : { method: '?', url: '?' },
             res: (res: { statusCode?: number }) => ({
               statusCode: res.statusCode,
             }),

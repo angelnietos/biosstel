@@ -17,17 +17,21 @@ export class HttpMetricsInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    const ctx = context.switchToHttp();
-    const req = ctx.getRequest<Request>();
-    const res = ctx.getResponse();
-    const method = req.method || 'GET';
-    const start = Date.now();
-
-    res.once('finish', () => {
-      const statusCode = res.statusCode || 200;
-      this.record(method, statusCode, start);
-    });
-
+    try {
+      if (context.getType<string>() !== 'http') return next.handle();
+      const ctx = context.switchToHttp();
+      const req = ctx.getRequest<Request>();
+      const res = ctx.getResponse();
+      if (!req || !res) return next.handle();
+      const method = (req as { method?: string })?.method ?? 'GET';
+      const start = Date.now();
+      res.once('finish', () => {
+        const statusCode = res.statusCode ?? 200;
+        this.record(method, statusCode, start);
+      });
+    } catch {
+      // e.g. GraphQL or other non-HTTP context
+    }
     return next.handle();
   }
 
