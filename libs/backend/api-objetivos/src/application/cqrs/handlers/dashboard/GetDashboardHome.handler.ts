@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import type { DashboardHomeResponse } from '@biosstel/shared-types';
 import { GetDashboardHomeQuery } from '../../queries/dashboard/GetDashboardHome.query';
-import type { TypeOrmDashboardRepository } from '../../../../infrastructure/persistence';
+import { TypeOrmDashboardRepository } from '../../../../infrastructure/persistence';
 
 @QueryHandler(GetDashboardHomeQuery)
 @Injectable()
