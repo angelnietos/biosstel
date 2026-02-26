@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import type { Product, ProductPlain } from '../../../../domain/entities/Product';
 import { ListProductsQuery } from '../../queries/productos/ListProducts.query';
-import type { ProductosManagementUseCase } from '../../../use-cases';
+import { ProductosManagementUseCase } from '../../../use-cases';
 
 @QueryHandler(ListProductsQuery)
 @Injectable()

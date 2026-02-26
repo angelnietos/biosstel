@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import type { ProductPlain } from '../../../../domain/entities/Product';
 import { UpdateProductCommand } from '../../commands/productos/UpdateProduct.command';
-import type { ProductosManagementUseCase } from '../../../use-cases';
+import { ProductosManagementUseCase } from '../../../use-cases';
 
 @CommandHandler(UpdateProductCommand)
 @Injectable()

@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UploadPlantillaProductCommand } from '../../commands/productos/UploadPlantillaProduct.command';
-import type { ProductosManagementUseCase } from '../../../use-cases';
+import { ProductosManagementUseCase } from '../../../use-cases';
 
 @CommandHandler(UploadPlantillaProductCommand)
 @Injectable()

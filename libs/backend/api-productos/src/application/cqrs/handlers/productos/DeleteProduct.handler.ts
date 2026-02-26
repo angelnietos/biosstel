@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteProductCommand } from '../../commands/productos/DeleteProduct.command';
-import type { ProductosManagementUseCase } from '../../../use-cases';
+import { ProductosManagementUseCase } from '../../../use-cases';
 
 @CommandHandler(DeleteProductCommand)
 @Injectable()

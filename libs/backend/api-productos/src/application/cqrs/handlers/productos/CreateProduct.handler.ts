@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import type { ProductPlain } from '../../../../domain/entities/Product';
 import { CreateProductCommand } from '../../commands/productos/CreateProduct.command';
-import type { ProductosManagementUseCase } from '../../../use-cases';
+import { ProductosManagementUseCase } from '../../../use-cases';
 
 @CommandHandler(CreateProductCommand)
 @Injectable()
