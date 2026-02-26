@@ -1,0 +1,29 @@
+diff --git a/src/utils/resolve-eslint-class.js b/src/utils/resolve-eslint-class.js
+index 09cf1f13283bf4e8bc685e42876234041bc28a87..78cd6eb55cabd6f3428ce21e80200b00d17f1e25 100644
+--- a/src/utils/resolve-eslint-class.js
++++ b/src/utils/resolve-eslint-class.js
+@@ -4,14 +4,16 @@ exports.resolveESLintClass = resolveESLintClass;
+ const flat_config_1 = require("../utils/flat-config");
+ async function resolveESLintClass(opts) {
+     try {
+-        // Explicitly use the FlatESLint and LegacyESLint classes here because the ESLint class points at a different one based on ESLint v8 vs ESLint v9
+-        // But the decision on which one to use is not just based on the major version of ESLint.
+-        // @ts-expect-error The may be wrong based on our installed eslint version
+-        const { LegacyESLint, FlatESLint } = await Promise.resolve().then(() => require('eslint/use-at-your-own-risk'));
+-        const shouldESLintUseFlatConfig = typeof opts?.useFlatConfigOverrideVal === 'boolean'
+-            ? opts.useFlatConfigOverrideVal
+-            : (0, flat_config_1.useFlatConfig)();
+-        return shouldESLintUseFlatConfig ? FlatESLint : LegacyESLint;
++        const unsafeExports = await Promise.resolve().then(() => require('eslint/use-at-your-own-risk'));
++        const { LegacyESLint, FlatESLint } = unsafeExports;
++        if (FlatESLint || LegacyESLint) {
++            const shouldESLintUseFlatConfig = typeof opts?.useFlatConfigOverrideVal === 'boolean'
++                ? opts.useFlatConfigOverrideVal
++                : (0, flat_config_1.useFlatConfig)();
++            return shouldESLintUseFlatConfig ? FlatESLint : LegacyESLint;
++        }
++        const { ESLint } = await Promise.resolve().then(() => require('eslint'));
++        return ESLint;
+     }
+     catch {
+         throw new Error('Unable to find `eslint`. Ensure a valid `eslint` version is installed.');
