@@ -1,5 +1,5 @@
 import type { ICommand } from '@biosstel/api-shared';
-import type { UpdateAlertData } from '../../../../../domain/repositories';
+import type { UpdateAlertData } from '../../../../domain/repositories';
 
 export class UpdateAlertaCommand implements ICommand {
   readonly type = 'UpdateAlertaCommand';
