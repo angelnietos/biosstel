@@ -1,12 +1,12 @@
 # =============================================================
-# API en modo GraphQL (config por lib: graphql.enabled + graphql.features)
-# Puerto 3020. Uso: pnpm api:docker:graphql
+# API en ambos modos a la vez: GraphQL (3020) + REST (3021)
+# Un solo Postgres compartido. Uso: pnpm api:docker:both
 # =============================================================
 
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: biosstel-db-graphql
+    container_name: biosstel-db-modes
     restart: unless-stopped
     environment:
       POSTGRES_USER: biosstel
@@ -16,7 +16,7 @@ services:
     ports:
       - '5435:5432'
     volumes:
-      - postgres_data_gql:/var/lib/postgresql/data
+      - postgres_data_modes:/var/lib/postgresql/data
       - ./docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
       - ./docker/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
     healthcheck:
@@ -31,15 +31,15 @@ services:
     build:
       context: .
       dockerfile: docker/dev.Dockerfile
-    container_name: biosstel-deps-graphql
+    container_name: biosstel-deps-modes
     volumes:
       - .:/app
-      - node_modules_gql:/app/node_modules
+      - node_modules_modes:/app/node_modules
     command: sh -c "pnpm install && echo 'Deps OK'"
     networks:
       - biosstel-api
 
-  api:
+  api-graphql:
     build:
       context: .
       dockerfile: docker/dev.Dockerfile
@@ -47,7 +47,7 @@ services:
     restart: unless-stopped
     volumes:
       - .:/app
-      - node_modules_gql:/app/node_modules
+      - node_modules_modes:/app/node_modules
     ports:
       - '3020:3020'
     environment:
@@ -69,7 +69,7 @@ services:
       sh -c "
         echo 'Waiting for Postgres...' &&
         node scripts/wait-for-db.js &&
-        echo 'Starting API (GraphQL mode, port 3020)...' &&
+        echo 'Starting API GraphQL (port 3020)...' &&
         cd /app &&
         nodemon --watch apps/api-biosstel/src --watch libs/backend --ext ts,json --exec 'node scripts/run-api-dev-tsx.js'
       "
@@ -89,15 +89,68 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 45s
+      start_period: 50s
+    networks:
+      - biosstel-api
+
+  api-rest:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    container_name: biosstel-api-rest
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - node_modules_modes:/app/node_modules
+    ports:
+      - '3021:3021'
+    environment:
+      NODE_ENV: development
+      PORT: 3021
+      HOST: '0.0.0.0'
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: biosstel
+      DB_PASSWORD: biosstel123
+      DB_NAME: biosstel
+      JWT_SECRET: dev-jwt-secret-do-not-use-in-production
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGIN: '*'
+      GRAPHQL_ENABLED: 'false'
+      CHOKIDAR_USEPOLLING: 'true'
+    command: >
+      sh -c "
+        echo 'Waiting for Postgres...' &&
+        node scripts/wait-for-db.js &&
+        echo 'Starting API REST (port 3021)...' &&
+        cd /app &&
+        nodemon --watch apps/api-biosstel/src --watch libs/backend --ext ts,json --exec 'node scripts/run-api-dev-tsx.js'
+      "
+    depends_on:
+      deps:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://127.0.0.1:3021/api/v1/health/live',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 50s
     networks:
       - biosstel-api
 
 volumes:
-  postgres_data_gql:
-    name: biosstel-postgres-data-graphql
-  node_modules_gql:
-    name: biosstel-node-modules-graphql
+  postgres_data_modes:
+    name: biosstel-postgres-data-modes
+  node_modules_modes:
+    name: biosstel-node-modules-modes
 
 networks:
   biosstel-api:

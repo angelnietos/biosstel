@@ -4,12 +4,24 @@ Este documento describe el estado actual (api-usuarios como referencia) y el pla
 
 ---
 
-## 1. Scripts Docker para probar API (api-usuarios)
+## 1. Scripts para probar API (api-usuarios)
 
-| Script | Puerto | Modo | Uso |
-|--------|--------|------|-----|
-| `pnpm api:docker:graphql` | **3020** | GraphQL habilitado (`GRAPHQL_FEATURES=users`) | Levanta API + Postgres con `/graphql` y REST |
-| `pnpm api:docker:rest` | **3021** | Solo REST/Postgres (`GRAPHQL_ENABLED=false`) | Levanta API + Postgres solo REST |
+### Docker (ambas a la vez o una por comando)
+
+| Script | Puerto(s) | Modo |
+|--------|-----------|------|
+| `pnpm api:docker:both` | **3020** + **3021** | Levanta **las dos** APIs: GraphQL (3020) y REST (3021) con un solo Postgres. |
+| `pnpm api:docker:graphql` | 3020 | Solo API GraphQL (mismo compose antiguo, un servicio). |
+| `pnpm api:docker:rest` | 3021 | Solo API REST (mismo compose antiguo, un servicio). |
+
+### Local sin Docker (más rápido; requiere Postgres: `pnpm db:start`)
+
+| Script | Puerto | Modo |
+|--------|--------|------|
+| `pnpm api:local:graphql` | **3020** | API con GraphQL (`GRAPHQL_FEATURES=users`). Con nodemon (watch). |
+| `pnpm api:local:rest` | **3021** | API solo REST. Con nodemon (watch). |
+
+Puedes tener **las dos locales a la vez** en dos terminales (una por script).
 
 ### Pruebas con curl
 

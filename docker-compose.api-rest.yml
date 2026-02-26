@@ -69,8 +69,8 @@ services:
         echo 'Waiting for Postgres...' &&
         node scripts/wait-for-db.js &&
         echo 'Starting API (REST/Postgres mode, port 3021)...' &&
-        cd apps/api-biosstel &&
-        pnpm exec nodemon
+        cd /app &&
+        nodemon --watch apps/api-biosstel/src --watch libs/backend --ext ts,json --exec 'node scripts/run-api-dev-tsx.js'
       "
     depends_on:
       deps:
