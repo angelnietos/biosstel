@@ -10,6 +10,20 @@ const { execSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const apiDir = path.join(root, 'apps/api-biosstel');
+
+// Liberar el puerto antes de arrancar (evita EADDRINUSE al reiniciar con nodemon)
+const port = process.env.PORT || '3020';
+process.env.KILL_PORTS = port;
+try {
+  execSync('node scripts/kill-ports.js', {
+    cwd: root,
+    stdio: 'pipe',
+    env: process.env,
+  });
+} catch (_) {
+  // Ignorar si no hay proceso que matar o fallo al matar
+}
+
 // ts-node (soporta experimentalDecorators; tsx/esbuild no)
 let tsnodeBin = path.join(root, 'node_modules/ts-node/dist/bin.js');
 if (!fs.existsSync(tsnodeBin)) {

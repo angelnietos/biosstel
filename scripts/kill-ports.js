@@ -140,16 +140,20 @@ function isDockerOrSystemProcess(name, path) {
   );
 }
 
-function isSafeToKillWindows(pid) {
+const DEV_API_PORTS = [3020, 4000];
+
+function isSafeToKillWindows(pid, port) {
   const { name, path } = getProcessNameWindows(pid);
   if (isDockerOrSystemProcess(name, path)) return false;
+  // Si no se pudo obtener nombre (wmic falla) y es puerto de dev API, asumir node y matar
+  if ((!name && !path) && DEV_API_PORTS.includes(port)) return true;
   return name === 'node.exe' || name === 'node' || path.includes('node.exe');
 }
 
-function killPid(pid) {
+function killPid(pid, port) {
   try {
     if (isWindows) {
-      if (!isSafeToKillWindows(pid)) {
+      if (!isSafeToKillWindows(pid, port)) {
         console.log(`⏭️  Puerto en uso por Docker/sistema (PID ${pid}). Para dev:api usa solo Postgres: pnpm db:start. O detén la API en Docker: docker compose -f docker-compose.dev.yml stop api`);
         return false;
       }
@@ -171,7 +175,7 @@ function main() {
   for (const port of PORTS) {
     const pids = getPidsOnPort(port);
     for (const pid of pids) {
-      if (killPid(pid)) {
+      if (killPid(pid, port)) {
         console.log(`✅ Puerto ${port}: proceso ${pid} terminado.`);
         killed++;
       }
