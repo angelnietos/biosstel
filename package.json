@@ -108,10 +108,10 @@
     "nx:gen": "pnpm exec nx g --no-interactive",
     "graph": "pnpm exec nx graph",
     "sonar:scan": "node scripts/sonar-scan.js",
-    "snyk:scan": "dotenv -e .env -- snyk test --severity-threshold=high --all-projects && dotenv -e .env -- snyk code test --severity-threshold=high",
-    "snyk:test": "dotenv -e .env -- snyk test --severity-threshold=high --all-projects",
-    "snyk:code": "dotenv -e .env -- snyk code test --severity-threshold=high",
-    "snyk:monitor": "dotenv -e .env -- snyk monitor --all-projects"
+    "snyk:scan": "node scripts/snyk-scan.js scan",
+    "snyk:test": "node scripts/snyk-scan.js test",
+    "snyk:code": "node scripts/snyk-scan.js code",
+    "snyk:monitor": "node scripts/snyk-scan.js monitor"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.13",
