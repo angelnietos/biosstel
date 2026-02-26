@@ -37,8 +37,8 @@ export class EnrichUsersListInterceptor implements NestInterceptor {
     );
   }
 
-  private isListUsersPath(request: { method: string; url?: string; path?: string }): boolean {
-    if (request.method !== 'GET') return false;
+  private isListUsersPath(request: { method?: string; url?: string; path?: string }): boolean {
+    if (!request || request.method !== 'GET') return false;
     const path = (request.path ?? request.url ?? '').split('?')[0].replace(/\/$/, '');
     return (
       path === '/api/users' ||
@@ -50,8 +50,15 @@ export class EnrichUsersListInterceptor implements NestInterceptor {
   }
 
   private async enrich(value: unknown, context: ExecutionContext): Promise<unknown> {
-    const request = context.switchToHttp().getRequest<{ method: string; url: string; path?: string }>();
-    if (!this.isListUsersPath(request)) return value;
+    const type = context.getType<string>();
+    if (type !== 'http') return value;
+    let request: { method?: string; url?: string; path?: string } | undefined;
+    try {
+      request = context.switchToHttp().getRequest();
+    } catch {
+      return value;
+    }
+    if (!request || !this.isListUsersPath(request)) return value;
     if (!isPaginatedUsers(value)) return value;
 
     const body = value;

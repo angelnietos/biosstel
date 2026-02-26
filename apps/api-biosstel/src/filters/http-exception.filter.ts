@@ -23,7 +23,7 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const request = ctx.getRequest<Request>() as Request | undefined;
 
     const status =
       exception instanceof HttpException
@@ -48,9 +48,9 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
       errorName = 'Error';
     }
 
-    if (status >= 500) {
+    if (status >= 500 && request) {
       this.logger.error(
-        `${request.method} ${request.url} ${status}`,
+        `${request.method ?? '?'} ${request.url ?? '?'} ${status}`,
         exception instanceof Error ? exception.stack : String(exception)
       );
     }
@@ -59,7 +59,7 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
       statusCode: status,
       message,
       error: errorName,
-      path: request.url,
+      path: request?.url,
     };
 
     response.status(status).json(body);
