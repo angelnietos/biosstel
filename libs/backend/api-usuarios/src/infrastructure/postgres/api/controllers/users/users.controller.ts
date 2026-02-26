@@ -22,9 +22,9 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { IMediator, type IMediatorPort } from '@biosstel/api-shared';
 import type { User, PaginatedResult } from '@biosstel/shared-types';
-import { CreateUserCommand, UpdateUserCommand, DeleteUserCommand } from '../../../../application/cqrs/commands/users';
-import { GetUserByIdQuery, ListUsersQuery } from '../../../../application/cqrs/queries/users';
-import type { CreateUserDto, UpdateUserDto, PaginationQueryDto } from '../../../../application/dto/users';
+import { CreateUserCommand, UpdateUserCommand, DeleteUserCommand } from '../../../../../application/cqrs/commands/users';
+import { GetUserByIdQuery, ListUsersQuery } from '../../../../../application/cqrs/queries/users';
+import type { CreateUserDto, UpdateUserDto, PaginationQueryDto } from '../../../../../application/dto/users';
 
 @ApiTags('users')
 @ApiBearerAuth('access-token')
