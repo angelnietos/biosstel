@@ -44,6 +44,7 @@
     "api:test:curl": "node scripts/curl-test-api-modes.js",
     "api:test:curl:graphql": "node scripts/curl-test-api-modes.js graphql",
     "api:test:curl:rest": "node scripts/curl-test-api-modes.js rest",
+    "api:test:curl:all": "node scripts/curl-test-api-modes.js all",
     "db:logs": "docker compose -f docker-compose.dev.yml logs -f postgres",
     "docker:dev:build": "node scripts/ensure-docker.js && docker compose -f docker-compose.dev.yml up --build",
     "docker:dev:reset": "docker compose -f docker-compose.dev.yml down -v && docker compose -f docker-compose.dev.yml up --build",
