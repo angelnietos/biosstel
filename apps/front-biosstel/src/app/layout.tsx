@@ -8,6 +8,7 @@ const inter = Inter({
   subsets: ['latin'],
 });
 
+
 // Evita prerender de /_not-found donde usePathname() no está disponible
 export const dynamic = 'force-dynamic';
 
