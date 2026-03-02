@@ -212,7 +212,7 @@ jobs:
       - run: pnpm run test:coverage
         env:
           CI: true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage-report
@@ -286,7 +286,7 @@ jobs:
           DB_USER: biosstel
           DB_PASSWORD: biosstel123
           DB_NAME: biosstel_test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report
@@ -385,7 +385,7 @@ jobs:
       - run: pnpm run build:front
         env:
           NODE_ENV: production
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: build-frontend
           path: apps/front-biosstel/.next
@@ -418,7 +418,7 @@ jobs:
       - run: pnpm run build:api
         env:
           NODE_ENV: production
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: build-backend
           path: apps/api-biosstel/dist
@@ -449,7 +449,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec nx run front-biosstel:build-storybook
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: build-storybook
           path: storybook-static
