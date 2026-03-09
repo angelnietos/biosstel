@@ -107,7 +107,7 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             com.biosstel.branch=${{ steps.version.outputs.branch }}
             com.biosstel.build.sha=${{ github.sha }}
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
       - uses: docker/build-push-action@v5
         with:
           context: .
@@ -171,7 +171,7 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             com.biosstel.branch=${{ steps.version.outputs.branch }}
             com.biosstel.build.sha=${{ github.sha }}
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
       - uses: docker/build-push-action@v5
         with:
           context: .
