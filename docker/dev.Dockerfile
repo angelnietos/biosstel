@@ -3,7 +3,7 @@
 # Lightweight image for local dev with hot reload
 # All devs use the same Node/pnpm version → consistent lockfile
 # =============================================================
-FROM node:20-alpine
+FROM node:26-alpine
 
 # System deps for native modules (bcrypt, sharp, etc.)
 RUN apk add --no-cache libc6-compat
